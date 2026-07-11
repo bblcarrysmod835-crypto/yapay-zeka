@@ -71,7 +71,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -85,7 +85,7 @@ if "sohbet_hafizasi" not in st.session_state:
 # Butonları mesaj kutusunun hemen dibine yanaştıran ve kusursuz yuvarlak yapan CSS
 st.markdown("""
     <style>
-    /* Bütün butonları tam yuvarlak ve eşit boyuta getir */
+    /* Bütün ana yuvarlak butonları tam yuvarlak ve hizalı yap */
     div[data-testid="stButton"] > button {
         border-radius: 50% !important;
         width: 42px !important;
@@ -96,16 +96,15 @@ st.markdown("""
         align-items: center !important;
         justify-content: center !important;
         font-size: 18px !important;
-        margin-top: 24px !important; /* Mesaj kutusuyla tam yatay eşitleme */
+        margin-top: 24px !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
         transition: 0.2s !important;
     }
-    /* Buton renk özelleştirmeleri */
+    /* Buton renk atamaları */
     div[data-testid="stButton"]:nth-of-type(1) > button { background-color: #3b82f6 !important; color: white !important; }
     div[data-testid="stButton"]:nth-of-type(2) > button { background-color: #10b981 !important; color: white !important; }
     div[data-testid="stButton"]:nth-of-type(3) > button { background-color: #ec4899 !important; color: white !important; }
     
-    /* Gereksiz boşlukları kapatıp butonları mesaj kutusuna yakınlaştır */
     div[data-testid="column"] {
         padding: 0px 2px !important;
     }
@@ -131,47 +130,53 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # Yeni Gelişmiş JavaScript Ses Yakalayıcı (Sesi sadece yazar, enter yapmaz, sen basınca gider)
-    JS_SES_YAKALAYICI = """
+    # Sessizlik algıladığı anda Enter'sız otomatik fırlatan JavaScript Akıllı Mikrofon Motoru
+    JS_AKILLI_MIC = """
     <script>
-    window.parent.document.addEventListener('TetikleSes', function (e) {
+    window.parent.document.addEventListener('TetikleAkilliSes', function (e) {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
             recognition.lang = 'tr-TR';
             recognition.interimResults = false;
-            
+            recognition.continuous = false; // Konuşmayı kesince dursun
+
             recognition.onresult = (event) => {
-                const metin = event.results[0][0].transcript;
-                if(metin) {
-                    // Mesaj kutusunu bulup sadece içine yazıyoruz (Enter'a basmayı tamamen kullanıcıya bırakıyoruz)
+                const sonucMetni = event.results[0][0].transcript;
+                if(sonucMetni && sonucMetni.trim() !== "") {
                     const chatInput = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
                     if(chatInput) {
-                        chatInput.value = metin;
+                        chatInput.value = sonucMetni;
                         chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        
+                        // Konuşma bittiği salise butona basıp otomatik gönderiyor!
+                        setTimeout(() => {
+                            const sendBtn = window.parent.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
+                            if(sendBtn) sendBtn.click();
+                        }, 400);
                     }
                 }
             };
             recognition.start();
         } else {
-            alert("Tarayıcında ses tanıma desteği yok be gardaşşş!");
+            alert("Gardaşşş tarayıcın ses tanımayı desteklemiyor!");
         }
     });
     </script>
     """
-    components.html(JS_SES_YAKALAYICI, height=0)
+    components.html(JS_AKILLI_MIC, height=0)
 
     # Chat Giriş Satırı ve Hemen Yanına Yakınlaştırılmış Orijinal Yuvarlak Butonlar
     c1, c2, c3, c4 = st.columns([0.85, 0.05, 0.05, 0.05])
     with c1:
-        yazi_soru = st.chat_input("Buraya yaz veya mikrofona konuşup Enter'a bas be gardaşşşşş...")
+        yazi_soru = st.chat_input("Buraya yaz veya mikrofona basıp direkt konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
     with c2:
-        # Mikrofon Butonu (JS'yi tetikler, sesi kutuya yazar)
-        if st.button("🎙️", help="Konuş be Gardaşşş! (Kutuya yazar, Enter ile gönderirsin)"):
-            st.markdown("""<script>const evt = new CustomEvent('TetikleSes'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
-            st.toast("📢 Dinliyorum... Konuşman bitince kutuya yazılacak, sonra Enter'a bas be gardaş!")
+        # Mikrofon Butonu (Konuşunca otomatik gönderir)
+        if st.button("🎙️", help="Konuş be Gardaşşş! Konuşman bitince otomatik gider."):
+            st.markdown("""<script>const evt = new CustomEvent('TetikleAkilliSes'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
+            st.toast("📢 Dinliyorum be gardaşşş... Konuşman bitince kendisi otomatik fırlatacak!")
     with c3:
         # Erkek Oyunu Butonu
         if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!"):
@@ -210,7 +215,7 @@ if st.session_state.aktif_oyun is None:
                 pass
 
 # ==========================================================================================
-# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE
+# MOBİL OK DESTEKLİ ERKEK OYUNU: BMW M3 ARCADE
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
@@ -219,25 +224,33 @@ elif st.session_state.aktif_oyun == "erkek":
             st.session_state.aktif_oyun = None
             st.rerun()
     with sag_ust:
-        st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
+        st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü (Mobil Uyumlu)")
         
-    st.markdown("**🕹️ KONTROLLER:** **A / D** tuşları veya **Sol / Sağ Yön Tuşları**. Makasını at, rekoru kır!")
+    st.markdown("**🕹️ KONTROLLER:** PC için **A / D** tuşları. Mobil için alttaki devasa **SAĞ / SOL** butonları!")
 
     bmw_full_screen_html = """
-    <div style="text-align:center; background:#05050a; padding:15px; border-radius:16px; border:3px solid #00ffcc;">
-        <div id="bmwFullCanvasContainer" style="width:100%; height:600px; border-radius:10px; overflow:hidden;"></div>
-        <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:15px 0; font-weight:bold;">4D Makas Skoru: 0 🌀</h2>
-        <button onclick="location.reload()" style="padding:12px 30px; font-size:16px; font-weight:bold; background:#00ffcc; color:#000; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #00ffcc;">Pisti Yeniden Yükle 🏎️</button>
+    <div style="text-align:center; background:#05050a; padding:15px; border-radius:16px; border:3px solid #00ffcc; max-width:100%; touch-action:none;">
+        <div id="bmwFullCanvasContainer" style="width:100%; height:450px; border-radius:10px; overflow:hidden;"></div>
+        
+        <!-- MOBİL OK BUTONLARI PANELİ -->
+        <div style="display:flex; justify-content:center; gap:40px; margin:20px 0;">
+            <button id="mobSolBtn" style="width:80px; height:80px; border-radius:50%; background:#00ffcc; color:black; font-size:32px; font-weight:bold; border:none; box-shadow:0 0 15px #00ffcc; user-select:none; -webkit-user-select:none;">◀️</button>
+            <button id="mobSagBtn" style="width:80px; height:80px; border-radius:50%; background:#00ffcc; color:black; font-size:32px; font-weight:bold; border:none; box-shadow:0 0 15px #00ffcc; user-select:none; -webkit-user-select:none;">▶️</button>
+        </div>
+
+        <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:20px;">4D Makas Skoru: 0 🌀</h2>
+        <button onclick="location.reload()" style="padding:10px 25px; font-size:14px; font-weight:bold; background:#333; color:#00ffcc; border:1px solid #00ffcc; border-radius:6px; cursor:pointer;">Pisti Yeniden Yükle 🏎️</button>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x020208);
 
-        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 600, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 450, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 600);
+        renderer.setSize(container.clientWidth, 450);
         container.appendChild(renderer.domElement);
 
         const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
@@ -269,11 +282,6 @@ elif st.session_state.aktif_oyun == "erkek":
         cabinMesh.position.set(0, 0.65, -0.1);
         bmwM3.add(cabinMesh);
 
-        const spGeo = new THREE.BoxGeometry(1.3, 0.08, 0.25);
-        const spMesh = new THREE.Mesh(spGeo, cabinMat);
-        spMesh.position.set(0, 0.55, -1.35);
-        bmwM3.add(spMesh);
-
         bmwM3.position.set(0, 0, -8);
         scene.add(bmwM3);
 
@@ -291,21 +299,34 @@ elif st.session_state.aktif_oyun == "erkek":
         camera.lookAt(new THREE.Vector3(0, 0.5, -25));
 
         let score = 0; let gameOver = false; let keys = {};
+        let mobSol = false; let mobSag = false;
+
         window.addEventListener("keydown", e => keys[e.key] = true);
         window.addEventListener("keyup", e => keys[e.key] = false);
 
+        // Mobil Dokunmatik Atamaları
+        const sBtn = document.getElementById("mobSolBtn");
+        const saBtn = document.getElementById("mobSagBtn");
+
+        sBtn.addEventListener("touchstart", () => mobSol = true);
+        sBtn.addEventListener("touchend", () => mobSol = false);
+        sBtn.addEventListener("mousedown", () => mobSol = true);
+        sBtn.addEventListener("mouseup", () => mobSol = false);
+
+        saBtn.addEventListener("touchstart", () => mobSag = true);
+        saBtn.addEventListener("touchend", () => mobSag = false);
+        saBtn.addEventListener("mousedown", () => mobSag = true);
+        saBtn.addEventListener("mouseup", () => mobSag = false);
+
         function animate() {
             if(!gameOver) {
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
-                if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || mobSol) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.20; }
+                if(keys["ArrowRight"] || keys["d"] || keys["D"] || mobSag) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.20; }
 
                 lines.forEach(l => {
                     l.position.z += 0.7 + (score * 0.02);
                     if(l.position.z > 10) l.position.z = -280;
                 });
-
-                let phase = Math.abs(Math.sin(score * 0.15));
-                scene.background.setRGB(0.01, 0.04 * phase, 0.09 * (1 - phase));
 
                 traffic.forEach(t => {
                     t.position.z += 0.7 + (score * 0.03);
@@ -317,7 +338,7 @@ elif st.session_state.aktif_oyun == "erkek":
                     }
                     if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) {
                         gameOver = true;
-                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>";
+                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:18px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>";
                     }
                 });
             }
@@ -327,10 +348,10 @@ elif st.session_state.aktif_oyun == "erkek":
         animate();
     </script>
     """
-    components.html(bmw_full_screen_html, height=730)
+    components.html(bmw_full_screen_html, height=750)
 
 # ==========================================================================================
-# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
+# MOBİL OK DESTEKLİ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "kiz":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
@@ -339,32 +360,40 @@ elif st.session_state.aktif_oyun == "kiz":
             st.session_state.aktif_oyun = None
             st.rerun()
     with sag_ust:
-        st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
+        st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu (Mobil Uyumlu)")
         
-    st.markdown("**🕹️ KONTROLLER:** **A / D** tuşları veya **Sol / Sağ Yön Tuşları**. Kara deliklere yakalanmadan neon kristalleri topla!")
+    st.markdown("**🕹️ KONTROLLER:** PC için **A / D** tuşları. Mobil için alttaki devasa **SAĞ / SOL** butonları!")
 
     kiz_full_screen_html = """
-    <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4;">
-        <div id="kizFullCanvasContainer" style="width:100%; height:600px; border-radius:10px; overflow:hidden;"></div>
-        <h2 id="kizScoreDisplay" style="color:#ff69b4; font-family:sans-serif; margin:15px 0; font-weight:bold;">Aura Enerjisi: 0 ⭐</h2>
-        <button onclick="location.reload()" style="padding:12px 30px; font-size:16px; font-weight:bold; background:#ff69b4; color:#fff; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #ff69b4;">Evreni Yenile ✨</button>
+    <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4; max-width:100%; touch-action:none;">
+        <div id="kizFullCanvasContainer" style="width:100%; height:450px; border-radius:10px; overflow:hidden;"></div>
+        
+        <!-- MOBİL OK BUTONLARI PANELİ -->
+        <div style="display:flex; justify-content:center; gap:40px; margin:20px 0;">
+            <button id="kizMobSolBtn" style="width:80px; height:80px; border-radius:50%; background:#ff69b4; color:white; font-size:32px; font-weight:bold; border:none; box-shadow:0 0 15px #ff69b4; user-select:none; -webkit-user-select:none;">◀️</button>
+            <button id="kizMobSagBtn" style="width:80px; height:80px; border-radius:50%; background:#ff69b4; color:white; font-size:32px; font-weight:bold; border:none; box-shadow:0 0 15px #ff69b4; user-select:none; -webkit-user-select:none;">▶️</button>
+        </div>
+
+        <h2 id="kizScoreDisplay" style="color:#ff69b4; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:20px;">Aura Enerjisi: 0 ⭐</h2>
+        <button onclick="location.reload()" style="padding:10px 25px; font-size:14px; font-weight:bold; background:#220033; color:#ff69b4; border:1px solid #ff69b4; border-radius:6px; cursor:pointer;">Evreni Yenile ✨</button>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("kizFullCanvasContainer");
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x11001c);
 
-        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 600, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 450, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 600);
+        renderer.setSize(container.clientWidth, 450);
         container.appendChild(renderer.domElement);
 
         const pLight = new THREE.PointLight(0xff69b4, 3, 100); pLight.position.set(0, 10, -5); scene.add(pLight);
         const aLight = new THREE.AmbientLight(0x3d0066); scene.add(aLight);
 
         const starGeo = new THREE.BufferGeometry();
-        const starCount = 400;
+        const starCount = 300;
         const starPositions = new Float32Array(starCount * 3);
         for(let i=0; i<starCount*3; i+=3) {
             starPositions[i] = (Math.random() - 0.5) * 60;
@@ -387,8 +416,8 @@ elif st.session_state.aktif_oyun == "kiz":
         const obsColors = [0x00ffff, 0xba55d3, 0xff69b4];
         for(let i=0; i<4; i++){
             let oGeo = new THREE.IcosahedronGeometry(1.0, 1);
-            let oMat = new THREE.MeshStandardMaterial({ color: obsColors[i % 3], wireframe: false, emissive: obsColors[i % 3] });
-            let oMesh = new THREE.Mesh(oGeo, oMat);
+            let oMat = new THREE.MeshStandardMaterial({ color: obsColors[i % 3], emissive: obsColors[i % 3] });
+            oMesh = new THREE.Mesh(oGeo, oMat);
             oMesh.position.set((Math.random() - 0.5) * 12, 0, -40 - (i * 30));
             scene.add(oMesh); obstacles.push(oMesh);
         }
@@ -397,13 +426,29 @@ elif st.session_state.aktif_oyun == "kiz":
         camera.lookAt(new THREE.Vector3(0, -0.5, -20));
 
         let score = 0; let gameOver = false; let keys = {};
+        let mobSol = false; let mobSag = false;
+
         window.addEventListener("keydown", e => keys[e.key] = true);
         window.addEventListener("keyup", e => keys[e.key] = false);
 
+        // Mobil Atamalar
+        const ksBtn = document.getElementById("kizMobSolBtn");
+        const ksaBtn = document.getElementById("kizMobSagBtn");
+
+        ksBtn.addEventListener("touchstart", () => mobSol = true);
+        ksBtn.addEventListener("touchend", () => mobSol = false);
+        ksBtn.addEventListener("mousedown", () => mobSol = true);
+        ksBtn.addEventListener("mouseup", () => mobSol = false);
+
+        ksaBtn.addEventListener("touchstart", () => mobSag = true);
+        ksaBtn.addEventListener("touchend", () => mobSag = false);
+        ksaBtn.addEventListener("mousedown", () => mobSag = true);
+        ksaBtn.addEventListener("mouseup", () => mobSag = false);
+
         function animate() {
             if(!gameOver) {
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.16; }
-                if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.16; }
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || mobSol) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.18; }
+                if(keys["ArrowRight"] || keys["d"] || keys["D"] || mobSag) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.18; }
 
                 playerMesh.rotation.z += 0.05;
                 
@@ -427,7 +472,7 @@ elif st.session_state.aktif_oyun == "kiz":
 
                     if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) {
                         gameOver = true;
-                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:24px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>";
+                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:18px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>";
                     }
                 });
             }
@@ -437,4 +482,4 @@ elif st.session_state.aktif_oyun == "kiz":
         animate();
     </script>
     """
-    components.html(kiz_full_screen_html, height=730)
+    components.html(kiz_full_screen_html, height=750)
