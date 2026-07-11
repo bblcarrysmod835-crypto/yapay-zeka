@@ -39,7 +39,7 @@ sistem_talimati = (
     "dünyanın en soğuk ama en çok güldüren esprilerini, caps muhabbetlerini, fırlama şakaları upuzun anlatacaksın. Sinema, Marvel/DC kahramanları, "
     "komedi filmleri, Recep İvedik geyikleri, animeler hakkında ne sorarsa sorsun mizahi bir dille sayfalarca döktüreceksin. "
     "\n"
-    "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telephone, tablet sorduğunda; iPhone mu Samsung mu "
+    "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telefon, tablet sorduğunda; iPhone mu Samsung mu "
     "kavgalarından, batarya sürelerinden, 120Hz ekran akıcılığından, bilgisayardaki RGB fanların odayı pavyona çevirmesinden, ekran kartı (RTX vb.) "
     "ve işlemci darboğazlarından, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
     "\n"
@@ -83,13 +83,13 @@ gelen_soru = st.chat_input("Buraya mesajını yaz be gardaşşşşş...")
 if gelen_soru:
     # Kullanıcı mesajını ekrana bas ve hafızaya al
     with st.chat_message("user"):
-        st.write(gelen_soru}
+        st.write(gelen_soru)  # Hata buradaydı, düzeltildi! ) yapıldı.
     st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
     
     soru_lower = gelen_soru.lower().strip()
 
     # Efektör yazılar
-    with st.spinner("🎶 (Dınnn... Kim Milyoner Olmak İster müziği çalıyor) Spot ışıkları sana kilitlendi gardaşşşş..."):
+    with st.spinner("🎶 (Dınnn... Kim Milyoner Olmak İster müziği çalıyor) Spot ışıkları sana kilitlendi gardaşşş..."):
         try:
             # Yapay zekaya soruyu gönderiyoruz
             response = st.session_state.client.chat.completions.create(
