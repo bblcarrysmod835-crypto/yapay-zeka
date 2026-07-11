@@ -51,7 +51,7 @@ sistem_talimati = (
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
     "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksin. "
     "\n"
-    "2) HITAP KANUNU: Konuşma tarzın mahalleden çok yakın bir dost, candan bir sırdaş gibi olacak. "
+    "2) HITAP KANUNU: Talk tarzın mahalleden çok yakın bir dost, candan bir sırdaş gibi olacak. "
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
     "\n"
     "3) AHMET ŞAKASI (KIRMIZI ÇİZGİ): Kullanıcı sana 'Ahmet', 'Ahmet kim?', 'Çişli' veya içinde Ahmet geçen herhangi bir şey "
@@ -74,7 +74,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -231,44 +231,45 @@ if st.session_state.aktif_oyun is None:
         </script>
     """, unsafe_allow_html=True)
 
-    # MASTER KONTROL PANELİ (TÜM STRÜKTÜR FORMUN İÇİNDE - SIFIR HATA GARANTİSİ)
-    with st.form(key="global_mesaj_formu", clear_on_submit=True):
-        c_mic, c_chat, c_send, c_g1, c_g2 = st.columns([0.15, 0.67, 0.06, 0.06, 0.06])
+    # KUSURSUZ YERLEŞİM: Normal butonlar dışarıda, Yazı kutusu ve Ok içeride!
+    c_mic, c_chat_box, c_g1, c_g2 = st.columns([0.15, 0.73, 0.06, 0.06])
+    
+    with c_mic:
+        mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
+        st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
+        if st.button(mic_simge, key="normal_mic_tasarim"):
+            st.session_state.mic_aktif = not st.session_state.mic_aktif
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
         
-        with c_mic:
-            mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
-            st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
-            if st.button(mic_simge, key="normal_mic_tasarim"):
-                st.session_state.mic_aktif = not st.session_state.mic_aktif
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-        with c_chat:
-            yazi_soru = st.text_input("Mesajın:", label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
-            
-        with c_send:
-            # Sütun formun içinde olduğu için artık asla hata veremez!
-            st.markdown('<div class="modern-gonder-btn">', unsafe_allow_html=True)
-            gonder_btn = st.form_submit_button("▲")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-        with c_g1:
-            st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
-            if st.button("🏎️", key="rk_game"):
-                st.session_state.aktif_oyun = "erkek"
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-        with c_g2:
-            st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
-            if st.button("🌌", key="kz_game"):
-                st.session_state.aktif_oyun = "kiz"
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-        if gonder_btn and yazi_soru:
-            gelen_soru = yazi_soru
-            st.session_state.mic_aktif = False
+    with c_chat_box:
+        # Form yapısı sadece yazı girdisi ve yukarı ok için izole edildi!
+        with st.form(key="saf_mesaj_formu", clear_on_submit=True):
+            c_input, c_arrow = st.columns([0.90, 0.10])
+            with c_input:
+                yazi_soru = st.text_input("Mesajın:", label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
+            with c_arrow:
+                st.markdown('<div class="modern-gonder-btn">', unsafe_allow_html=True)
+                gonder_btn = st.form_submit_button("▲")
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+            if gonder_btn and yazi_soru:
+                gelen_soru = yazi_soru
+                st.session_state.mic_aktif = False
+
+    with c_g1:
+        st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
+        if st.button("🏎️", key="rk_game"):
+            st.session_state.aktif_oyun = "erkek"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    with c_g2:
+        st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
+        if st.button("🌌", key="kz_game"):
+            st.session_state.aktif_oyun = "kiz"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # Girdi geldiğinde yapay zekayı tetikleme hattı
     if gelen_soru:
