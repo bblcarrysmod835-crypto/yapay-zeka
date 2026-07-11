@@ -111,12 +111,19 @@ st.markdown("""
         margin-top: 6px !important;
     }
     
-    /* Siyah Tabanlı Beyaz Dokulu Gelişmiş Chat Input Alanı */
+    /* Canlı Mat Kahve Tabanlı Beyaz Yazılı Chat Input Alanı */
     textarea[data-testid="stChatInputTextArea"] {
-        background-color: #0b0b0d !important;
+        background-color: #4a2e1b !important;
         color: #ffffff !important;
-        border: 1.5px solid #e2e8f0 !important;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.15) !important;
+        border: 2px solid #d4a373 !important;
+        border-radius: 10px !important;
+        font-size: 16px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    }
+    
+    /* Yazı yazarken placeholder rengini ayarlama */
+    textarea[data-testid="stChatInputTextArea"]::placeholder {
+        color: #c2a696 !important;
     }
     
     /* Chat input konteyner ayarları */
