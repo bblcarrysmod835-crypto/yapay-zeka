@@ -20,7 +20,7 @@ if "client" not in st.session_state:
 if "aktif_oyun" not in st.session_state:
     st.session_state.aktif_oyun = None  # None, "erkek" veya "kiz"
 
-# Mikrofonun o an aktif (kırmızı) olup olmadığını tutan hafıza
+# Mikrofonun o an aktif olup olmadığını tutan hafıza
 if "mic_aktif" not in st.session_state:
     st.session_state.mic_aktif = False
 
@@ -80,13 +80,13 @@ sistem_talimati = (
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
-    "PUBG and Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
+    "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# SESTRE DEVRİM YAPTIK: MİKROFONU NORMALE DÖNDÜREN, OYUNLARI SAĞDA BİRLEŞTİREN CSS
+# OYUNLARIN ARASINI SIFIRLAYAN VE MİKROFONU NORMALLEŞTİREN ÖZEL CSS KANUNLARI
 st.markdown("""
     <style>
     /* Paneli en alta sabitle */
@@ -97,16 +97,17 @@ st.markdown("""
         height: 100vh;
     }
     
-    /* Sağdaki butonların dip dipe gelmesi ve hizalanması için boşlukları erit */
+    /* Sağdaki sütunların boşluğunu sıfırla, butonları yapıştır */
     div[data-testid="column"] {
-        padding: 0px 1px !important;
+        padding: 0px 0px !important;
+        margin: 0px 0px !important;
     }
     .stHorizontalBlock {
         align-items: center !important;
-        gap: 1px !important;
+        gap: 0px !important;
     }
     
-    /* Sağdaki oyun butonlarını yuvarlak ve yapışık yap */
+    /* Sağdaki oyun butonları - Yuvarlak ve birbirine sıfıra sıfır yapışık */
     .sag-oyun-btn div[data-testid="stButton"] > button {
         border-radius: 50% !important;
         width: 44px !important;
@@ -114,35 +115,21 @@ st.markdown("""
         padding: 0 !important;
         font-size: 20px !important;
         margin-top: 24px !important;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+        border: none !important;
     }
     
-    /* Mikrofon Butonunu Yuvarlaktan Çıkarıp Orijinal Dikdörtgen/Normal Formuna Döndürme */
+    /* Sol taraftaki normal mikrofon butonu tasarımı (Kırmızı yanıp sönme falan tamamen kaldırıldı) */
     .sol-normal-mic div[data-testid="stButton"] > button {
-        border-radius: 8px !important; /* Yuvarlak değil, normal buton tasarımı */
+        border-radius: 8px !important;
         width: 100% !important;
         height: 42px !important;
         margin-top: 24px !important;
         background-color: #3b82f6 !important;
         color: white !important;
-        font-size: 18px !important;
-    }
-    
-    /* Mikrofon Aktifken Kırmızı Yanıp Sönme Efekti */
-    .sol-normal-mic-aktif div[data-testid="stButton"] > button {
-        border-radius: 8px !important;
-        width: 100% !important;
-        height: 42px !important;
-        margin-top: 24px !important;
-        background-color: #ef4444 !important;
-        color: white !important;
-        font-size: 18px !important;
-        animation: normalMicPulse 1.0s infinite !important;
-    }
-    @keyframes normalMicPulse {
-        0% { opacity: 1.0; }
-        50% { opacity: 0.6; }
-        100% { opacity: 1.0; }
+        font-size: 16px !important;
+        border: none !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -166,70 +153,122 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # ESKİ TARAYICI ENGELSİZ SES TANIMA TETİKLEYİCİSİ
-    JS_DIREK_MAN_MIC = """
+    # GERÇEK ZAMANLI SES SEVİYESİNİ ALGILAYAN VE BAĞIRDIKÇA YÜKSELEN RİTİM/DALGA MOTORU (JS)
+    JS_RITIM_MIC = """
     <script>
-    if (window.parent && !window.parent.micSistemKuruldu) {
-        window.parent.micSistemKuruldu = true;
-        
-        window.parent.document.addEventListener('TetikleDirekMic', function () {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                recognition.lang = 'tr-TR';
-                recognition.interimResults = false;
-                recognition.continuous = false;
+    if (window.parent && !window.parent.ritimSistemKuruldu) {
+        window.parent.ritimSistemKuruldu = true;
+        window.parent.audioContext = null;
+        window.parent.analyser = null;
+        window.parent.dataArray = null;
+        window.parent.recognition = null;
 
-                recognition.onresult = (event) => {
-                    const metinSonuc = event.results[0][0].transcript;
-                    if(metinSonuc && metinSonuc.trim() !== "") {
-                        const inputs = window.parent.document.querySelectorAll('textarea[data-testid="stChatInputTextArea"]');
-                        inputs.forEach(chatInput => {
-                            chatInput.value = metinSonuc;
-                            chatInput.dispatchEvent(new Event('input', { bubbles: true }));
-                        });
+        window.parent.document.addEventListener('BaslatRitimMic', function () {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                    // Ses Analizcisini Başlat (Ritim/Ses Yüksekliği İçin)
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    window.parent.audioContext = new AudioContext();
+                    const source = window.parent.audioContext.createMediaStreamSource(stream);
+                    window.parent.analyser = window.parent.audioContext.createAnalyser();
+                    window.parent.analyser.fftSize = 32;
+                    source.connect(window.parent.analyser);
+                    
+                    const bufferLength = window.parent.analyser.frequencyBinCount;
+                    window.parent.dataArray = new Uint8Array(bufferLength);
+
+                    // Ekranda ritim çubuklarını oynatan fonksiyon
+                    function drawRitim() {
+                        if(!window.parent.analyser) return;
+                        requestAnimationFrame(drawRitim);
+                        window.parent.analyser.getByteFrequencyData(window.parent.dataArray);
                         
-                        setTimeout(() => {
-                            const buttons = window.parent.document.querySelectorAll('button[data-testid="stChatInputSubmitButton"]');
-                            buttons.forEach(sendBtn => sendBtn.click());
-                        }, 250);
+                        // Toplam ses şiddetini hesapla
+                        let sum = 0;
+                        for(let i=0; i<bufferLength; i++) { sum += window.parent.dataArray[i]; }
+                        let average = sum / bufferLength; // Bağırdıkça bu değer fırlar!
+
+                        // Çubukların boyunu dinamik olarak değiştir
+                        for(let i=1; i<=5; i++) {
+                            const bar = window.parent.document.getElementById('ritimBar' + i);
+                            if(bar) {
+                                // Bağırdıkça ritim fırlasın
+                                let height = Math.max(6, (average * 0.8) * (i * 0.3 + 0.5));
+                                bar.style.height = Math.min(65, height) + 'px';
+                            }
+                        }
                     }
-                };
-                
-                recognition.start();
-            } else {
-                alert("Gardaşşş tarayıcın ses tanımayı desteklemiyor veya izin kapalı!");
+                    drawRitim();
+
+                    // Konuşma Algılama Kısmı
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    window.parent.recognition = new SpeechRecognition();
+                    window.parent.recognition.lang = 'tr-TR';
+                    window.parent.recognition.interimResults = false;
+                    window.parent.recognition.continuous = false;
+
+                    window.parent.recognition.onresult = (event) => {
+                        const metinSonuc = event.results[0][0].transcript;
+                        if(metinSonuc && metinSonuc.trim() !== "") {
+                            const inputs = window.parent.document.querySelectorAll('textarea[data-testid="stChatInputTextArea"]');
+                            inputs.forEach(chatInput => {
+                                chatInput.value = metinSonuc;
+                                chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            });
+                            setTimeout(() => {
+                                const buttons = window.parent.document.querySelectorAll('button[data-testid="stChatInputSubmitButton"]');
+                                buttons.forEach(sendBtn => sendBtn.click());
+                            }, 250);
+                        }
+                    };
+
+                    window.parent.recognition.onend = () => { window.parent.document.dispatchEvent(new CustomEvent('KapatRitimKlavuz')); };
+                    window.parent.recognition.start();
+                }).catch(err => { alert("Mikrofon izni verilmedi be gardaş!"); });
             }
+        });
+
+        window.parent.document.addEventListener('DurdurRitimMic', function () {
+            if(window.parent.recognition) { try { window.parent.recognition.abort(); } catch(e){} }
+            if(window.parent.audioContext) { try { window.parent.audioContext.close(); } catch(e){} }
+            window.parent.recognition = null;
+            window.parent.analyser = null;
+            window.parent.audioContext = null;
         });
     }
     </script>
     """
-    components.html(JS_DIREK_MAN_MIC, height=0)
+    components.html(JS_RITIM_MIC, height=0)
 
-    # TAM İSTEDİĞİN DÜZEN: SOLDA NORMAL MİKROFON - ORTADA MESAJ KUTUSU - SAĞDA DİP DİPE İKİ OYUN
-    c_mic, c_chat, c_g1, c_g2 = st.columns([0.08, 0.80, 0.06, 0.06])
+    # TASARIM: SOLDA NORMAL MİKROFON - ORTADA CHAT - SAĞDA SIFIR BOŞLUKLU DİP DİPE OYUNLAR
+    c_mic, c_chat, c_g1, c_g2 = st.columns([0.10, 0.78, 0.06, 0.06])
     
     with c_mic:
-        # Sol Taraf: Yuvarlaktan çıkmış, normal haline dönen mikrofon butonu
-        mic_simge = "🔴 DİNLEYOR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
-        mic_div_class = "sol-normal-mic-aktif" if st.session_state.mic_aktif else "sol-normal-mic"
+        # Sol Taraf: Bas-Durdur özellikli normal mikrofon butonu (Kırmızılık tamamen kaldırıldı)
+        mic_simge = "⏹️ DURDUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
         
-        st.markdown(f'<div class="{mic_div_class}">', unsafe_allow_html=True)
-        if st.button(mic_simge, key="normal_mic_tasarim", help="Bas ve Konuş be Gardaşşş!"):
-            st.session_state.mic_aktif = True
-            st.markdown("""<script>const evt = new CustomEvent('TetikleDirekMic'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
-            st.rerun()
+        st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
+        if st.button(mic_simge, key="normal_mic_tasarim", help="Bas konuş, tekrar bas durdur be gardaş!"):
+            if st.session_state.mic_aktif:
+                st.session_state.mic_aktif = False
+                st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('DurdurRitimMic'));</script>""", unsafe_allow_html=True)
+                st.rerun()
+            else:
+                st.session_state.mic_aktif = True
+                st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('BaslatRitimMic'));</script>""", unsafe_allow_html=True)
+                st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_chat:
-        # Orta Taraf: Mesaj kutusu
+        # Orta Taraf: Yazı alanı
         yazi_soru = st.chat_input("Buraya yaz veya soldaki butona basıp direkt konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
             st.session_state.mic_aktif = False 
+            st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('DurdurRitimMic'));</script>""", unsafe_allow_html=True)
             
     with c_g1:
-        # Sağ Taraf 1: Dip dipe duran Erkek Oyunu Butonu
+        # Sağ Taraf: Dip dipe yapışık Erkek Oyunu Butonu
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
         if st.button("🏎️", key="rk_game", help="Erkek Oyunu (BMW M3) Başlat!"):
             st.session_state.aktif_oyun = "erkek"
@@ -237,18 +276,32 @@ if st.session_state.aktif_oyun is None:
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_g2:
-        # Sağ Taraf 2: Hemen yanındaki yapışık Kız Oyunu Butonu
+        # Sağ Taraf: Sıfır boşlukla hemen yanındaki Kız Oyunu Butonu
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
         if st.button("🌌", key="kz_game", help="Kız Oyunu (Astro-Aura) Başlat!"):
             st.session_state.aktif_oyun = "kiz"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ALTTAN ÇIKAN SES ALGILAMA BİLGİ PANELİ
+    # ALTTAN ÇIKAN SES ALGISI VE BAĞIRDIKÇA YÜKSELEN ENERJİK RİTİM PANELI (HTML EQUALIZER)
     if st.session_state.mic_aktif:
-        st.info("🎙️ Ses algılama sistemi devrede... Dinleniyor be gardaşşşşş!")
+        ritim_html = """
+        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 6px; height: 75px; width: 100%; background: rgba(15, 23, 42, 0.9); border-radius: 12px; border: 1px solid #3b82f6; padding-bottom: 10px; margin-top:10px;">
+            <div id="ritimBar1" style="width: 12px; height: 10px; background: #3b82f6; border-radius: 3px; transition: height 0.05s ease;"></div>
+            <div id="ritimBar2" style="width: 12px; height: 15px; background: #60a5fa; border-radius: 3px; transition: height 0.05s ease;"></div>
+            <div id="ritimBar3" style="width: 12px; height: 8px; background: #93c5fd; border-radius: 3px; transition: height 0.05s ease;"></div>
+            <div id="ritimBar4" style="width: 12px; height: 20px; background: #60a5fa; border-radius: 3px; transition: height 0.05s ease;"></div>
+            <div id="ritimBar5" style="width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; transition: height 0.05s ease;"></div>
+        </div>
+        """
+        st.components.v1.html(ritim_html, height=85)
 
-    # Girdi gelirse sistemi çalıştır
+    # Gizli tetikleyici (Konuşma bittiğinde ritmi kapatmak için)
+    if "KapatRitimKlavuz" in st.experimental_get_query_params():
+        st.session_state.mic_aktif = False
+        st.rerun()
+
+    # Girdi algılandıysa yapay zekayı ateşle
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
