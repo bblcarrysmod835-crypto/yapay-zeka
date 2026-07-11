@@ -1,5 +1,5 @@
 # 1. ADIM: Sınırsız evrensel beyni ve esprileri çalıştıracak olan dev yapay zeka kütüphanesini Colab'a kuruyoruz
-!pip install -q g4f
+
 
 import time
 import sys
