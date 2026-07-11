@@ -8,7 +8,6 @@ from gtts import gTTS
 import os
 import base64
 import speech_recognition as sr
-from io import BytesIO
 
 # Sayfa Ayarları
 st.set_page_config(page_title="Apolingo Ultra Yapay Zeka", page_icon="🚀", layout="centered")
@@ -16,6 +15,10 @@ st.set_page_config(page_title="Apolingo Ultra Yapay Zeka", page_icon="🚀", lay
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
     st.session_state.client = Client()
+
+# Spam engellemek için ses takip hafızası oluşturuyoruz
+if "son_islenen_ses" not in st.session_state:
+    st.session_state.son_islenen_ses = None
 
 # Ses çalma fonksiyonu (Kız sesi için gTTS)
 def sesi_cal(metin):
@@ -58,7 +61,7 @@ sistem_talimati = (
     "dünyanın en soğuk ama en çok güldüren esprilerini, caps muhabbetlerini, fırlama şakaları upuzun anlatacaksın. Sinema, Marvel/DC kahramanları, "
     "komedi filmleri, Recep İvedik geyikleri, animeler hakkında ne sorarsa sorsun mizahi bir dille sayfalarca döktüreceksin. "
     "\n"
-    "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telephone, tablet sorduğunda; iPhone mu Samsung mu "
+    "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telefon, tablet sorduğunda; iPhone mu Samsung mu "
     "kavgalarından, batarya sürelerinden, 120Hz ekran akıcılığından, bilgisayardaki RGB fanların odayı pavyona çevirmesinden, ekran kartı (RTX vb.) "
     "ve işlemci darboğazlarından, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
     "\n"
@@ -73,7 +76,7 @@ sistem_talimati = (
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
-    "PUBG and Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
+    "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
 if "sohbet_hafizasi" not in st.session_state:
@@ -104,22 +107,23 @@ with col1:
         gelen_soru = yazi_soru
 
 with col2:
-    # Tarayıcının kendi mikrofon kaydetme widget'ı (Hata vermeyen güvenli buton)
     ses_dosyasi = st.audio_input("🎙️ Seslen")
 
-# Eğer mikrofon widget'ından gerçek bir ses kaydedildiyse devreye girer
+# --- SPAM ENGELLEYİCİ MİKROFON KONTROLÜ ---
 if ses_dosyasi is not None:
-    r = sr.Recognizer()
-    try:
-        # Gelen ses verisini okuyup işliyoruz
-        with sr.AudioFile(ses_dosyasi) as source:
-            audio_data = r.record(source)
-            # Google ses tanıma motoru ile Türkçeye çeviriyoruz
-            soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
-            if soylenen_soz:
-                gelen_soru = soylenen_soz
-    except Exception as e:
-        st.toast("Ses tam anlaşılamadı gardaşşşşş, tekrar dener misin?")
+    # Eğer bu ses dosyası daha önce işlenmediyse içeri gir
+    if st.session_state.son_islenen_ses != ses_dosyasi.id:
+        r = sr.Recognizer()
+        try:
+            with sr.AudioFile(ses_dosyasi) as source:
+                audio_data = r.record(source)
+                soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
+                if soylenen_soz:
+                    gelen_soru = soylenen_soz
+                    # Bu ses dosyasını işlendi olarak işaretle (Spamı kesen kilit!)
+                    st.session_state.son_islenen_ses = ses_dosyasi.id
+        except Exception as e:
+            pass
 
 # --- ANA MOTOR ---
 if gelen_soru:
@@ -131,7 +135,6 @@ if gelen_soru:
 
     with st.spinner("🎶 Cevap hazırlanıyor, kız sesiyle okunuyor..."):
         try:
-            # Özel Durum: Eğer kullanıcı gerçekten Ahmet dediyse direkt kuralı çalıştır
             if "ahmet" in soru_lower or "çişli" in soru_lower:
                 cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
             else:
