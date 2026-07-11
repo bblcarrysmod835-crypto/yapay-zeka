@@ -11,7 +11,7 @@ import speech_recognition as sr
 import streamlit.components.v1 as components
 
 # Sayfa Ayarları (Geniş ekran düzeni)
-st.set_page_config(page_title="Apolingo Ultra Costa AI & Game", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Apolingo Ultra Costa AI & 3D Game", page_icon="🚀", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
@@ -68,7 +68,7 @@ sistem_talimati = (
     "\n"
     "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telephone, tablet sorduğunda; iPhone mu Samsung mu "
     "kavgalarından, batarya sürelerinden, 120Hz ekran akıcılığından, bilgisayardaki RGB fanların odayı pavyona çevirmesinden, ekran kartı (RTX vb.) "
-    "ve işlemci darboğazlarından, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
+    "ve işlemcibadge'lerinden, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
     "\n"
     "7) ODA TASARIMI, DUVAR RENKLERİ VEYA SETUP REHBERİ: Kullanıcı odasını boyatmak istediğinde, duvar rengi sorduğunda "
     "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini ve kablo gizlemeyi anlatacaksın. "
@@ -165,138 +165,202 @@ with sol_taraf:
                 pass
 
 # ==========================================================================================
-# SAĞ PANEL - SEÇİMLİ VE GİZLENEBİLİR OYUN SAHASI (GERÇEK BARBIE TASARIMLI)
+# SAĞ PANEL - DEVRİM NİTELİĞİNDE 3D WEBGL OYUN MERKEZİ (THREE.JS ENTEGRELİ)
 # ==========================================================================================
 with sag_taraf:
-    st.subheader("🎮 APOLINGO OYUN MERKEZİ")
+    st.subheader("🎮 APOLINGO 3D GAME MATRIX")
     st.write("---")
     
     if st.session_state.oyun_panel_acik:
         oyun_secimi = st.radio(
-            "Gardaşşşşş ne oynamak istersin? Seçimini yap oyunun açılsın:",
-            ["Henüz Seçmedim ⏳", "🏎️ BMW M3 Otoban Makas", "👗 Barbie Kıyafet Tasarımı"],
+            "Gardaşşşşş ne oynamak istersin? Seçimini yap 3D motor ateşlensin:",
+            ["Henüz Seçmedim ⏳", "🏎️ 3D BMW M3 Otoban Makas", "👗 3D Barbie Kıyafet Tasarımı"],
             index=0
         )
         st.write("---")
 
-        if oyun_secimi == "🏎️ BMW M3 Otoban Makas":
-            st.markdown("**🕹️ YÖNLER:** **A/D** veya **Sol/Sağ Ok Tuşları** ile BMW M3'ü kontrol et, makasları diz!")
+        if oyun_secimi == "🏎️ 3D BMW M3 Otoban Makas":
+            st.markdown("**🕹️ 3D KONTROLLER:** Klavyeden **A / D** veya **Sol / Sağ Ok Tuşları** ile gümüş renkli 3D BMW M3'ü sağa sola kır, diğer arabalara makas at!")
             
-            bmw_oyun_html = """
-            <div style="text-align:center;">
-                <canvas id="roadCanvas" width="340" height="440" style="border:4px solid #1a1a1a; background:#222; border-radius:10px;"></canvas>
-                <h3 id="scoreBoard" style="color:white; font-family:sans-serif; margin-top:5px;">Makas Skoru: 0</h3>
-                <button onclick="resetGame()" style="padding:8px 15px; font-weight:bold; background:#e60000; color:white; border:none; border-radius:5px; cursor:pointer;">Yeniden Gazla! 🏎️</button>
+            # THREE.JS ile 3D Araba Makas Atma Oyunu
+            bmw_3d_html = """
+            <div style="text-align:center; background:#111; padding:10px; border-radius:10px;">
+                <div id="game3dContainer" style="width:100%; height:400px; border-radius:8px; overflow:hidden;"></div>
+                <h3 id="score3dBoard" style="color:white; font-family:sans-serif; margin:10px 0;">3D Makas Skoru: 0</h3>
+                <button onclick="location.reload()" style="padding:10px 20px; font-weight:bold; background:#e60000; color:white; border:none; border-radius:5px; cursor:pointer;">Kazadan Sonra Yeniden Gazla! 🏎️</button>
             </div>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
             <script>
-                const canvas = document.getElementById("roadCanvas"); const ctx = canvas.getContext("2d");
-                let score = 0; let gameOver = false;
-                let player = { x: 150, y: 350, w: 35, h: 65, speed: 6 };
-                let enemies = [{ x: 60, y: -100, w: 35, h: 60, speed: 4, color: '#ffcc00' }, { x: 160, y: -300, w: 35, h: 60, speed: 5, color: '#00ccff' }];
-                let keys = {}; window.addEventListener("keydown", e => { keys[e.key] = true; }); window.addEventListener("keyup", e => { keys[e.key] = false; });
-                function resetGame() { score = 0; gameOver = false; player.x = 150; enemies[0].y = -100; enemies[1].y = -300; }
-                function loop() {
-                    if(!gameOver) {
-                        if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(player.x > 40) player.x -= player.speed; }
-                        if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(player.x < 265) player.x += player.speed; }
-                        ctx.fillStyle = "#333"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        ctx.fillStyle = "#fff"; ctx.fillRect(35, 0, 5, canvas.height); ctx.fillRect(300, 0, 5, canvas.height);
-                        ctx.fillStyle = "#fffa"; for(let i=0; i<canvas.height; i+=40) { ctx.fillRect(120, (i + (score*4)) % canvas.height, 4, 20); ctx.fillRect(210, (i + (score*4)) % canvas.height, 4, 20); }
-                        ctx.fillStyle = "#a6b4c9"; ctx.fillRect(player.x, player.y, player.w, player.h);
-                        ctx.fillStyle = "#0066cc"; ctx.fillRect(player.x+5, player.y, 4, player.h); ctx.fillStyle = "#111"; ctx.fillRect(player.x+4, player.y+15, player.w-8, 15);
-                        enemies.forEach(enemy => {
-                            enemy.y += enemy.speed; if(enemy.y > canvas.height) { enemy.y = -70; enemy.x = 45 + Math.random() * 210; score++; document.getElementById("scoreBoard").innerText = "Makas Skoru: " + score; }
-                            ctx.fillStyle = enemy.color; ctx.fillRect(enemy.x, enemy.y, enemy.w, enemy.h); ctx.fillStyle = "#111"; ctx.fillRect(enemy.x+4, enemy.y+25, enemy.w-8, 12);
-                            if(player.x < enemy.x + enemy.w && player.x + player.w > enemy.x && player.y < enemy.y + enemy.h && player.y + player.h > enemy.y) { gameOver = true; }
-                        });
-                    } else { ctx.fillStyle = "rgba(0,0,0,0.8)"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "red"; ctx.font = "bold 24px sans-serif"; ctx.fillText("BMW M3 PERT OLDU!", 50, 200); }
-                    requestAnimationFrame(loop);
-                }
-                loop();
-            </script>
-            """
-            components.html(bmw_oyun_html, height=530)
+                const container = document.getElementById("game3dContainer");
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0x1a1a1a);
+                scene.fog = new THREE.FogExp2(0x1a1a1a, 0.015);
 
-        elif oyun_secimi == "👗 Barbie Kıyafet Tasarımı":
-            st.markdown("**✨ Barbie Manken Gardırobu:** Kıyafetlerin üzerine tıkla, gerçek elbiseler Barbie'nin üzerinde anında canlansın!")
-            
-            # Tamamen Geliştirilmiş, Görsel Giydirmeli Barbie Oyunu
-            barbie_gorsel_html = """
-            <div style="text-align:center; background:#fff0f5; padding:20px; border-radius:15px; border:4px solid #ff69b4; font-family:sans-serif; max-width:440px; margin:0 auto;">
-                <div style="display:flex; justify-content: space-between; align-items:flex-start;">
-                    
-                    <!-- GERÇEK BARBIE MANKEN SİLÜETİ -->
-                    <div style="width:160px; height:320px; background:#ffe4e1; border-radius:50px 50px 20px 20px; position:relative; border:2px solid #ffb6c1; overflow:hidden; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
-                        <!-- Barbie Altın Sarısı Saçları -->
-                        <div style="position:absolute; top:12px; left:40px; width:80px; height:65px; background:#ffd700; border-radius:40px 40px 10px 10px; z-index:1;"></div>
-                        <!-- Barbie Kafası ve Yüzü -->
-                        <div style="position:absolute; top:25px; left:57px; width:46px; height:46px; background:#ffdab9; border-radius:50%; z-index:2; border:1px solid #ffb6c1; text-align:center; font-size:16px; line-height:44px;">👩🏼</div>
-                        <!-- Barbie Boynu -->
-                        <div style="position:absolute; top:68px; left:73px; width:14px; height:15px; background:#ffdab9; z-index:1;"></div>
-                        <!-- Barbie Vücut / Gövde Yapısı -->
-                        <div style="position:absolute; top:80px; left:45px; width:70px; height:180px; background:#ffdab9; border-radius:20px; z-index:1;"></div>
-                        
-                        <!-- ÜSTÜNE GELECEK DİNAMİK KIYAFET KATMANLARI (BOŞ BAŞLAR, SEÇİLİNCE ÇİZİLİR) -->
-                        <div id="layerTop" style="position:absolute; top:80px; left:42px; width:76px; height:65px; z-index:3; transition: 0.2s; border-radius:5px;"></div>
-                        <div id="layerBottom" style="position:absolute; top:140px; left:45px; width:70px; height:100px; z-index:3; transition: 0.2s; border-radius:0 0 15px 15px;"></div>
-                    </div>
-                    
-                    <!-- EFSANE KIYAFET DOLABI BUTONLARI -->
-                    <div style="text-align:left; width:220px; padding-left:15px;">
-                        <h4 style="color:#ff1493; margin:0 0 8px 0; border-bottom:2px solid #ff69b4; padding-bottom:3px;">👚 Üst Kıyafetler</h4>
-                        <button onclick="wearTop('pinkDress')" style="width:100%; padding:8px; background:#ff69b4; color:white; border:none; margin-bottom:5px; border-radius:6px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1);">💖 Pembe Şık Elbise</button>
-                        <button onclick="wearTop('purpleTop')" style="width:100%; padding:8px; background:#8a2be2; color:white; border:none; margin-bottom:5px; border-radius:6px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1);">🔮 Mor Gece Bluzu</button>
-                        <button onclick="wearTop('blackCrop')" style="width:100%; padding:8px; background:#222; color:white; border:none; margin-bottom:12px; border-radius:6px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1);">🖤 Tarz Siyah Crop</button>
-                        
-                        <h4 style="color:#ff1493; margin:0 0 8px 0; border-bottom:2px solid #ff69b4; padding-bottom:3px;">👖 Alt Kıyafetler</h4>
-                        <button onclick="wearBottom('jeanSkirt')" style="width:100%; padding:8px; background:#4682b4; color:white; border:none; margin-bottom:5px; border-radius:6px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1);">💙 Havalı Kot Etek</button>
-                        <button onclick="wearBottom('tutuPink')" style="width:100%; padding:8px; background:#ffb6c1; color:black; border:none; margin-bottom:5px; border-radius:6px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1);">🌸 Kabarık Tütü Etek</button>
-                        <button onclick="wearBottom('whitePants')" style="width:100%; padding:8px; background:#fff; color:#333; border:1px solid #ccc; margin-bottom:5px; border-radius:6px; font-weight:bold; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,0.1);">⚪ Klasik Beyaz Şort</button>
-                    </div>
-                </div>
-                
-                <h3 id="statusText" style="color:#db7093; margin-top:15px; font-size:16px; background:#fff; padding:8px; border-radius:8px;">👗 Barbie'yi Giydir Be Gardaşşşşş!</h3>
-            </div>
-            
-            <script>
-                function wearTop(type) {
-                    const topLayer = document.getElementById("layerTop");
-                    if(type === 'pinkDress') {
-                        topLayer.style.background = "linear-gradient(to bottom, #ff69b4, #ff1493)";
-                        topLayer.style.border = "2px solid #fff";
-                    } else if(type === 'purpleTop') {
-                        topLayer.style.background = "linear-gradient(to bottom, #9370db, #8a2be2)";
-                        topLayer.style.border = "2px solid #fff";
-                    } else if(type === 'blackCrop') {
-                        topLayer.style.background = "#222222";
-                        topLayer.style.border = "1px solid #444";
+                const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 400, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(container.clientWidth, 400);
+                container.appendChild(renderer.domElement);
+
+                // Işıklandırma
+                const light = new THREE.DirectionalLight(0xffffff, 1.2);
+                light.position.set(0, 20, 10).normalize();
+                scene.add(light);
+                scene.add(new THREE.AmbientLight(0x404040));
+
+                // 3D Sonsuz Otoban Pisti
+                const roadGeo = new THREE.PlaneGeometry(20, 1000);
+                const roadMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+                const road = new THREE.Mesh(roadGeo, roadMat);
+                road.rotation.x = -Math.PI / 2;
+                scene.add(road);
+
+                // Bizim Efsanevi 3D BMW M3 (Gümüş Gri Kutu Gövde Üzerine Detaylar)
+                const bmwGeo = new THREE.BoxGeometry(1.6, 1, 3);
+                const bmwMat = new THREE.MeshLambertMaterial({ color: 0xc0c0c0 }); // Metalik gümüş
+                const playerBMW = new THREE.Mesh(bmwGeo, bmwMat);
+                playerBMW.position.set(0, 0.5, -5);
+                scene.add(playerBMW);
+
+                // Trafikteki 3D Arabalar
+                let enemies = [];
+                const colors = [0xffcc00, 0x00ccff, 0xff3333];
+                for(let i=0; i<3; i++) {
+                    let enGeo = new THREE.BoxGeometry(1.6, 1, 3);
+                    let enMat = new THREE.MeshLambertMaterial({ color: colors[i] });
+                    let enMesh = new THREE.Mesh(enGeo, enMat);
+                    enMesh.position.set((Math.random() - 0.5) * 12, 0.5, -50 - (i * 30));
+                    scene.add(enMesh);
+                    enemies.push(enMesh);
+                }
+
+                // Kamera yerleşimi (Araba arkası kokpit/takip açısı)
+                camera.position.set(0, 4, 3);
+                camera.lookAt(new THREE.Vector3(0, 1, -15));
+
+                let score = 0;
+                let gameOver = false;
+                let keys = {};
+
+                window.addEventListener("keydown", e => keys[e.key] = true);
+                window.addEventListener("keyup", e => keys[e.key] = false);
+
+                function animate() {
+                    if (!gameOver) {
+                        // BMW Kontrol mekanizması
+                        if (keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(playerBMW.position.x > -5) playerBMW.position.x -= 0.15; }
+                        if (keys["ArrowRight"] || keys["d"] || keys["D"]) { if(playerBMW.position.x < 5) playerBMW.position.x += 0.15; }
+
+                        // Trafik akış motoru
+                        enemies.forEach(en => {
+                            en.position.z += 0.4 + (score * 0.02); // Skor arttıkça hızlanır!
+                            if (en.position.z > 5) {
+                                en.position.z = -100 - Math.random()*20;
+                                en.position.x = (Math.random() - 0.5) * 10;
+                                score++;
+                                document.getElementById("score3dBoard").innerText = "3D Makas Skoru: " + score;
+                            }
+
+                            // 3D Çarpışma Kutusu Algılaması (AABB)
+                            if (Math.abs(playerBMW.position.x - en.position.x) < 1.5 && Math.abs(playerBMW.position.z - en.position.z) < 3) {
+                                gameOver = true;
+                                document.getElementById("score3dBoard").innerHTML = "<span style='color:red;'>💥 BMW M3 PERT OLDU! 💥</span>";
+                            }
+                        });
                     }
-                    checkStyleStatus();
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(animate);
                 }
-                
-                function wearBottom(type) {
-                    const btmLayer = document.getElementById("layerBottom");
-                    if(type === 'jeanSkirt') {
-                        btmLayer.style.background = "linear-gradient(to bottom, #4682b4, #1e90ff)";
-                        btmLayer.style.border = "2px solid #fff";
-                    } else if(type === 'tutuPink') {
-                        btmLayer.style.background = "linear-gradient(to bottom, #ffb6c1, #ff69b4)";
-                        btmLayer.style.border = "2px solid #fff";
-                    } else if(type === 'whitePants') {
-                        btmLayer.style.background = "#f8f9fa";
-                        btmLayer.style.border = "1px solid #ddd";
-                    }
-                    checkStyleStatus();
-                }
-                
-                function checkStyleStatus() {
-                    document.getElementById("statusText").innerHTML = "✨ <b>Muazzam Kombin!</b> Barbie Resmen Podyumu Sallıyor! 💅💖";
-                }
+                animate();
             </script>
             """
-            components.html(barbie_gorsel_html, height=420)
+            components.html(bmw_3d_html, height=520)
+
+        elif oyun_secimi == "👗 3D Barbie Kıyafet Tasarımı":
+            st.markdown("**✨ 3D Barbie Tasarım Podyumu:** Gardıroptan butonlara basarak Barbie'ye elbiseler giydir, 3D model podyumda anlık olarak değişsin!")
+            
+            # THREE.JS ile 3D Dönen Barbie Modeli Kıyafet Giydirme Simülatörü
+            barbie_3d_html = """
+            <div style="text-align:center; background:#fff0f5; padding:15px; border-radius:15px; border:4px solid #ff69b4; display:flex; justify-content:space-between; align-items:center;">
+                
+                <!-- 3D PODYUM ALANI -->
+                <div id="barbie3dCanvas" style="width:200px; height:340px; background:#ffe4e1; border-radius:20px; overflow:hidden;"></div>
+                
+                <!-- DİNAMİK GARDIROP BUTONLARI -->
+                <div style="text-align:left; width:200px;">
+                    <h4 style="color:#ff1493; margin:0 0 10px 0; border-bottom:2px solid #ff69b4;">👗 3D Elbise Seçimi</h4>
+                    <button onclick="change3DStyle(0xff69b4, '💖 Pembe Kokteyl Elbisesi')" style="width:100%; padding:10px; background:#ff69b4; color:white; border:none; margin-bottom:6px; border-radius:6px; font-weight:bold; cursor:pointer;">💖 Pembe Elbise</button>
+                    <button onclick="change3DStyle(0x8a2be2, '🔮 Mor Parti Elbisesi')" style="width:100%; padding:10px; background:#8a2be2; color:white; border:none; margin-bottom:6px; border-radius:6px; font-weight:bold; cursor:pointer;">🔮 Mor Elbise</button>
+                    <button onclick="change3DStyle(0x222222, '🖤 Asil Siyah Gece Kıyafeti')" style="width:100%; padding:10px; background:#222; color:white; border:none; margin-bottom:6px; border-radius:6px; font-weight:bold; cursor:pointer;">🖤 Siyah Elbise</button>
+                    <button onclick="change3DStyle(0x4682b4, '💙 Günlük Denim Tarzı')" style="width:100%; padding:10px; background:#4682b4; color:white; border:none; margin-bottom:6px; border-radius:6px; font-weight:bold; cursor:pointer;">💙 Denim Kombin</button>
+                    
+                    <p id="barbieLabel" style="color:#ff1493; font-weight:bold; font-size:12px; margin-top:10px; text-align:center;">Kombin Seçimi Bekleniyor...</p>
+                </div>
+            </div>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+            <script>
+                const bContainer = document.getElementById("barbie3dCanvas");
+                const bScene = new THREE.Scene();
+                bScene.background = new THREE.Color(0xffe4e1);
+
+                const bCamera = new THREE.PerspectiveCamera(50, 200 / 340, 0.1, 100);
+                const bRenderer = new THREE.WebGLRenderer({ antialias: true });
+                bRenderer.setSize(200, 340);
+                bContainer.appendChild(bRenderer.domElement);
+
+                // Aydınlatma Şovları
+                const bLight = new THREE.DirectionalLight(0xffffff, 1.5);
+                bLight.position.set(5, 10, 5).normalize();
+                bScene.add(bLight);
+                bScene.add(new THREE.AmbientLight(0x555555));
+
+                // 3D Barbie Silüeti Tasarımı (Kafa, Saç ve Elbise Katmanları)
+                const group = new THREE.Group();
+
+                // Barbie Kafası
+                const headGeo = new THREE.SphereGeometry(0.5, 32, 32);
+                const headMat = new THREE.MeshLambertMaterial({ color: 0xffdab9 });
+                const head = new THREE.Mesh(headGeo, headMat);
+                head.position.y = 1.6;
+                group.add(head);
+
+                // Barbie'nin Efsanevi 3D Altın Sarısı Saçları
+                const hairGeo = new THREE.SphereGeometry(0.54, 32, 32, 0, Math.PI*2, 0, Math.PI/2);
+                const hairMat = new THREE.MeshLambertMaterial({ color: 0xffd700 });
+                const hair = new THREE.Mesh(hairGeo, hairMat);
+                hair.position.y = 1.7;
+                group.add(hair);
+
+                // Barbie'nin Giydirilebilir 3D Gövde/Elbise Silindiri
+                const dressGeo = new THREE.CylinderGeometry(0.4, 0.7, 2, 32);
+                const dressMat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // İlk başta beyaz mayo
+                const dressMesh = new THREE.Mesh(dressGeo, dressMat);
+                dressMesh.position.y = 0.4;
+                group.add(dressMesh);
+
+                bScene.add(group);
+                bCamera.position.set(0, 1, 4);
+                bCamera.lookAt(0, 1, 0);
+
+                // İnteraktif Kıyafet Değiştirme Fonksiyonu
+                function change3DStyle(colorHex, name) {
+                    dressMat.color.setHex(colorHex);
+                    document.getElementById("barbieLabel").innerText = name + " Giydirildi! ✨";
+                }
+
+                // Podyumda Sürekli Dönen 3D Barbie Efekti
+                function bAnimate() {
+                    group.rotation.y += 0.015; // Kendi etrafında zarifçe döner
+                    bRenderer.render(bScene, bCamera);
+                    requestAnimationFrame(bAnimate);
+                }
+                bAnimate();
+            </script>
+            """
+            components.html(barbie_3d_html, height=390)
             
         else:
-            st.info("🎯 Panel açıldı be gardaşşşşş! Şimdi üstteki butonlardan oyununu seç, anında buraya gelsin!")
+            st.info("🎯 Panel açıldı be gardaşşşşş! Şimdi üstteki butonlardan oyununu seç, 3D motor anında yüklensin!")
     else:
         st.warning("🕹️ Oyun alanı kilitli. Sol tarafta mikrofonun yanındaki '🎮 Oyun Modu' butonuna basarak eğlenceyi başlatabilirsin!")
