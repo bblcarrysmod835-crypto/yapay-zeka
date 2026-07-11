@@ -174,7 +174,6 @@ if st.session_state.aktif_oyun is None:
                 }
             };
             
-            // Konuşma bittiğinde veya hata alındığında kırmızı buton durumunu sıfırlamak için tetik at
             recognition.onend = () => {
                 window.parent.document.dispatchEvent(new CustomEvent('MicKapatSinyal'));
             };
@@ -191,11 +190,6 @@ if st.session_state.aktif_oyun is None:
     """
     components.html(JS_DIREK_MAN_MIC, height=0)
 
-    # JavaScript'ten gelen kapatma sinyalini dinleyen mekanizma
-    if "mic_kapat_tetik" in st.session_state and st.session_state.mic_kapat_tetik:
-        st.session_state.mic_aktif = False
-        st.session_state.mic_kapat_tetik = False
-
     # Chat Giriş Satırı ve Hemen Yanına Yakınlaştırılmış Orijinal Yuvarlak Butonlar
     c1, c2, c3, c4 = st.columns([0.85, 0.05, 0.05, 0.05])
     with c1:
@@ -207,15 +201,13 @@ if st.session_state.aktif_oyun is None:
         # Mikrofon Butonu (Basınca kırmızıya döner, konuşma bitince direk man fırlatır)
         mic_simge = "🔴" if st.session_state.mic_aktif else "🎙️"
         
-        # Dinamik class enjeksiyonu için container yapısı
-        mic_container = st.container()
         if st.session_state.mic_aktif:
             st.markdown('<div class="mic-kirmizi">', unsafe_allow_html=True)
             
         if st.button(mic_simge, help="Tıkla ve Konuş be Gardaşşş! Konuşman bittiği an direkt gider."):
             st.session_state.mic_aktif = True
             st.markdown("""<script>const evt = new CustomEvent('TetikleDirekMic'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
-            st.invalidate() # Butonun anında kırmızılaşması için sayfayı hafifçe tazele
+            st.rerun() # Hatalı fonksiyon yerine güvenli tetikleyici eklendi!
             
         if st.session_state.mic_aktif:
             st.markdown('</div>', unsafe_allow_html=True)
