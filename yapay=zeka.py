@@ -87,23 +87,20 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ: GİRİŞ KUTUSU BEYAZ YAPILDI, SİMSİYAH EFEKTLER KALDIRILDI
+# CSS DÜZENLEMELERİ (KIRMIZI SIDEBAR VE SAF BEYAZ METİN ALANLARI)
 # ==========================================================================================
 st.markdown("""
     <style>
     /* 1. Genel Arka Plan */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
-        background-color: #120a06 !important;
+        background-color: #0b0705 !important;
         background-image: 
-            radial-gradient(circle at 0% 0%, #613b24 0%, transparent 45%),
-            radial-gradient(circle at 100% 0%, #613b24 0%, transparent 45%),
-            radial-gradient(circle at 0% 100%, #3d2212 0%, transparent 45%),
-            radial-gradient(circle at 100% 100%, #3d2212 0%, transparent 45%) !important;
+            radial-gradient(circle at 100% 0%, #3a1c11 0%, transparent 50%),
+            radial-gradient(circle at 0% 100%, #220e08 0%, transparent 50%) !important;
         background-attachment: fixed !important;
         color: #ffffff !important;
     }
 
-    /* Genel Metin Elemanları */
     p, span, label, div {
         color: #ffffff !important;
     }
@@ -111,120 +108,71 @@ st.markdown("""
     /* 2. ANA BAŞLIK */
     .havali-ana-baslik {
         text-align: center !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 30px !important; 
-        font-weight: 800 !important;
-        letter-spacing: 2px !important;
+        font-family: 'Segoe UI', sans-serif !important;
+        font-size: 32px !important; 
+        font-weight: 900 !important;
+        letter-spacing: 3px !important;
         color: #ffffff !important; 
         margin-top: 15px !important;
-        margin-bottom: 5px !important;
     }
     
     .havali-alt-yazi {
         text-align: center !important;
-        color: #ffffff !important;
+        color: #cccccc !important;
         font-size: 14px !important;
         margin-bottom: 25px !important;
-        opacity: 0.9;
-        font-weight: 500;
     }
     
-    /* 3. SOL ÜÇ ÇİZGİ BUTONU */
-    button[data-testid="stSidebarCollapseButton"] {
-        background-color: #1a1a1a !important;
-        border-radius: 50% !important;
-        border: 2px solid #ffffff !important;
-        padding: 5px !important;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6) !important;   
-        transition: all 0.3s ease-in-out !important;
-    }
-    
-    button[data-testid="stSidebarCollapseButton"]:hover {
-        transform: rotate(90deg) scale(1.15) !important;
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.9) !important;
-    }
-    
-    button[data-testid="stSidebarCollapseButton"] svg {
-        fill: #ffffff !important;
-        color: #ffffff !important;
-    }
-    
-    /* 4. SIDEBAR OYUN PANELİ: TONLAMALI PREMİUM KIRMIZI */
+    /* 3. SIDEBAR: TONLAMALI PREMİUM KIRMIZI */
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
-        background: linear-gradient(180deg, #4a0000 0%, #220000 50%, #050000 100%) !important;
-        border-right: 2px solid #8b0000 !important;
-        box-shadow: 5px 0 25px rgba(139, 0, 0, 0.3) !important;
+        background: linear-gradient(180deg, #5a0000 0%, #2a0000 50%, #0d0000 100%) !important;
+        border-right: 3px solid #b30000 !important;
+        box-shadow: 8px 0 30px rgba(179, 0, 0, 0.25) !important;
     }
     
     [data-testid="stSidebar"] * {
         color: #ffffff !important;
     }
-
-    div[data-testid="stRadio"] label div[data-slide="true"] {
-        background-color: #ff3333 !important;
-    }
     
-    /* 5. SOHBET BALONLARI */
+    /* 4. SOHBET BALONLARI */
     [data-testid="stChatMessage"] {
-        background-color: rgba(20, 10, 5, 0.7) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        border-radius: 16px !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
-        backdrop-filter: blur(8px);
+        background-color: rgba(25, 15, 10, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
         margin-bottom: 15px !important;
     }
-
-    [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] span {
-        color: #ffffff !important;
-    }
     
-    /* 6. MESAJ GİRİŞ KUTUSU - ARTIK NORMAL VE BEYAZ */
+    /* 5. MESAJ GİRİŞ KUTUSU - SAF BEYAZ */
     textarea[data-testid="stChatInputTextArea"] {
-        color: #111111 !important; /* Beyaz zeminde rahat okunsun diye koyu yazı */
-        border-radius: 14px !important;
-        font-size: 16px !important;
-        background-color: #ffffff !important; /* KUTUNUN İÇİ NORMAL SAF BEYAZ */
-        border: 2px solid #cccccc !important;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
-    }
-    
-    textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #999999 !important;
+        color: #111111 !important;
+        border-radius: 12px !important;
         background-color: #ffffff !important;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15) !important;
+        border: 2px solid #dddddd !important;
     }
-
-    /* Giriş alanındaki placeholder (ipucu) yazısının rengi */
+    textarea[data-testid="stChatInputTextArea"]:focus {
+        border-color: #8b0000 !important;
+    }
     textarea[data-testid="stChatInputTextArea"]::placeholder {
-        color: #666666 !important;
-        opacity: 0.8 !important;
+        color: #777777 !important;
     }
-
-    /* Mikrofon Yuvası */
     .stAudioInput {
         background-color: #ffffff !important;
-        border-radius: 50% !important;
-        border: 2px solid #cccccc !important;
-    }
-
-    /* Spinner Dönüşü */
-    div[data-testid="stSpinner"] i {
-        border-top-color: #ff3333 !important;
+        border: 2px solid #dddddd !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================================================================
-# SOL TARAFTAKİ MENÜ (SIDEBAR) ALANI VE OYUNLARIN BURAYA BAĞLANMASI
+# SOL TARAFTAKİ MENÜ
 # ==========================================================================================
 with st.sidebar:
-    st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("Kırmızı Tonlamalı Özel Sürüm")
+    st.markdown("## 🎮 APOLINGO ARCADE ULTRA")
+    st.markdown("**Premium Next-Gen Grafik Güncellemesi**")
     st.write("---")
     
     secilen_mod = st.radio(
         "Aparatı Seç Be Gardaşşş:",
-        ["💬 Sohbet Modu", "🏎️ BMW M3 Makas Oyunu", "🌌 Astro-Aura Kuantum Oyunu"],
+        ["💬 Sohbet Modu", "🏎️ BMW M3 Ultra Makas", "🌌 Astro-Aura Kuantum Jet"],
         index=0
     )
     
@@ -239,14 +187,13 @@ with st.sidebar:
     st.caption("👨‍💻 Kurucu: Apolingo\n\n**By Abdurrahim İriş © 2026**")
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ: SOHBET MODU
+# SOHBET MODU
 # ==========================================================================================
 if st.session_state.aktif_mod == "Sohbet":
-    st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER ARCADE AI</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş | Net Beyaz Görünüm</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER AI</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="havali-alt-yazi">Kurucu: Apolingo | Premium Engine</p>', unsafe_allow_html=True)
     st.write("---")
 
-    # Sohbet hafızasını ekrana basıyoruz
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
             with st.chat_message("user"):
@@ -256,13 +203,9 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.write(mesaj["content"])
 
     gelen_soru = None
-
-    # MİKROFON VE METİN GİRİŞİ YAN YANA
     c_mic, c_text = st.columns([0.10, 0.90])
-    
     with c_mic:
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
-        
     with c_text:
         yazi_soru = st.chat_input("Mesajını buraya yaz be gardaşşşş...")
         if yazi_soru:
@@ -277,7 +220,7 @@ if st.session_state.aktif_mod == "Sohbet":
                 if soylenen_soz:
                     gelen_soru = soylenen_soz
                     st.session_state.ses_isleme_aktif = False
-        except Exception as e:
+        except:
             pass
 
     if gelen_soru:
@@ -286,7 +229,7 @@ if st.session_state.aktif_mod == "Sohbet":
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Apolingo Panellerde Hesaplamalar Yapıyor..."):
+        with st.spinner("⚡ Hesaplamalar Yapılıyor..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
@@ -300,159 +243,307 @@ if st.session_state.aktif_mod == "Sohbet":
                 with st.chat_message("assistant"):
                     st.write(cevap)
                 st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
-                
                 st.session_state.ses_isleme_aktif = True
                 sesi_cal(cevap)
                 st.rerun()
-            except Exception as e:
+            except:
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE
+# NEXT-GEN ULTRA BMW M3 MAKAS SİMÜLATÖRÜ
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
-    st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
-    st.caption("Sol üstteki parıldayan Üç Çizgiye basarak istediğin an ana panele dönebilirsin gardaşşş!")
+    st.markdown("### 🏎️ BMW M3 Ultra-Quality Next-Gen Makas Simülatörü")
+    st.caption("A, D veya Yön Tuşları ile kontrol et. Kaliteli şeritler ve gövde fizikleri aktif!")
 
-    bmw_full_screen_html = """
-    <div style="text-align:center; background:#0d0603; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.5); user-select:none; position:relative;">
-        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(23,13,7,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
-        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(23,13,7,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
+    bmw_nextgen_html = """
+    <div style="text-align:center; background:#050201; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 30px rgba(255,0,0,0.4); user-select:none; position:relative;">
+        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(20,0,0,0.85); color:#ffffff; border:2px solid #ff3333; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 15px #ff0000;">◀</button>
+        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(20,0,0,0.85); color:#ffffff; border:2px solid #ff3333; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 15px #ff0000;">▶</button>
         <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanel" style="margin-top:15px;">
-            <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">4D Makas Skoru: 0 🌀</h2>
+            <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:30px; letter-spacing:1px;">HIGH-RES MAKAS: 0 🔥</h2>
             <div id="restartButtonContainer"></div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
-        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0503);
-        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
-        const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
-        scene.add(new THREE.AmbientLight(0x555555));
-        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x140b06, roughness: 0.5 })); scene.add(road);
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050201, 0.015);
+        
+        const camera = new THREE.PerspectiveCamera(50, container.clientWidth / 550, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(container.clientWidth, 550);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+
+        // Kaliteli Işıklandırma
+        const mainLight = new THREE.DirectionalLight(0xffffff, 2.5);
+        mainLight.position.set(5, 40, 20);
+        scene.add(mainLight);
+        
+        const ambientLight = new THREE.AmbientLight(0x221111, 1.2);
+        scene.add(ambientLight);
+
+        // Ultra Asfalt Pist
+        const roadGeo = new THREE.BoxGeometry(18, 0.1, 1000);
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x110d0c, roughness: 0.6, metalness: 0.1 });
+        const road = new THREE.Mesh(roadGeo, roadMat);
+        scene.add(road);
+
+        // Parlayan Neon Şerit Çizgileri
         let lines = [];
-        for(let i=0; i<20; i++){
-            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: '#ff3333' }));
-            lMesh.position.set(0, 0.09, -i * 30); scene.add(lMesh); lines.push(lMesh);
+        for(let i=0; i<30; i++){
+            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.12, 12), new THREE.MeshBasicMaterial({ color: 0xff1111 }));
+            lMesh.position.set(0, 0.08, -i * 25);
+            scene.add(lMesh);
+            lines.push(lMesh);
         }
+
+        // Gelişmiş BMW M3 Tasarımı (Gölgeli ve Detaylı)
         const bmwM3 = new THREE.Group();
-        const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 3.0), new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.9, roughness: 0.1 }));
-        baseMesh.position.y = 0.28; bmwM3.add(baseMesh);
-        const cabinMesh = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.45, 1.5), new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.05 }));
-        cabinMesh.position.set(0, 0.65, -0.1); bmwM3.add(cabinMesh);
-        const spMesh = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.08, 0.25), cabinMesh.material);
-        spMesh.position.set(0, 0.55, -1.35); bmwM3.add(spMesh);
-        bmwM3.position.set(0, 0, -8); scene.add(bmwM3);
-        let traffic = []; const colors = [0xffaa00, 0xff3366, 0x00ccff, 0x9933ff];
-        for(let i=0; i<4; i++){
-            let tMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.65, 2.8), new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.5 }));
-            tMesh.position.set((Math.random() - 0.5) * 11, 0.35, -50 - (i * 40)); scene.add(tMesh); traffic.push(tMesh);
+        
+        // Karoseri
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xe6e6e6, metalness: 0.8, roughness: 0.15 });
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.45, 3.4), bodyMat);
+        body.position.y = 0.35;
+        bmwM3.add(body);
+
+        // Kabin / Camlar
+        const glassMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.0, metalness: 1.0 });
+        const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.45, 1.7), glassMat);
+        cabin.position.set(0, 0.75, -0.1);
+        bmwM3.add(cabin);
+
+        // Kırmızı LED Arka Lambalar (Stop Lambaları)
+        const taillightMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const leftLight = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.1), taillightMat);
+        leftLight.position.set(-0.6, 0.45, 1.7);
+        const rightLight = leftLight.clone();
+        rightLight.position.x = 0.6;
+        bmwM3.add(leftLight, rightLight);
+
+        bmwM3.position.set(0, 0, -10);
+        scene.add(bmwM3);
+
+        // Yüksek Kaliteli Trafik Araçları
+        let traffic = [];
+        const carColors = [0xffcc00, 0x11ff11, 0x00ccff, 0xcc00ff];
+        for(let i=0; i<5; i++){
+            let tGroup = new THREE.Group();
+            let tBody = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.6, 3.0), new THREE.MeshStandardMaterial({ color: carColors[i%4], roughness: 0.2 }));
+            tBody.position.y = 0.4;
+            let tCabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.5, 1.4), glassMat);
+            tCabin.position.set(0, 0.85, -0.1);
+            tGroup.add(tBody, tCabin);
+            tGroup.position.set((Math.random() - 0.5) * 13, 0, -60 - (i * 45));
+            scene.add(tGroup);
+            traffic.push(tGroup);
         }
-        camera.position.set(0, 4.2, -1.0); camera.lookAt(new THREE.Vector3(0, 0.5, -25));
+
+        camera.position.set(0, 5.0, -2.5);
+        camera.lookAt(new THREE.Vector3(0, 0.8, -30));
+
         let score = 0; let gameOver = false; let keys = {};
-        window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
+        let rollAngle = 0; // Dönüş esneme açısı
+        window.addEventListener("keydown", e => keys[e.key] = true);
+        window.addEventListener("keyup", e => keys[e.key] = false);
+
         let touchLeft = false, touchRight = false;
-        const bLeft = document.getElementById("btnLeft"); const bRight = document.getElementById("btnRight");
-        bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
-        bLeft.addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; }); bLeft.addEventListener("touchend", () => touchLeft = false);
-        bRight.addEventListener("mousedown", () => touchRight = true); bRight.addEventListener("mouseup", () => touchRight = false);
-        bRight.addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; }); bRight.addEventListener("touchend", () => touchRight = false);
+        document.getElementById("btnLeft").addEventListener("pointerdown", () => touchLeft = true);
+        document.getElementById("btnLeft").addEventListener("pointerup", () => touchLeft = false);
+        document.getElementById("btnRight").addEventListener("pointerdown", () => touchRight = true);
+        document.getElementById("btnRight").addEventListener("pointerup", () => touchRight = false);
 
         function animate() {
             if(!gameOver) {
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
-                if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
-                lines.forEach(l => { l.position.z += 0.7 + (score * 0.02); if(l.position.z > 10) l.position.z = -280; });
-                let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.04, 0.02 * phase, 0.01 * (1 - phase));
+                let currentSpeed = 0.85 + (score * 0.02);
+                
+                // Fiziksel gövde esneme ve kontrol mekanizması
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
+                    if(bmwM3.position.x > -7.5) {
+                        bmwM3.position.x -= 0.22;
+                        if(rollAngle < 0.12) rollAngle += 0.02;
+                    }
+                } else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { 
+                    if(bmwM3.position.x < 7.5) {
+                        bmwM3.position.x += 0.22;
+                        if(rollAngle > -0.12) rollAngle -= 0.02;
+                    }
+                } else {
+                    rollAngle *= 0.85; // Düzlüğe geri dönme
+                }
+                bmwM3.rotation.z = rollAngle; // Sağa sola yatma efekti
+
+                // Yol akışı
+                lines.forEach(l => { 
+                    l.position.z += currentSpeed; 
+                    if(l.position.z > 15) l.position.z = -300; 
+                });
+
+                // Trafik Yapay Zekası ve Çarpışma Algılama
                 traffic.forEach(t => {
-                    t.position.z += 0.7 + (score * 0.03);
-                    if(t.position.z > 2) { t.position.z = -140 - Math.random()*30; t.position.x = (Math.random() - 0.5) * 11; score++; document.getElementById("scoreDisplay4D").innerText = "4D Makas Skoru: " + score + " 🌀"; }
-                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) { 
+                    t.position.z += currentSpeed * 0.45;
+                    if(t.position.z > 2) { 
+                        t.position.z = -180 - Math.random()*50; 
+                        t.position.x = (Math.random() - 0.5) * 13; 
+                        score++; 
+                        document.getElementById("scoreDisplay4D").innerText = "HIGH-RES MAKAS: " + score + " 🔥"; 
+                    }
+                    
+                    // Hassas çarpışma kutusu kontrolü
+                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.45 && Math.abs(bmwM3.position.z - t.position.z) < 3.2) { 
                         gameOver = true; 
-                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff5555; font-size:26px;'>💥 M3 PERT OLDU! 💥</span>";
-                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#ff0000; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #ff0000;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
+                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:28px;'>💥 MAKAS PATLADI! BMW PERT! 💥</span>";
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 45px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #8b0000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 25px #ff0000; transition: 0.2s;">YENİ M3 ÇEK BE GARDAŞŞŞ! 🔄</button>';
                     }
                 });
             }
-            renderer.render(scene, camera); requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
         }
         animate();
     </script>
     """
-    components.html(bmw_full_screen_html, height=780)
+    components.html(bmw_nextgen_html, height=780)
 
 # ==========================================================================================
-# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
+# NEXT-GEN ULTRA ASTRO-AURA KUANTUM JET OYUNU
 # ==========================================================================================
 elif st.session_state.aktif_mod == "KizOyunu":
-    st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
-    st.caption("Sol üstteki parıldayan Üç Çizgiye basarak istediğin an ana panele dönebilirsin gardaşşş!")
+    st.markdown("### 🌌 Astro-Aura Premium 4D Space Escape")
+    st.caption("A, D veya Yön Tuşları ile fütüristik jetini kozmik fırtınadan koru be gardaş!")
 
-    kiz_full_screen_html = """
-    <div style="text-align:center; background:#0a0503; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.5); user-select:none; position:relative;">
-        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(10,5,3,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
-        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(10,5,3,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
+    astro_premium_html = """
+    <div style="text-align:center; background:#030105; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 30px rgba(255,0,0,0.4); user-select:none; position:relative;">
+        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(15,0,25,0.85); color:#ffffff; border:2px solid #ff3333; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 15px #ff0000;">◀</button>
+        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(15,0,25,0.85); color:#ffffff; border:2px solid #ff3333; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 15px #ff0000;">▶</button>
         <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanelKiz" style="margin-top:15px;">
-            <h2 id="kizScoreDisplay" style="color:#ffffff; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">Aura Enerjisi: 0 ⭐</h2>
+            <h2 id="kizScoreDisplay" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:30px; letter-spacing:1px;">AURA MATRİSİ: 0 ⭐</h2>
             <div id="restartButtonContainerKiz"></div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("kizFullCanvasContainer");
-        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0503);
-        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x030105, 0.012);
+        
+        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
-        const pLight = new THREE.PointLight(0xff0000, 3, 100); pLight.position.set(0, 10, -5); scene.add(pLight);
-        scene.add(new THREE.AmbientLight(0x24140c));
-        const starGeo = new THREE.BufferGeometry(); const starCount = 400; const starPositions = new Float32Array(starCount * 3);
-        for(let i=0; i<starCount*3; i+=3) { starPositions[i] = (Math.random() - 0.5) * 60; starPositions[i+1] = (Math.random() - 0.5) * 40; starPositions[i+2] = -Math.random() * 150; }
-        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-        const starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffaaaa, size: 0.4 })); scene.add(starField);
-        const playerMesh = new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.0, 4), new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x8b0000, roughness: 0.1 }));
-        playerMesh.rotation.x = Math.PI / 2; playerMesh.position.set(0, 0, -6); scene.add(playerMesh);
-        let obstacles = []; const obsColors = [0xff3333, 0x8b0000, 0xff0000];
-        for(let i=0; i<4; i++){
-            let oMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), new THREE.MeshStandardMaterial({ color: obsColors[i % 3], emissive: obsColors[i % 3] }));
-            oMesh.position.set((Math.random() - 0.5) * 12, 0, -40 - (i * 30)); scene.add(oMesh); obstacles.push(oMesh);
+        renderer.setSize(container.clientWidth, 550);
+        container.appendChild(renderer.domElement);
+
+        // Işık Efektleri (Mor ve Kırmızı Kozmik Işıklar)
+        const spaceLight = new THREE.PointLight(0xff33aa, 3, 150);
+        spaceLight.position.set(0, 15, -10);
+        scene.add(spaceLight);
+        scene.add(new THREE.AmbientLight(0x1a0a2a, 1.5));
+
+        // Kaliteli Kuantum Tozu / Yıldız Alanı
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 600;
+        const starPositions = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i+=3) {
+            starPositions[i] = (Math.random() - 0.5) * 70;
+            starPositions[i+1] = (Math.random() - 0.5) * 45;
+            starPositions[i+2] = -Math.random() * 200;
         }
-        camera.position.set(0, 5, 2); camera.lookAt(new THREE.Vector3(0, -0.5, -20));
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xff66cc, size: 0.35, transparent: true, opacity: 0.8 });
+        const starField = new THREE.Points(starGeo, starMat);
+        scene.add(starField);
+
+        // Premium Kuantum Stealth Jet Tasarımı
+        const playerJet = new THREE.Group();
+        const jetMat = new THREE.MeshStandardMaterial({ color: 0xff3333, metalness: 0.9, roughness: 0.1 });
+        
+        // Ana Gövde
+        const coreGeo = new THREE.ConeGeometry(0.6, 2.4, 4);
+        const core = new THREE.Mesh(coreGeo, jetMat);
+        core.rotation.x = Math.PI / 2;
+        playerJet.add(core);
+
+        // Kanatlar
+        const wingGeo = new THREE.BoxGeometry(2.2, 0.05, 0.8);
+        const wings = new THREE.Mesh(wingGeo, jetMat);
+        wings.position.set(0, -0.1, 0.2);
+        playerJet.add(wings);
+
+        // Plazma İtici Motor Ateşi (Arka Işık)
+        const engineLight = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+        engineLight.position.set(0, 0, 1.2);
+        playerJet.add(engineLight);
+
+        playerJet.position.set(0, 0, -8);
+        scene.add(playerJet);
+
+        // Geometrik Kuantum Kristalleri (Engeller)
+        let crystals = [];
+        for(let i=0; i<5; i++){
+            let cGeo = new THREE.IcosahedronGeometry(1.2, 0); // Kristalize köşeli yapı
+            let cMat = new THREE.MeshStandardMaterial({ color: 0x990033, emissive: 0x4a0011, roughness: 0.3, metalness: 0.7 });
+            let crystal = new THREE.Mesh(cGeo, cMat);
+            crystal.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -50 - (i * 35));
+            scene.add(crystal);
+            crystals.push(crystal);
+        }
+
+        camera.position.set(0, 4.5, 3);
+        camera.lookAt(new THREE.Vector3(0, 0, -18));
+
         let score = 0; let gameOver = false; let keys = {};
-        window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
+        window.addEventListener("keydown", e => keys[e.key] = true);
+        window.addEventListener("keyup", e => keys[e.key] = false);
+
         let touchLeft = false, touchRight = false;
-        const bLeft = document.getElementById("btnLeftKiz"); const bRight = document.getElementById("btnRightKiz");
-        bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
-        bLeft.addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; }); bLeft.addEventListener("touchend", () => touchLeft = false);
-        bRight.addEventListener("mousedown", () => touchRight = true); bRight.addEventListener("mouseup", () => touchRight = false);
-        bRight.addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; }); bRight.addEventListener("touchend", () => touchRight = false);
+        document.getElementById("btnLeftKiz").addEventListener("pointerdown", () => touchLeft = true);
+        document.getElementById("btnLeftKiz").addEventListener("pointerup", () => touchLeft = false);
+        document.getElementById("btnRightKiz").addEventListener("pointerdown", () => touchLeft = true);
+        document.getElementById("btnRightKiz").addEventListener("pointerup", () => touchLeft = false);
 
         function animate() {
             if(!gameOver) {
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.16; }
-                if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.16; }
-                playerMesh.rotation.z += 0.05;
+                let gameSpeed = 0.65 + (score * 0.025);
+
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerJet.position.x > -7.5) playerJet.position.x -= 0.20; playerJet.rotation.z = 0.3; }
+                else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerJet.position.x < 7.5) playerJet.position.x += 0.20; playerJet.rotation.z = -0.3; }
+                else { playerJet.rotation.z *= 0.85; }
+
+                // Uzay tozu akışı
                 const positions = starField.geometry.attributes.position.array;
-                for(let i=2; i<positions.length; i+=3) { positions[i] += 0.4; if(positions[i] > 5) positions[i] = -150; }
+                for(let i=2; i<positions.length; i+=3) { 
+                    positions[i] += gameSpeed * 1.5; 
+                    if(positions[i] > 10) positions[i] = -180; 
+                }
                 starField.geometry.attributes.position.needsUpdate = true;
-                obstacles.forEach(o => {
-                    o.position.z += 0.55 + (score * 0.02); o.rotation.x += 0.02; o.rotation.y += 0.02;
-                    if(o.position.z > 5) { o.position.z = -120 - Math.random()*20; o.position.x = (Math.random() - 0.5) * 12; score++; document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐ ✨"; }
-                    if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) { 
+
+                // Kristallerin Hareketi ve Çarpışma
+                crystals.forEach(c => {
+                    c.position.z += gameSpeed;
+                    c.rotation.x += 0.03;
+                    c.rotation.y += 0.02;
+
+                    if(c.position.z > 5) { 
+                        c.position.z = -140 - Math.random()*30; 
+                        c.position.x = (Math.random() - 0.5) * 14; 
+                        score++; 
+                        document.getElementById("kizScoreDisplay").innerText = "AURA MATRİSİ: " + score + " ⭐"; 
+                    }
+                    
+                    if(Math.abs(playerJet.position.x - c.position.x) < 1.5 && Math.abs(playerJet.position.z - c.position.z) < 2.2) { 
                         gameOver = true; 
-                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff3333; font-size:24px;'>🔮 AURA DAĞILDI! 🔮</span>";
-                        document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#ff0000; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #ff0000;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
+                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff3366; font-size:26px;'>🔮 KUANTUM KALKANLARI ÇÖKTÜ! 🔮</span>";
+                        document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 45px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0055, #4a0011); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 25px #ff0055;">KAZANI YENİDEN TETİKLE! 🔄</button>';
                     }
                 });
             }
-            renderer.render(scene, camera); requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
         }
         animate();
     </script>
     """
-    components.html(kiz_full_screen_html, height=780)
+    components.html(astro_premium_html, height=780)
