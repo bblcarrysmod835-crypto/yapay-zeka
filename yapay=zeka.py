@@ -10,7 +10,7 @@ import base64
 import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Oyunlar sığsın diye genişlettim biraz)
+# Sayfa Ayarları (Geniş ekran düzeni)
 st.set_page_config(page_title="Apolingo Ultra Costa AI & Game", page_icon="🚀", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -20,6 +20,10 @@ if "client" not in st.session_state:
 # Spam engellemek için ses takip hafızası
 if "son_islenen_ses_adi" not in st.session_state:
     st.session_state.son_islenen_ses_adi = None
+
+# Oyunun açık/kapalı olma durumunu hafızada tutuyoruz
+if "oyun_acik_mi" not in st.session_state:
+    st.session_state.oyun_acik_mi = False
 
 # Ses çalma fonksiyonu (Kız sesi için gTTS)
 def sesi_cal(metin):
@@ -64,7 +68,7 @@ sistem_talimati = (
     "\n"
     "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telefon, tablet sorduğunda; iPhone mu Samsung mu "
     "kavgalarından, batarya sürelerinden, 120Hz ekran akıcılığından, bilgisayardaki RGB fanların odayı pavyona çevirmesinden, ekran kartı (RTX vb.) "
-    "ve işlemcibadge'lerinden, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
+    "ve işlemci darboğazlarından, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
     "\n"
     "7) ODA TASARIMI, DUVAR RENKLERİ VEYA SETUP REHBERİ: Kullanıcı odasını boyatmak istediğinde, duvar rengi sorduğunda "
     "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini ve kablo gizlemeyi anlatacaksın. "
@@ -151,164 +155,171 @@ with sol_taraf:
                 pass
 
 # ==========================================================================================
-# SAĞ PANEL - MİKROFONUN SAĞINDAKİ OYUN MERKEZİ (BMW M3 OTOMATİK MAKAS & BARBIE SEÇİMİ)
+# SAĞ PANEL - MİKROFONUN SAĞINDAKİ BUTONLU OYUN MERKEZİ
 # ==========================================================================================
 with sag_taraf:
     st.subheader("🎮 APOLINGO OYUN MERKEZİ")
-    oyun_secimi = st.radio("Oyun Modu Seçin Gardaşşşşş:", ["🏎️ BMW M3 Otoban Makas", "👗 Barbie Kıyafet Tasarımı"], horizontal=True)
+    
+    # Oyun Açma / Kapatma Butonu
+    if not st.session_state.oyun_acik_mi:
+        if st.button("🚀 OYUNU BAŞLAT", use_container_width=True):
+            st.session_state.oyun_acik_mi = True
+            st.rerun()
+    else:
+        if st.button("🛑 OYUNU KAPAT", use_container_width=True):
+            st.session_state.oyun_acik_mi = False
+            st.rerun()
+
     st.write("---")
 
-    if oyun_secimi == "🏎️ BMW M3 Otoban Makas":
-        st.markdown("**🕹️ YÖNLER:** **A/D** veya **Sol/Sağ Ok Tuşları** ile BMW M3'ü kontrol et, arabalara makas at!")
-        
-        # HTML5 & JS Tabanlı BMW M3 Makas Atma Oyunu (Kokpit Görünümlü Efektle)
-        bmw_oyun_html = """
-        <div style="text-align:center;">
-            <canvas id="roadCanvas" width="340" height="450" style="border:4px solid #1a1a1a; background:#222; border-radius:10px;"></canvas>
-            <h3 id="scoreBoard" style="color:white; font-family:sans-serif; margin-top:5px;">Makas Skoru: 0</h3>
-            <button onclick="resetGame()" style="padding:8px 15px; font-weight:bold; background:#e60000; color:white; border:none; border-radius:5px; cursor:pointer;">Yeniden Gazla! 🏎️</button>
-        </div>
-        <script>
-            const canvas = document.getElementById("roadCanvas");
-            const ctx = canvas.getContext("2d");
-            
-            let score = 0;
-            let gameOver = false;
-            
-            let player = { x: 150, y: 360, w: 35, h: 65, speed: 6 };
-            let enemies = [
-                { x: 60, y: -100, w: 35, h: 60, speed: 4, color: '#ffcc00' },
-                { x: 160, y: -300, w: 35, h: 60, speed: 5, color: '#00ccff' }
-            ];
-            
-            let keys = {};
-            window.addEventListener("keydown", e => { keys[e.key] = true; });
-            window.addEventListener("keyup", e => { keys[e.key] = false; });
-            
-            function resetGame() {
-                score = 0; gameOver = false;
-                player.x = 150;
-                enemies[0].y = -100; enemies[1].y = -300;
-                enemies[0].x = 60; enemies[1].x = 180;
-            }
-            
-            function loop() {
-                if(!gameOver) {
-                    // Yön kontrolleri
-                    if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(player.x > 40) player.x -= player.speed; }
-                    if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(player.x < 265) player.x += player.speed; }
-                    
-                    // Arka Plan Şeritleri (Otoban Akışı)
-                    ctx.fillStyle = "#333";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Yol kenarı çizgileri
-                    ctx.fillStyle = "#fff";
-                    ctx.fillRect(35, 0, 5, canvas.height);
-                    ctx.fillRect(300, 0, 5, canvas.height);
-                    
-                    // Kesikli çizgiler
-                    ctx.fillStyle = "#fffa";
-                    for(let i=0; i<canvas.height; i+=40) {
-                        ctx.fillRect(120, (i + (score*4)) % canvas.height, 4, 20);
-                        ctx.fillRect(210, (i + (score*4)) % canvas.height, 4, 20);
-                    }
-                    
-                    // Bizim BMW M3 (Gümüş Gri/Mavi Şeritli Efsane)
-                    ctx.fillStyle = "#a6b4c9"; // Metalik BMW Rengi
-                    ctx.fillRect(player.x, player.y, player.w, player.h);
-                    ctx.fillStyle = "#0066cc"; // M Şeridi
-                    ctx.fillRect(player.x+5, player.y, 4, player.h);
-                    ctx.fillStyle = "#111"; // Camlar
-                    ctx.fillRect(player.x+4, player.y+15, player.w-8, 15);
-                    
-                    // Diğer Trafikteki Arabalar
-                    enemies.forEach(enemy => {
-                        enemy.y += enemy.speed;
-                        if(enemy.y > canvas.height) {
-                            enemy.y = -70;
-                            enemy.x = 45 + Math.random() * 210;
-                            score++;
-                            document.getElementById("scoreBoard").innerText = "Makas Skoru: " + score;
-                        }
-                        
-                        ctx.fillStyle = enemy.color;
-                        ctx.fillRect(enemy.x, enemy.y, enemy.w, enemy.h);
-                        ctx.fillStyle = "#111";
-                        ctx.fillRect(enemy.x+4, enemy.y+25, enemy.w-8, 12); // cam
-                        
-                        // Çarpışma Testi (Makas Atarken Vurursan)
-                        if(player.x < enemy.x + enemy.w && player.x + player.w > enemy.x &&
-                           player.y < enemy.y + enemy.h && player.y + player.h > enemy.y) {
-                            gameOver = true;
-                        }
-                    });
-                } else {
-                    ctx.fillStyle = "rgba(0,0,0,0.8)";
-                    ctx.fillRect(0,0,canvas.width,canvas.height);
-                    ctx.fillStyle = "red";
-                    ctx.font = "bold 24px sans-serif";
-                    ctx.fillText("BMW M3 PERT OLDU!", 50, 200);
-                    ctx.fillStyle = "white";
-                    ctx.font = "16px sans-serif";
-                    ctx.fillText("Toplam Makas: " + score, 110, 240);
-                }
-                requestAnimationFrame(loop);
-            }
-            loop();
-        </script>
-        """
-        components.html(bmw_oyun_html, height=550)
+    # Oyun ancak butona basıldıysa ekrana gelir
+    if st.session_state.oyun_acik_mi:
+        oyun_secimi = st.radio("Oyun Modu Seçin Gardaşşşşş:", ["🏎️ BMW M3 Otoban Makas", "👗 Barbie Kıyafet Tasarımı"], horizontal=True)
+        st.write("---")
 
-    elif oyun_secimi == "👗 Barbie Kıyafet Tasarımı":
-        st.markdown("**✨ Kombinini Seç:** Barbie'ye en uyumlu tarzı bul ve alt tarafta stili tamamla!")
-        
-        # JavaScript tabanlı interaktif Barbie Giydirme Oyunu
-        barbie_oyun_html = """
-        <div style="text-align:center; background:#fff0f5; padding:15px; border-radius:12px; border:3px solid #ff69b4; font-family:sans-serif;">
-            <div style="display:flex; justify-content: space-around; align-items:center;">
-                <!-- Barbie Figürü -->
-                <div id="barbieModel" style="width:120px; height:240px; background:#ffe4e1; border-radius:30px; position:relative; border:2px solid #ffb6c1;">
-                    <div style="width:50px; height:50px; background:#ffe4e1; border-radius:50%; position:absolute; top:10px; left:35px; border:1px solid #ffb6c1;">👨‍🦰</div>
-                    <div id="chosenTop" style="width:100px; height:70px; background:none; position:absolute; top:65px; left:10px; border-radius:10px; text-align:center; color:white; font-size:12px; line-height:70px;"></div>
-                    <div id="chosenBottom" style="width:90px; height:90px; background:none; position:absolute; top:135px; left:15px; border-radius:5px; text-align:center; color:white; font-size:12px; line-height:90px;"></div>
-                </div>
-                
-                <!-- Gardırop Seçenekleri -->
-                <div style="text-align:left;">
-                    <h5 style="color:#ff1493; margin:2px;">👚 Üst Giyim</h5>
-                    <button onclick="changeTop('#ff69b4', 'Pembe Tişört')" style="background:#ff69b4; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Pembe Tişört</button><br>
-                    <button onclick="changeTop('#9400d3', 'Mor Bluz')" style="background:#9400d3; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Mor Bluz</button><br>
-                    <button onclick="changeTop('#00black', 'Siyah Crop')" style="background:#111; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Siyah Crop</button>
-                    
-                    <h5 style="color:#ff1493; margin:8px 0 2px 0;">👖 Alt Giyim</h5>
-                    <button onclick="changeBottom('#4169e1', 'Kot Etek')" style="background:#4169e1; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Kot Etek</button><br>
-                    <button onclick="changeBottom('#ffb6c1', 'Tütü Etek')" style="background:#ffb6c1; color:black; border:none; margin:2px; border-radius:4px; cursor:pointer;">Tütü Etek</button><br>
-                    <button onclick="changeBottom('#f5f5dc', 'Krem Şort')" style="background:#f5f5dc; color:black; border:none; margin:2px; border-radius:4px; cursor:pointer;">Krem Şort</button>
-                </div>
+        if oyun_secimi == "🏎️ BMW M3 Otoban Makas":
+            st.markdown("**🕹️ YÖNLER:** **A/D** veya **Sol/Sağ Ok Tuşları** ile BMW M3'ü kontrol et, arabalara makas at!")
+            
+            bmw_oyun_html = """
+            <div style="text-align:center;">
+                <canvas id="roadCanvas" width="340" height="450" style="border:4px solid #1a1a1a; background:#222; border-radius:10px;"></canvas>
+                <h3 id="scoreBoard" style="color:white; font-family:sans-serif; margin-top:5px;">Makas Skoru: 0</h3>
+                <button onclick="resetGame()" style="padding:8px 15px; font-weight:bold; background:#e60000; color:white; border:none; border-radius:5px; cursor:pointer;">Yeniden Gazla! 🏎️</button>
             </div>
-            <h4 id="styleRating" style="color:#ff1493; margin-top:15px;">Kombin Durumu: Giysi Seç bekleniyor...</h4>
-        </div>
-        <script>
-            function changeTop(color, name) {
-                const top = document.getElementById("chosenTop");
-                top.style.background = color;
-                top.innerText = name;
-                checkStyle();
-            }
-            function changeBottom(color, name) {
-                const btm = document.getElementById("chosenBottom");
-                btm.style.background = color;
-                btm.innerText = name;
-                checkStyle();
-            }
-            function checkStyle() {
-                const t = document.getElementById("chosenTop").innerText;
-                const b = document.getElementById("chosenBottom").innerText;
-                if(t && b) {
-                    document.getElementById("styleRating").innerText = "✨ Harika Kombin! Barbie Piste Hazır! 💅";
+            <script>
+                const canvas = document.getElementById("roadCanvas");
+                const ctx = canvas.getContext("2d");
+                
+                let score = 0;
+                let gameOver = false;
+                
+                let player = { x: 150, y: 360, w: 35, h: 65, speed: 6 };
+                let enemies = [
+                    { x: 60, y: -100, w: 35, h: 60, speed: 4, color: '#ffcc00' },
+                    { x: 160, y: -300, w: 35, h: 60, speed: 5, color: '#00ccff' }
+                ];
+                
+                let keys = {};
+                window.addEventListener("keydown", e => { keys[e.key] = true; });
+                window.addEventListener("keyup", e => { keys[e.key] = false; });
+                
+                function resetGame() {
+                    score = 0; gameOver = false;
+                    player.x = 150;
+                    enemies[0].y = -100; enemies[1].y = -300;
+                    enemies[0].x = 60; enemies[1].x = 180;
                 }
-            }
-        </script>
-        """
-        components.html(barbie_oyun_html, height=400)
+                
+                function loop() {
+                    if(!gameOver) {
+                        if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(player.x > 40) player.x -= player.speed; }
+                        if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(player.x < 265) player.x += player.speed; }
+                        
+                        ctx.fillStyle = "#333";
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        ctx.fillStyle = "#fff";
+                        ctx.fillRect(35, 0, 5, canvas.height);
+                        ctx.fillRect(300, 0, 5, canvas.height);
+                        
+                        ctx.fillStyle = "#fffa";
+                        for(let i=0; i<canvas.height; i+=40) {
+                            ctx.fillRect(120, (i + (score*4)) % canvas.height, 4, 20);
+                            ctx.fillRect(210, (i + (score*4)) % canvas.height, 4, 20);
+                        }
+                        
+                        ctx.fillStyle = "#a6b4c9"; 
+                        ctx.fillRect(player.x, player.y, player.w, player.h);
+                        ctx.fillStyle = "#0066cc"; 
+                        ctx.fillRect(player.x+5, player.y, 4, player.h);
+                        ctx.fillStyle = "#111"; 
+                        ctx.fillRect(player.x+4, player.y+15, player.w-8, 15);
+                        
+                        enemies.forEach(enemy => {
+                            enemy.y += enemy.speed;
+                            if(enemy.y > canvas.height) {
+                                enemy.y = -70;
+                                enemy.x = 45 + Math.random() * 210;
+                                score++;
+                                document.getElementById("scoreBoard").innerText = "Makas Skoru: " + score;
+                            }
+                            
+                            ctx.fillStyle = enemy.color;
+                            ctx.fillRect(enemy.x, enemy.y, enemy.w, enemy.h);
+                            ctx.fillStyle = "#111";
+                            ctx.fillRect(enemy.x+4, enemy.y+25, enemy.w-8, 12);
+                            
+                            if(player.x < enemy.x + enemy.w && player.x + player.w > enemy.x &&
+                               player.y < enemy.y + enemy.h && player.y + player.h > enemy.y) {
+                                gameOver = true;
+                            }
+                        });
+                    } else {
+                        ctx.fillStyle = "rgba(0,0,0,0.8)";
+                        ctx.fillRect(0,0,canvas.width,canvas.height);
+                        ctx.fillStyle = "red";
+                        ctx.font = "bold 24px sans-serif";
+                        ctx.fillText("BMW M3 PERT OLDU!", 50, 200);
+                        ctx.fillStyle = "white";
+                        ctx.font = "16px sans-serif";
+                        ctx.fillText("Toplam Makas: " + score, 110, 240);
+                    }
+                    requestAnimationFrame(loop);
+                }
+                loop();
+            </script>
+            """
+            components.html(bmw_oyun_html, height=550)
+
+        elif oyun_secimi == "👗 Barbie Kıyafet Tasarımı":
+            st.markdown("**✨ Kombinini Seç:** Barbie'ye en uyumlu tarzı bul ve stili tamamla!")
+            
+            barbie_oyun_html = """
+            <div style="text-align:center; background:#fff0f5; padding:15px; border-radius:12px; border:3px solid #ff69b4; font-family:sans-serif;">
+                <div style="display:flex; justify-content: space-around; align-items:center;">
+                    <div id="barbieModel" style="width:120px; height:240px; background:#ffe4e1; border-radius:30px; position:relative; border:2px solid #ffb6c1;">
+                        <div style="width:50px; height:50px; background:#ffe4e1; border-radius:50%; position:absolute; top:10px; left:35px; border:1px solid #ffb6c1;">👨‍🦰</div>
+                        <div id="chosenTop" style="width:100px; height:70px; background:none; position:absolute; top:65px; left:10px; border-radius:10px; text-align:center; color:white; font-size:12px; line-height:70px;"></div>
+                        <div id="chosenBottom" style="width:90px; height:90px; background:none; position:absolute; top:135px; left:15px; border-radius:5px; text-align:center; color:white; font-size:12px; line-height:90px;"></div>
+                    </div>
+                    
+                    <div style="text-align:left;">
+                        <h5 style="color:#ff1493; margin:2px;">👚 Üst Giyim</h5>
+                        <button onclick="changeTop('#ff69b4', 'Pembe Tişört')" style="background:#ff69b4; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Pembe Tişört</button><br>
+                        <button onclick="changeTop('#9400d3', 'Mor Bluz')" style="background:#9400d3; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Mor Bluz</button><br>
+                        <button onclick="changeTop('#00black', 'Siyah Crop')" style="background:#111; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Siyah Crop</button>
+                        
+                        <h5 style="color:#ff1493; margin:8px 0 2px 0;">👖 Alt Giyim</h5>
+                        <button onclick="changeBottom('#4169e1', 'Kot Etek')" style="background:#4169e1; color:white; border:none; margin:2px; border-radius:4px; cursor:pointer;">Kot Etek</button><br>
+                        <button onclick="changeBottom('#ffb6c1', 'Tütü Etek')" style="background:#ffb6c1; color:black; border:none; margin:2px; border-radius:4px; cursor:pointer;">Tütü Etek</button><br>
+                        <button onclick="changeBottom('#f5f5dc', 'Krem Şort')" style="background:#f5f5dc; color:black; border:none; margin:2px; border-radius:4px; cursor:pointer;">Krem Şort</button>
+                    </div>
+                </div>
+                <h4 id="styleRating" style="color:#ff1493; margin-top:15px;">Kombin Durumu: Giysi Seç bekleniyor...</h4>
+            </div>
+            <script>
+                function changeTop(color, name) {
+                    const top = document.getElementById("chosenTop");
+                    top.style.background = color;
+                    top.innerText = name;
+                    checkStyle();
+                }
+                function changeBottom(color, name) {
+                    const btm = document.getElementById("chosenBottom");
+                    btm.style.background = color;
+                    btm.innerText = name;
+                    checkStyle();
+                }
+                function checkStyle() {
+                    const t = document.getElementById("chosenTop").innerText;
+                    const b = document.getElementById("chosenBottom").innerText;
+                    if(t && b) {
+                        document.getElementById("styleRating").innerText = "✨ Harika Kombin! Barbie Piste Hazır! 💅";
+                    }
+                }
+            </script>
+            """
+            components.html(barbie_oyun_html, height=400)
+    else:
+        # Oyun kapalıyken görünecek havalı bekleme ekranı
+        st.info("🎮 Oyun Merkezi şu an kapalı gardaşşşşş. Canın sıkılınca yukarıdaki 'OYUNU BAŞLAT' butonuna basıp otobana çıkabilirsin!")
