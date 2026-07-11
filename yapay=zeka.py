@@ -9,7 +9,7 @@ import os
 import base64
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Tamemen geniş ve pürüzsüz tam ekran düzeni)
+# Sayfa Ayarları (Tamamen geniş ve pürüzsüz tam ekran düzeni)
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -19,6 +19,10 @@ if "client" not in st.session_state:
 # Oyun panelinin aktiflik durumu ve hangi oyunun seçildiği hafızası
 if "aktif_oyun" not in st.session_state:
     st.session_state.aktif_oyun = None  # None, "erkek" veya "kiz"
+
+# Ses algılama için session state hafızası
+if "ses_girdisi" not in st.session_state:
+    st.session_state.ses_girdisi = None
 
 # Ses çalma fonksiyonu (Kız sesi için gTTS)
 def sesi_cal(metin):
@@ -74,7 +78,7 @@ sistem_talimati = (
     "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
-    "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, citaurma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
+    "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
     "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
@@ -82,30 +86,42 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# Butonları jilet gibi yuvarlak yapan CSS stil kuralları
+# Butonları mesaj kutusunun hemen dibine yanaştıran ve kusursuz yuvarlak yapan CSS
 st.markdown("""
     <style>
+    /* Bütün butonları tam yuvarlak ve eşit boyuta getir */
     div[data-testid="stButton"] > button {
         border-radius: 50% !important;
-        width: 44px !important;
-        height: 44px !important;
+        width: 42px !important;
+        height: 42px !important;
         padding: 0 !important;
-        line-height: 44px !important;
+        line-height: 42px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         font-size: 18px !important;
+        margin-top: 24px !important; /* Mesaj kutusuyla tam yatay eşitleme */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
+        transition: 0.2s !important;
+    }
+    /* Buton renk özelleştirmeleri */
+    div[data-testid="stButton"]:nth-of-type(1) > button { background-color: #3b82f6 !important; color: white !important; }
+    div[data-testid="stButton"]:nth-of-type(2) > button { background-color: #10b981 !important; color: white !important; }
+    div[data-testid="stButton"]:nth-of-type(3) > button { background-color: #ec4899 !important; color: white !important; }
+    
+    /* Gereksiz boşlukları kapatıp butonları mesaj kutusuna yakınlaştır */
+    div[data-testid="column"] {
+        padding: 0px 2px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# URL Parametresi ile buton aksiyonlarını yakalama (Sayfanın donmasını önleyen yeni dinamik mekanizma)
-query_params = st.query_params
-if "oyun" in query_params:
-    secilen = query_params["oyun"]
-    st.session_state.aktif_oyun = secilen
-    st.query_params.clear()
-    st.rerun()
+# Arka planda gizli ses yakalama ve otomatik gönderme scripti
+if st.session_state.ses_girdisi:
+    gelen_soru = st.session_state.ses_girdisi
+    st.session_state.ses_girdisi = None  # Hafızayı temizle
+else:
+    gelen_soru = None
 
 # ==========================================================================================
 # GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - FULL CHAT EKRANI)
@@ -124,106 +140,66 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    gelen_soru = None
-
-    # HTML/JS Tabanlı Pürüzsüz Yuvarlak Buton Paneli (Mikrofon Altında Hiçbir Şey Çıkmaz!)
-    hizali_butonlar_html = """
-    <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end; height: 45px; margin-top: 25px;">
-        <!-- Yuvarlak Ses Kayıt Butonu -->
-        <button id="safMicBtn" title="Konuş be Gardaşşş!" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: #3b82f6; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
-            🎙️
-        </button>
-        <!-- Yuvarlak Erkek Oyunu Butonu -->
-        <button id="safBmwBtn" title="Erkek Oyunu (BMW M3) Başlat!" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: #10b981; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
-            🏎️
-        </button>
-        <!-- Yuvarlak Kız Oyunu Butonu -->
-        <button id="safAuraBtn" title="Kız Oyunu (Astro-Aura) Başlat!" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: #ec4899; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
-            🌌
-        </button>
-    </div>
-
+    # JavaScript destekli ses tanıma bileşeni (Ekranda görünmez, tetiklendiğinde dinler)
+    JS_SES_YAKALAYICI = """
     <script>
-        // Oyun Tetikleme Yönlendirmeleri
-        document.getElementById('safBmwBtn').onclick = function() {
-            window.top.location.href = window.top.location.pathname + "?oyun=erkek";
-        };
-        document.getElementById('safAuraBtn').onclick = function() {
-            window.top.location.href = window.top.location.pathname + "?oyun=kiz";
-        };
-
-        // Arka Planda Çirkin Çubuk Çıkarmayan Web Speech Ses Tanıma Sistemi
-        const micBtn = document.getElementById('safMicBtn');
-        let recognition;
-        let isListening = false;
-
+    window.parent.document.addEventListener('TetikleSes', function (e) {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
+            const recognition = new SpeechRecognition();
             recognition.lang = 'tr-TR';
             recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
-
+            
             recognition.onstart = () => {
-                isListening = true;
-                micBtn.style.background = "#ef4444";
-                micBtn.innerText = "🛑";
+                window.parent.postMessage({type: 'DURUM', veri: '📢 Dinleniyor be gardaşşş...'}, '*');
             };
-
-            recognition.onend = () => {
-                isListening = false;
-                micBtn.style.background = "#3b82f6";
-                micBtn.innerText = "🎙️";
-            };
-
+            
             recognition.onresult = (event) => {
-                const textResult = event.results[0][0].transcript;
-                if(textResult) {
-                    // Streamlit chat_input alanını bulup sesi içine yazar ve simüle eder
-                    const chatInput = window.top.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
+                const metin = event.results[0][0].transcript;
+                if(metin) {
+                    const chatInput = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
                     if(chatInput) {
-                        chatInput.value = textResult;
+                        chatInput.value = metin;
                         chatInput.dispatchEvent(new Event('input', { bubbles: true }));
                         setTimeout(() => {
-                            const sendBtn = window.top.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
+                            const sendBtn = window.parent.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
                             if(sendBtn) sendBtn.click();
-                        }, 400);
-                    } else {
-                        alert("Ses algılandı be gardaşşş: " + textResult);
+                        }, 300);
                     }
                 }
             };
-
-            recognition.onerror = () => {
-                isListening = false;
-                micBtn.style.background = "#3b82f6";
-                micBtn.innerText = "🎙️";
-            };
+            recognition.start();
+        } else {
+            alert("Tarayıcında ses tanıma desteği yok be gardaşşş!");
         }
-
-        micBtn.onclick = function() {
-            if(!recognition) {
-                alert("Tarayıcın ses tanımayı desteklemiyor be gardaşşş!");
-                return;
-            }
-            if (!isListening) {
-                recognition.start();
-            } else {
-                recognition.stop();
-            }
-        };
+    });
     </script>
     """
+    components.html(JS_SES_YAKALAYICI, height=0)
 
-    # Chat Giriş Satırı Tasarımı (Kutunun tam sağında, milimetrik yan yana 3 yuvarlak buton)
-    c1, c2 = st.columns([0.80, 0.20])
+    # Chat Giriş Satırı ve Hemen Yanına Yakınlaştırılmış Orijinal Yuvarlak Butonlar
+    c1, c2, c3, c4 = st.columns([0.85, 0.05, 0.05, 0.05])
     with c1:
         yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
     with c2:
-        components.html(hizali_butonlar_html, height=70)
+        # Mikrofon Butonu (JS'yi tetikler)
+        if st.button("🎙️", help="Konuş be Gardaşşş!"):
+            st.markdown("""<script>const evt = new CustomEvent('TetikleSes'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
+            st.toast("📢 Mikrofon Aktif! Konuş be gardaşşş, dinliyorum...")
+    with c3:
+        # Erkek Oyunu Butonu
+        if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!"):
+            st.session_state.aktif_oyun = "erkek"
+            st.rerun()
+    with c4:
+        # Kız Oyunu Butonu
+        if st.button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!"):
+            st.session_state.aktif_oyun = "kiz"
+            st.rerun()
 
+    # Eğer bir soru girdisi (yazı veya ses) varsa işleme alıyoruz
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
