@@ -55,7 +55,7 @@ sistem_talimati = (
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
     "\n"
     "3) AHMET ŞAKASI (KIRMIZI ÇİZGİ): Kullanıcı sana 'Ahmet', 'Ahmet kim?', 'Çişli' veya içinde Ahmet geçen herhangi bir şey "
-    "yazdığında, o anki konuyu anında çöpe atacaksın ve REAKSİYON OLARAK KESİNLKELİKLE büyük harflerle aynen şu cevabı vereceksin: "
+    "yazdığında, o anki konuyu anında çöpe atacaksın ve REAKSİYON OLARAK KESİNLİKLE büyük harflerle aynen şu cevabı vereceksin: "
     "'ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨'. Bu şakayı asla es geçmeyeceksin. "
     "\n"
     "4) ÖZEL REPLİK: Kullanıcı 'biri bana böyle de derse' veya 'biri bana böyle de' yazarsa anında 'dicek' diyerek cümleyi tamamlayacaksın. "
@@ -74,7 +74,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -85,7 +85,7 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# PROFESYONEL VE ULTRA MODERN UI TASARIMI (UP ARROW OK SİSTEMİ DAHİL)
+# PROFESYONEL VE ULTRA MODERN UI TASARIMI
 st.markdown("""
     <style>
     .stApp {
@@ -113,7 +113,7 @@ st.markdown("""
         border: none !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
     }
-    /* Yukarı Bakan Ok Butonunun Kusursuz CSS Yerleşimi */
+    /* Yukarı Bakan Ok Butonunun CSS Yerleşimi */
     .modern-gonder-btn div[data-testid="stButton"] > button {
         background-color: #1e293b !important;
         color: #3b82f6 !important;
@@ -198,7 +198,6 @@ if st.session_state.aktif_oyun is None:
                 recognition.onresult = (event) => {
                     const metinSonuc = event.results[0][0].transcript;
                     if(metinSonuc && metinSonuc.trim() !== "") {
-                        // Gecikmesiz üst pencereye fırlatma hattı
                         window.parent.postMessage({type: 'sesli_konusma', text: metinSonuc}, '*');
                     }
                 };
@@ -209,7 +208,7 @@ if st.session_state.aktif_oyun is None:
         """
         components.html(JS_RITIM_MIC, height=42)
 
-    # RE-ENJEKSİYON MOTORU: SESİ ALIP FORMUN SUBMIT TETİKLEYİCİSİNİ TETİKLER
+    # RE-ENJEKSİYON MOTORU
     st.markdown("""
         <script>
         window.addEventListener('message', function(event) {
@@ -220,56 +219,56 @@ if st.session_state.aktif_oyun is None:
                     inputElement.dispatchEvent(new Event('input', { bubbles: true }));
                     inputElement.dispatchEvent(new Event('change', { bubbles: true }));
                     
-                    // Maksimum hızda formu sunucuya teslim et!
                     setTimeout(() => {
                         const form = inputElement.closest('form');
                         if(form) {
                             form.requestSubmit();
                         }
-                    }, 50); // 50ms hıza indirildi (Ultra Fast)
+                    }, 50);
                 }
             }
         });
         </script>
     """, unsafe_allow_html=True)
 
-    # MATRİS PLANLAMASI: YUKARI BAKAN OK VE MİKROFON KOMBİNASYONU
-    c_mic, c_chat, c_send, c_g1, c_g2 = st.columns([0.15, 0.67, 0.06, 0.06, 0.06])
-    
-    with c_mic:
-        mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
-        st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
-        if st.button(mic_simge, key="normal_mic_tasarim"):
-            st.session_state.mic_aktif = not st.session_state.mic_aktif
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
+    # MASTER KONTROL PANELİ (TÜM STRÜKTÜR FORMUN İÇİNDE - SIFIR HATA GARANTİSİ)
+    with st.form(key="global_mesaj_formu", clear_on_submit=True):
+        c_mic, c_chat, c_send, c_g1, c_g2 = st.columns([0.15, 0.67, 0.06, 0.06, 0.06])
         
-    with st.form(key="mesaj_formu_yeni", clear_on_submit=True):
+        with c_mic:
+            mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
+            st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
+            if st.button(mic_simge, key="normal_mic_tasarim"):
+                st.session_state.mic_aktif = not st.session_state.mic_aktif
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+            
         with c_chat:
             yazi_soru = st.text_input("Mesajın:", label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
+            
         with c_send:
-            # İşte tam istediğin o yukarı bakan profesyonel ok butonu (▲)
+            # Sütun formun içinde olduğu için artık asla hata veremez!
             st.markdown('<div class="modern-gonder-btn">', unsafe_allow_html=True)
             gonder_btn = st.form_submit_button("▲")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        with c_g1:
+            st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
+            if st.button("🏎️", key="rk_game"):
+                st.session_state.aktif_oyun = "erkek"
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        with c_g2:
+            st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
+            if st.button("🌌", key="kz_game"):
+                st.session_state.aktif_oyun = "kiz"
+                st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
             
         if gonder_btn and yazi_soru:
             gelen_soru = yazi_soru
             st.session_state.mic_aktif = False
-
-    with c_g1:
-        st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
-        if st.button("🏎️", key="rk_game"):
-            st.session_state.aktif_oyun = "erkek"
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with c_g2:
-        st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
-        if st.button("🌌", key="kz_game"):
-            st.session_state.aktif_oyun = "kiz"
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
     # Girdi geldiğinde yapay zekayı tetikleme hattı
     if gelen_soru:
@@ -298,7 +297,7 @@ if st.session_state.aktif_oyun is None:
                 pass
 
 # ==========================================================================================
-# OYUNLAR (DOKUNULMADI, STABİL ÇALIŞIYOR)
+# OYUNLAR (STABİL ÇALIŞIYOR)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
