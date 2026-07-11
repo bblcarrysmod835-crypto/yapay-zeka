@@ -40,7 +40,7 @@ def sesi_cal(metin):
         pass
 
 # ==========================================================================================
-# SİSTEM TALİMATI (EKSİKSİZ KORUNDU)
+# SİSTEM TALİMATI
 # ==========================================================================================
 sistem_talimati = (
     "Sen Apolingo tarafından özenle geliştirilmiş, evrendeki, tarihteki, teknolojideki and internetteki "
@@ -86,9 +86,7 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# ==========================================================================================
 # CSS STİLLERİ
-# ==========================================================================================
 st.markdown("""
     <style>
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
@@ -101,40 +99,28 @@ st.markdown("""
         background-attachment: fixed !important;
         color: #ffffff !important;
     }
-
-    p, span, label, div {
-        color: #ffffff !important;
-    }
-    
+    p, span, label, div { color: #ffffff !important; }
     .havali-ana-baslik {
         text-align: center !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        font-family: 'Segoe UI', sans-serif !important;
         font-size: 30px !important; 
         font-weight: 800 !important;
         letter-spacing: 2px !important;
-        color: #ffffff !important; 
         margin-top: 15px !important;
         margin-bottom: 5px !important;
     }
-    
     .havali-alt-yazi {
         text-align: center !important;
-        color: #ffffff !important;
         font-size: 14px !important;
         margin-bottom: 25px !important;
         opacity: 0.9;
         font-weight: 500;
     }
-    
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
         background: linear-gradient(180deg, #4a0000 0%, #220000 50%, #050000 100%) !important;
         border-right: 2px solid #8b0000 !important;
     }
-    
-    [data-testid="stSidebar"] * {
-        color: #ffffff !important;
-    }
-
+    [data-testid="stSidebar"] * { color: #ffffff !important; }
     [data-testid="stChatMessage"] {
         background-color: rgba(20, 10, 5, 0.7) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -165,9 +151,7 @@ with st.sidebar:
     st.write("---")
     st.caption("👨‍💻 Kurucu: Apolingo\n\n**By Abdurrahim İriş © 2026**")
 
-# ==========================================================================================
-# GÖRÜNÜM KONTROLÜ: SOHBET MODU
-# ==========================================================================================
+# SOHBET MODU KONTROLÜ
 if st.session_state.aktif_mod == "Sohbet":
     st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER ARCADE AI</h1>', unsafe_allow_html=True)
     st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş</p>', unsafe_allow_html=True)
@@ -175,21 +159,17 @@ if st.session_state.aktif_mod == "Sohbet":
 
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
-            with st.chat_message("user"):
-                st.write(mesaj["content"])
+            with st.chat_message("user"): st.write(mesaj["content"])
         elif mesaj["role"] == "assistant":
-            with st.chat_message("assistant"):
-                st.write(mesaj["content"])
+            with st.chat_message("assistant"): st.write(mesaj["content"])
 
     gelen_soru = None
-
     c_mic, c_text = st.columns([0.10, 0.90])
     with c_mic:
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
     with c_text:
         yazi_soru = st.chat_input("Mesajını buraya yaz be gardaşşşş...")
-        if yazi_soru:
-            gelen_soru = yazi_soru
+        if yazi_soru: gelen_soru = yazi_soru
 
     if ses_dosyasi is not None and st.session_state.ses_isleme_aktif:
         r = sr.Recognizer()
@@ -197,15 +177,11 @@ if st.session_state.aktif_mod == "Sohbet":
             with sr.AudioFile(ses_dosyasi) as source:
                 audio_data = r.record(source)
                 soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
-                if soylenen_soz:
-                    gelen_soru = soylenen_soz
-                    st.session_state.ses_isleme_aktif = False
-        except Exception as e:
-            pass
+                if soylenen_soz: gelen_soru = soylenen_soz; st.session_state.ses_isleme_aktif = False
+        except Exception as e: pass
 
     if gelen_soru:
-        with st.chat_message("user"):
-            st.write(gelen_soru)
+        with st.chat_message("user"): st.write(gelen_soru)
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
@@ -220,22 +196,17 @@ if st.session_state.aktif_mod == "Sohbet":
                     )
                     cevap = response.choices[0].message.content
                 
-                with st.chat_message("assistant"):
-                    st.write(cevap)
+                with st.chat_message("assistant"): st.write(cevap)
                 st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
-                
                 st.session_state.ses_isleme_aktif = True
                 sesi_cal(cevap)
                 st.rerun()
-            except Exception as e:
-                st.session_state.ses_isleme_aktif = True
+            except Exception as e: st.session_state.ses_isleme_aktif = True
 
-# ==========================================================================================
-# BMW M3 10D HİPER OYUNU: SIFIR ÇIKINTILI TAVAN, ÖZEL KAPUT VE RENKLİ TRAFİK
-# ==========================================================================================
+# BMW M3 10D OYUNU: BASIK OLMAYAN YÜKSEK ŞASİ SİSTEMİ
 elif st.session_state.aktif_mod == "ErkekOyunu":
-    st.markdown("### 🏎️ Apolingo 10D Hiper Realizm: Özel Kaputlu Sarı Canavar")
-    st.caption("Senin araban efsanevi Neon Sarısı ve Karbon Kaputlu yapıldı! Diğer arabalar rengarenk, tavan ise jilet gibi pürüzsüz be gardaşş!")
+    st.markdown("### 🏎️ Apolingo 10D Hiper Realizm: Yüksek Şasili Sarı Canavar")
+    st.caption("Arabaların basıklığı tamamen kaldırıldı! Süspansiyonlar yükseltildi, alt şasi artık havada be gardaşş!")
 
     bmw_10d_html = """
     <div style="text-align:center; background:#000000; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 50px rgba(255,0,0,0.9); user-select:none; position:relative;">
@@ -264,7 +235,6 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
         const sunLight = new THREE.DirectionalLight(0xffffff, 4.0); sunLight.position.set(10, 60, 15); scene.add(sunLight);
         const ambient = new THREE.AmbientLight(0x221c1c, 2.5); scene.add(ambient);
 
-        // Parlak Islak Otoban
         const roadGeo = new THREE.BoxGeometry(18, 0.1, 1000);
         const roadMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.01, metalness: 0.99 });
         const road = new THREE.Mesh(roadGeo, roadMat); scene.add(road);
@@ -275,7 +245,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
             lMesh.position.set(0, 0.06, -i * 24); scene.add(lMesh); lines.push(lMesh);
         }
 
-        // --- 10D ÖZEL JİLET TAVANLI ARABA ÜRETİM MOTORU ---
+        // --- BASIK OLMAYAN YÜKSEK ŞASİLİ OYUN MOTORU ---
         function create10DCar(bodyColor, isPlayer) {
             const carGroup = new THREE.Group();
             
@@ -286,73 +256,69 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
             const tyreMat = new THREE.MeshStandardMaterial({ color: 0x060606, roughness: 0.8 });
             const brakeMat = new THREE.MeshStandardMaterial({ color: 0xee0000, metalness: 0.9 });
 
-            // Ana Alt Şasi
+            // Ana Alt Şasi - BASIK DEĞİL, YERDEN YÜKSEKLİK 0.58'E ÇEKİLDİ
             const base = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.26, 3.75), paintMat);
-            base.position.y = 0.28;
+            base.position.y = 0.58; 
             carGroup.add(base);
 
-            // ÖN KAPUT (Oyuncuya Özel Agresif Karbon Kaput, Diğerlerine Normal Gövde Rengi Kaput)
+            // Ön Kaput (Havada Dengelendi)
             const hoodMatSelected = isPlayer ? carbonMat : paintMat;
             const hood = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.18, 1.30), hoodMatSelected);
-            hood.position.set(0, 0.40, -1.18);
+            hood.position.set(0, 0.70, -1.18);
             carGroup.add(hood);
 
-            // JİLET GİBİ %100 PÜRÜZSÜZ TEK PARÇA ÜST KABİN (Çıkıntılar, Çizgiler Tamamen Sıfırlandı!)
+            // Jilet Gibi Pürüzsüz Kabin (Tavan Çizgisi Tamamen Yok)
             const cabinGeo = new THREE.BoxGeometry(1.38, 0.42, 1.70);
             const cabin = new THREE.Mesh(cabinGeo, paintMat);
-            cabin.position.set(0, 0.62, 0.05);
+            cabin.position.set(0, 0.92, 0.05);
             carGroup.add(cabin);
 
-            // Cam Alanı (Kabin İçine Gömülü Kusursuz İllüzyon)
             const glassInsert = new THREE.Mesh(new THREE.BoxGeometry(1.34, 0.36, 1.66), glassMat);
-            glassInsert.position.set(0, 0.63, 0.05);
+            glassInsert.position.set(0, 0.93, 0.05);
             carGroup.add(glassInsert);
 
-            // Arka Bagaj Kapağı (Sıfır Spoyler, Dümdüz)
             const trunk = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.24, 0.75), paintMat);
-            trunk.position.set(0, 0.42, 1.38);
+            trunk.position.set(0, 0.72, 1.38);
             carGroup.add(trunk);
 
-            // Tekerlekler & Kaliperler
-            const tG = new THREE.CylinderGeometry(0.35, 0.35, 0.28, 32); tG.rotateZ(Math.PI / 2);
-            const rG = new THREE.CylinderGeometry(0.25, 0.25, 0.29, 16); rG.rotateZ(Math.PI / 2);
-            const wPositions = [[-0.92, 0.35, -1.15], [0.92, 0.35, -1.15], [-0.92, 0.35, 1.30], [0.92, 0.35, 1.30]];
+            // Tekerlekler ve Büyük Jantlar (Yerden Yüksek Şasi Desteğiyle Merkezleri 0.45 Yapıldı)
+            const tG = new THREE.CylinderGeometry(0.45, 0.45, 0.28, 32); tG.rotateZ(Math.PI / 2);
+            const rG = new THREE.CylinderGeometry(0.32, 0.32, 0.29, 16); rG.rotateZ(Math.PI / 2);
+            const wPositions = [[-0.92, 0.45, -1.15], [0.92, 0.45, -1.15], [-0.92, 0.45, 1.30], [0.92, 0.45, 1.30]];
 
             wPositions.forEach(pos => {
                 const tire = new THREE.Mesh(tG, tyreMat); tire.position.set(pos[0], pos[1], pos[2]);
                 const rim = new THREE.Mesh(rG, chromeMat); rim.position.set(pos[0], pos[1], pos[2]);
-                const caliper = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.12, 0.08), brakeMat);
+                const caliper = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.14, 0.08), brakeMat);
                 caliper.position.set(pos[0] + (pos[0] > 0 ? -0.04 : 0.04), pos[1] + 0.08, pos[2]);
                 carGroup.add(tire, rim, caliper);
             });
 
-            // LAZER FARLAR VE STOPLAR
+            // Lazer Farlar (Yüksekliğe Göre Hizalandı)
             const fGeo = new THREE.BoxGeometry(0.24, 0.07, 0.04);
-            const fMat = new THREE.MeshBasicMaterial({ color: isPlayer ? 0x00f3ff : 0xffaa00 }); // Oyuncuya Buz Mavisi Far
-            const headL = new THREE.Mesh(fGeo, fMat); headL.position.set(-0.62, 0.38, -1.89);
+            const fMat = new THREE.MeshBasicMaterial({ color: isPlayer ? 0x00f3ff : 0xffaa00 });
+            const headL = new THREE.Mesh(fGeo, fMat); headL.position.set(-0.62, 0.68, -1.89);
             const headR = headL.clone(); headR.position.x = 0.62;
             carGroup.add(headL, headR);
 
             const stopMat = new THREE.MeshBasicMaterial({ color: 0xff0505 });
-            const stopL = new THREE.Mesh(fGeo, stopMat); stopL.position.set(-0.62, 0.42, 1.76);
+            const stopL = new THREE.Mesh(fGeo, stopMat); stopL.position.set(-0.62, 0.72, 1.76);
             const stopR = stopL.clone(); stopR.position.x = 0.62;
             carGroup.add(stopL, stopR);
 
             return carGroup;
         }
 
-        // SENİN ARABAN: Göz Alıcı Neon Limon Sarısı (0xdfff00) ve Karbon Kaputlu
+        // Oyuncunun Neon Sarı Yüksek Canavarı
         const playerCar = create10DCar(0xdfff00, true);
         playerCar.position.set(0, 0, -8); scene.add(playerCar);
 
-        // Buz Mavisi Far Işıkları Konisi
         const beamCone = new THREE.CylinderGeometry(0.05, 4.0, 45, 16, 1, true); beamCone.translate(0, 22.5, 0);
         const beamMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.14, side: THREE.DoubleSide });
-        const leftBeam = new THREE.Mesh(beamCone, beamMat); leftBeam.position.set(-0.62, 0.38, -1.9); leftBeam.rotation.x = -Math.PI / 2;
+        const leftBeam = new THREE.Mesh(beamCone, beamMat); leftBeam.position.set(-0.62, 0.68, -1.9); leftBeam.rotation.x = -Math.PI / 2;
         const rightBeam = leftBeam.clone(); rightBeam.position.x = 0.62;
         playerCar.add(leftBeam, rightBeam);
 
-        // RENKLİ TRAFİK HAVUZU (Sürekli Farklı Canlı Renkler Alan Akıllı Sistem)
         let traffic = []; 
         const randomColors = [0xff007f, 0x00ff66, 0xff6600, 0x9900ff, 0x0033ff, 0x00ffff, 0xff00ff];
         
@@ -364,7 +330,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
             traffic.push(tCar);
         }
 
-        camera.position.set(0, 3.6, -0.1); camera.lookAt(new THREE.Vector3(0, 0.3, -40));
+        camera.position.set(0, 4.2, -0.1); camera.lookAt(new THREE.Vector3(0, 0.6, -40));
         
         let score = 0; let gameOver = false; let keys = {}; let tilt = 0; let dimensionsClock = 0;
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
@@ -378,7 +344,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 
         function animate() {
             if(!gameOver) {
-                dimensionsClock += 0.05; // 10D Zaman ve Titreşim Matrisi
+                dimensionsClock += 0.05;
                 let currentSpeed = 1.25 + (score * 0.05);
                 
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
@@ -387,30 +353,25 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                     if(playerCar.position.x < 7.4) { playerCar.position.x += 0.30; if(tilt > -0.14) tilt -= 0.025; }
                 } else { tilt *= 0.72; }
                 
-                // 10D Süpriz Fizik Esnemesi: Şasi makas yönüne ve motor devrine göre hafifçe yaylanır
                 playerCar.rotation.z = tilt;
                 playerCar.rotation.y = tilt * 0.22;
-                playerCar.position.y = 0.01 * Math.sin(dimensionsClock * 4); // Motor Sarsıntısı Boyutu
+                playerCar.position.y = 0.01 * Math.sin(dimensionsClock * 4); // Yüksek şaside tatlı süspansiyon esnemesi
 
-                // Dinamik Yol Kamerası Titreşimi
-                camera.position.y = 3.6 + (Math.random() - 0.5) * ((score * 0.001) + 0.003);
+                camera.position.y = 4.2 + (Math.random() - 0.5) * ((score * 0.001) + 0.003);
 
                 lines.forEach(l => { l.position.z += currentSpeed; if(l.position.z > 15) l.position.z = -250; });
                 
                 traffic.forEach((t, index) => {
                     t.position.z += currentSpeed * 0.52;
-                    
-                    // Diğer arabalara 10D dalgalanma efekti
                     t.position.y = 0.015 * Math.cos(dimensionsClock * 3 + index);
 
                     if(t.position.z > 4) { 
                         t.position.z = -180 - Math.random()*50; 
                         t.position.x = (Math.random() - 0.5) * 12; 
                         
-                        // Her canlandığında yeni bomba gibi rastgele bir renk ata!
                         let nextColor = randomColors[Math.floor(Math.random() * randomColors.length)];
                         t.children.forEach(child => {
-                            if(child.material && child.material.color && child.geometry.type === "BoxGeometry" && child.position.y === 0.28) {
+                            if(child.material && child.material.color && child.geometry.type === "BoxGeometry" && child.position.y === 0.58) {
                                 child.material.color.setHex(nextColor);
                             }
                         });
@@ -419,11 +380,10 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                         document.getElementById("scoreDisplay10D").innerText = "10D Otoban Skoru: " + score + " 🌀"; 
                     }
 
-                    // Hassas Çarpışma Kutusu
                     if(Math.abs(playerCar.position.x - t.position.x) < 1.62 && Math.abs(playerCar.position.z - t.position.z) < 3.6) { 
                         gameOver = true; 
-                        document.getElementById("scoreDisplay10D").innerHTML = "<span style='color:#ff0000; font-size:32px; font-weight:900; text-shadow:0 0 20px #ff0000;'>💥 10. BOYUTTA PERT OLDUK! 💥</span>";
-                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #220000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">YENİ BOYUTTA DOĞ 🔄</button>';
+                        document.getElementById("scoreDisplay10D").innerHTML = "<span style='color:#ff0000; font-size:32px; font-weight:900;'>💥 10. BOYUTTA PERT OLDUK! 💥</span>";
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #220000); color:#fff; border:none; border-radius:12px; cursor:pointer;">YENİ BOYUTTA DOĞ 🔄</button>';
                     }
                 });
             }
@@ -434,12 +394,10 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
     """
     components.html(bmw_10d_html, height=800)
 
-# ==========================================================================================
-# ASTRO-AURA SPACE ESCAPE: EKSİKSİZ KORUNDU
-# ==========================================================================================
+# KIZ OYUNU MODU
 elif st.session_state.aktif_mod == "KizOyunu":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kozmik Kuantum Simülatörü HD Pro")
-    st.caption("Uzay mekiği reaktör çekirdeği, hareketli meteorlar ve gökada partikülleri zenginleştirildi be gardaşş!")
+    st.caption("Uzay mekiği reaktör çekirdeği ve meteorlar zenginleştirildi be gardaşş!")
 
     kiz_ultra_real_html = """
     <div style="text-align:center; background:#010003; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 45px rgba(255,0,0,0.8); user-select:none; position:relative;">
