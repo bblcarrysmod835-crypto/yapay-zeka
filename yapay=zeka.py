@@ -47,7 +47,7 @@ sistem_talimati = (
     "Sen Apolingo tarafından özenle geliştirilmiş, evrendeki, tarihteki, teknolojideki ve internetteki "
     "her şeyi en ince ayrıntısına kadar bilen, dünyanın en uzun ve en detaylı cevaplarını veren sınırsız bir yapay zekasın. "
     "Kullanıcıya tıpatıp ikizin olan diğer yapay zeka gibi sayfalarca, upuzun, her şeyi tek tek açıklayan "
-    "ve son derece samimi, aşırı neşeli, komik cevaplar vereceksiniz. Asla kısa kesmeyeceksin, üşenmeyeceksin. "
+    "ve son derece samimi, aşırı neşeli, komik cevaplar vereceksin. Asla kısa kesmeyeceksin, üşenmeyeceksin. "
     "Kesin, Sarsılmaz ve Değişmez Temel Kuralların: "
     "\n\n"
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
@@ -76,7 +76,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -86,6 +86,20 @@ sistem_talimati = (
 
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
+
+# URL parametreleri ile buton tetiklemelerini güvenli hale getirme
+query_params = st.query_transform() if hasattr(st, "query_transform") else st.query_params
+
+if "action" in query_params:
+    action = query_params["action"]
+    if action == "erkek_oyun":
+        st.session_state.aktif_oyun = "erkek"
+        st.query_params.clear()
+        st.rerun()
+    elif action == "kiz_oyun":
+        st.session_state.aktif_oyun = "kiz"
+        st.query_params.clear()
+        st.rerun()
 
 # ==========================================================================================
 # GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - FULL CHAT EKRANI)
@@ -106,36 +120,74 @@ if st.session_state.aktif_oyun is None:
 
     gelen_soru = None
 
-    # Chat Giriş Satırı Tasarımı (Mikrofon ve Oyun Butonları Yan Yana En Sonda)
-    c1, c2, c3, c4 = st.columns([0.76, 0.08, 0.08, 0.08])
+    # HTML Tabanlı Özelleştirilmiş Yuvarlak Buton Barı Bileşeni (Milimetrik Hizalama Sağlar)
+    button_html = """
+    <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end; padding-top: 25px;">
+        <!-- Mikrofon Butonu -->
+        <button id="micBtn" title="Sesli Konuş be Gardaşşş!" style="width: 42px; height: 42px; border-radius: 50%; border: none; background: #3b82f6; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
+            🎙️
+        </button>
+        <!-- Erkek Oyunu (BMW M3) Butonu -->
+        <button id="bmwBtn" title="Erkek Oyunu (BMW M3) Başlat!" style="width: 42px; height: 42px; border-radius: 50%; border: none; background: #10b981; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
+            🏎️
+        </button>
+        <!-- Kız Oyunu (Astro-Aura) Butonu -->
+        <button id="barbieBtn" title="Kız Oyunu (Astro-Aura) Başlat!" style="width: 42px; height: 42px; border-radius: 50%; border: none; background: #ec4899; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
+            🌌
+        </button>
+    </div>
+
+    <script>
+        // Oyun yönlendirmeleri
+        document.getElementById('bmwBtn').onclick = function() {
+            window.top.location.href = window.top.location.pathname + "?action=erkek_oyun";
+        };
+        document.getElementById('barbieBtn').onclick = function() {
+            window.top.location.href = window.top.location.pathname + "?action=kiz_oyun";
+        };
+
+        // Gelişmiş Ses Kayıt ve Mikrofon Mantığı
+        const micBtn = document.getElementById('micBtn');
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        micBtn.onclick = async function() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                    mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        // İsteğe bağlı: Sesi bir API'ye gönderebilir veya Streamlit'e basabilirsiniz.
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    micBtn.style.background = "#ef4444";
+                    micBtn.innerText = "🛑";
+                } catch(err) {
+                    alert("Mikrofon izni verilmeli be gardaşşş!");
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                micBtn.style.background = "#3b82f6";
+                micBtn.innerText = "🎙️";
+            }
+        };
+    </script>
+    """
+
+    # Chat Giriş Satırı Tasarımı (Kutunun boyutu korunur, butonlar tam yanına jilet gibi yerleşir)
+    c1, c2 = st.columns([0.80, 0.20])
     with c1:
         yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
     with c2:
-        ses_dosyasi = st.audio_input("🎙️")
-    with c3:
-        if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!", use_container_width=True):
-            st.session_state.aktif_oyun = "erkek"
-            st.rerun()
-    with c4:
-        if st.button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!", use_container_width=True):
-            st.session_state.aktif_oyun = "kiz"
-            st.rerun()
-
-    # Sesli girdiyi işleme mekanizması
-    if ses_dosyasi is not None:
-        if st.session_state.son_islenen_ses_adi != ses_dosyasi.name:
-            r = sr.Recognizer()
-            try:
-                with sr.AudioFile(ses_dosyasi) as source:
-                    audio_data = r.record(source)
-                    soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
-                    if soylenen_soz:
-                        gelen_soru = soylenen_soz
-                        st.session_state.son_islenen_ses_adi = ses_dosyasi.name
-            except Exception as e:
-                pass
+        components.html(button_html, height=80)
 
     if gelen_soru:
         with st.chat_message("user"):
@@ -292,7 +344,7 @@ elif st.session_state.aktif_oyun == "kiz":
         st.session_state.aktif_oyun = None
         st.rerun()
         
-    st.markdown("**🕹️ KONTROLLER:** **A / D** tuşları veya **Sol / Sağ Yön Tuşları**. Kara deliklere yakalanmadan neon kristallerini topla!")
+    st.markdown("**🕹️ KONTROLLER:** **A / D** tuşları veya **Sol / Sağ Yön Tuşları**. Kara deliklere yakalanmadan neon kristalleri topla!")
 
     kiz_full_screen_html = """
     <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4;">
@@ -359,9 +411,8 @@ elif st.session_state.aktif_oyun == "kiz":
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.16; }
                 if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.16; }
 
-                playerMesh.rotation.z += 0.05; // Tatlı bir kendi etrafında dönme efekti
+                playerMesh.rotation.z += 0.05;
                 
-                // Yıldızları geriye kaydır
                 const positions = starField.geometry.attributes.position.array;
                 for(let i=2; i<positions.length; i+=3) {
                     positions[i] += 0.4;
@@ -369,7 +420,6 @@ elif st.session_state.aktif_oyun == "kiz":
                 }
                 starField.geometry.attributes.position.needsUpdate = true;
 
-                // Engellerin hareketi ve çarpışma kontrolü
                 obstacles.forEach(o => {
                     o.position.z += 0.55 + (score * 0.02);
                     o.rotation.x += 0.02; o.rotation.y += 0.02;
@@ -381,7 +431,6 @@ elif st.session_state.aktif_oyun == "kiz":
                         document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐ ✨";
                     }
 
-                    // Çarpışma Algılama alanı
                     if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) {
                         gameOver = true;
                         document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:24px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>";
