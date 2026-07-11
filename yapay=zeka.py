@@ -24,6 +24,10 @@ if "aktif_oyun" not in st.session_state:
 if "mic_aktif" not in st.session_state:
     st.session_state.mic_aktif = False
 
+# Gizli ses girdisi hafızası (Sorunu çözen anahtar kutu)
+if "sesli_girdi_hafizasi" not in st.session_state:
+    st.session_state.sesli_girdi_hafizasi = None
+
 # Ses çalma fonksiyonu
 def sesi_cal(metin):
     try:
@@ -74,7 +78,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -145,79 +149,94 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # DOĞRUDAN URL/SORGU PANELİNE METİN GÖNDEREN DEVLESTİRİLMİŞ JAVASCRIPT MOTORU
-    JS_RITIM_MIC = """
-    <script>
-    if (window.parent && !window.parent.ritimSistemKuruldu) {
-        window.parent.ritimSistemKuruldu = true;
-        window.parent.audioContext = null;
-        window.parent.analyser = null;
-        window.parent.dataArray = null;
-        window.parent.recognition = null;
+    # IFRAME ENGELLERİNİ AŞAN VE ARKA PLANDA YAZI YAKALAYAN KULLANICI KÖPRÜSÜ
+    if st.session_state.mic_aktif:
+        JS_RITIM_MIC = """
+        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px;">
+            <div id="kucukBar1" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
+            <div id="kucukBar2" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
+            <div id="kucukBar3" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
+            <div id="kucukBar4" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
+        </div>
+        
+        <script>
+        // Ses algılama ve görselleştirme motoru
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioContext = new AudioContext();
+                const source = audioContext.createMediaStreamSource(stream);
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 32;
+                source.connect(analyser);
+                
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
 
-        window.parent.document.addEventListener('BaslatRitimMic', function () {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    window.parent.audioContext = new AudioContext();
-                    const source = window.parent.audioContext.createMediaStreamSource(stream);
-                    window.parent.analyser = window.parent.audioContext.createAnalyser();
-                    window.parent.analyser.fftSize = 32;
-                    source.connect(window.parent.analyser);
-                    
-                    const bufferLength = window.parent.analyser.frequencyBinCount;
-                    window.parent.dataArray = new Uint8Array(bufferLength);
+                function drawRitim() {
+                    requestAnimationFrame(drawRitim);
+                    analyser.getByteFrequencyData(dataArray);
+                    let sum = 0;
+                    for(let i=0; i<bufferLength; i++) { sum += dataArray[i]; }
+                    let average = sum / bufferLength;
 
-                    function drawRitim() {
-                        if(!window.parent.analyser) return;
-                        requestAnimationFrame(drawRitim);
-                        window.parent.analyser.getByteFrequencyData(window.parent.dataArray);
-                        
-                        let sum = 0;
-                        for(let i=0; i<bufferLength; i++) { sum += window.parent.dataArray[i]; }
-                        let average = sum / bufferLength;
-
-                        for(let i=1; i<=4; i++) {
-                            const bar = window.parent.document.getElementById('kucukBar' + i);
-                            if(bar) {
-                                let height = Math.max(4, (average * 0.45) * (i * 0.2 + 0.6));
-                                bar.style.height = Math.min(30, height) + 'px';
-                            }
+                    for(let i=1; i<=4; i++) {
+                        const bar = document.getElementById('kucukBar' + i);
+                        if(bar) {
+                            let height = Math.max(4, (average * 0.45) * (i * 0.2 + 0.6));
+                            bar.style.height = Math.min(30, height) + 'px';
                         }
                     }
-                    drawRitim();
+                }
+                drawRitim();
 
-                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                    window.parent.recognition = new SpeechRecognition();
-                    window.parent.recognition.lang = 'tr-TR';
-                    window.parent.recognition.interimResults = false;
-                    window.parent.recognition.continuous = false;
+                // Güvenli Ses Tanıma ve Üst Pencere Köprüsü
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'tr-TR';
+                recognition.interimResults = false;
+                recognition.continuous = false;
 
-                    window.parent.recognition.onresult = (event) => {
-                        const metinSonuc = event.results[0][0].transcript;
-                        if(metinSonuc && metinSonuc.trim() !== "") {
-                            // Chat_input engelini aşmak için URL parametresine basıp sayfayı tetikliyoruz
-                            const anaUrl = new URL(window.parent.location.href);
-                            anaUrl.searchParams.set("sesli_veri", metinSonuc);
-                            window.parent.location.href = anaUrl.toString();
-                        }
-                    };
-                    window.parent.recognition.start();
-                }).catch(err => { console.log(err); });
+                recognition.onresult = (event) => {
+                    const metinSonuc = event.results[0][0].transcript;
+                    if(metinSonuc && metinSonuc.trim() !== "") {
+                        // Streamlit Query Params engeline takılmamak için görünmez bir inputa basıyoruz
+                        window.parent.postMessage({type: 'sesli_konusma', text: metinSonuc}, '*');
+                    }
+                };
+                
+                recognition.onerror = (e) => { console.log(e); };
+                recognition.start();
+            }).catch(err => { console.log("Mikrofon izni yok be gardaş:", err); });
+        }
+        </script>
+        """
+        # HTML köprüsünü çalıştırıyoruz
+        girdi_yakalayici = components.html(JS_RITIM_MIC, height=42)
+
+    # ÜST PENCEREDEN GELEN POSTMESSAGE VERİSİNİ KOD TARAFINDA YAKALAYAN HACK
+    # Streamlit'in yenilenmesini tetiklemek için deneysel bir text_input kullanıyoruz
+    gizemli_veri = st.text_input("Ses Köprüsü", key="gizemli_ses_koprusu", label_visibility="collapsed")
+    
+    # HTML'den gelen postMessage verilerini Streamlit inputuna aktarmak için küçük bir JavaScript enjeksiyonu
+    st.markdown("""
+        <script>
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'sesli_konusma') {
+                const inputs = window.parent.document.querySelectorAll('input[aria-label="Ses Köprüsü"]');
+                if(inputs.length > 0) {
+                    inputs[0].value = event.data.text;
+                    inputs[0].dispatchEvent(new Event('input', { bubbles: true }));
+                    inputs[0].dispatchEvent(new Event('change', { bubbles: true }));
+                }
             }
         });
+        </script>
+    """, unsafe_allow_html=True)
 
-        window.parent.document.addEventListener('DurdurRitimMic', function () {
-            if(window.parent.recognition) { try { window.parent.recognition.abort(); } catch(e){} }
-            if(window.parent.audioContext) { try { window.parent.audioContext.close(); } catch(e){} }
-            window.parent.recognition = null;
-            window.parent.analyser = null;
-            window.parent.audioContext = null;
-        });
-    }
-    </script>
-    """
-    components.html(JS_RITIM_MIC, height=0)
+    if gizemli_veri and gizemli_veri != "":
+        gelen_soru = gizemli_veri
+        st.session_state.mic_aktif = False
 
     # PANEL MATRİSİ
     c_mic, c_chat, c_g1, c_g2 = st.columns([0.12, 0.76, 0.06, 0.06])
@@ -229,32 +248,17 @@ if st.session_state.aktif_oyun is None:
         if st.button(mic_simge, key="normal_mic_tasarim"):
             if st.session_state.mic_aktif:
                 st.session_state.mic_aktif = False
-                st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('DurdurRitimMic'));</script>""", unsafe_allow_html=True)
                 st.rerun()
             else:
                 st.session_state.mic_aktif = True
-                st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('BaslatRitimMic'));</script>""", unsafe_allow_html=True)
                 st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-        
-        # MİKROFONUN ALTINDAKİ KÜÇÜK DİKDÖRTGEN RİTİM ALANI
-        if st.session_state.mic_aktif:
-            kucuk_dikdortgen_ritim = """
-            <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px; margin-top: 5px;">
-                <div id="kucukBar1" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
-                <div id="kucukBar2" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
-                <div id="kucukBar3" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
-                <div id="kucukBar4" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
-            </div>
-            """
-            st.components.v1.html(kucuk_dikdortgen_ritim, height=42)
         
     with c_chat:
         yazi_soru = st.chat_input("Mesajını yaz veya konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
             st.session_state.mic_aktif = False
-            st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('DurdurRitimMic'));</script>""", unsafe_allow_html=True)
 
     with c_g1:
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
@@ -269,13 +273,6 @@ if st.session_state.aktif_oyun is None:
             st.session_state.aktif_oyun = "kiz"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-
-    # SESLİ VERİ YAKALAYICI VE OTOMATİK TEMİZLEYİCİ
-    if "sesli_veri" in st.query_params:
-        gelen_soru = st.query_params["sesli_veri"]
-        st.session_state.mic_aktif = False
-        # URL'yi temizle ki sonsuz döngüye girmesin gardaş!
-        st.query_params.clear()
 
     # Girdi geldiğinde yapay zekayı tetikleme hattı
     if gelen_soru:
