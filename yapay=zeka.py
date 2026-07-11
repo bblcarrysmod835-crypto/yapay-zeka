@@ -75,7 +75,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teoriisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -87,18 +87,13 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ: MAVİ NEON VE SİBER AMBİYANS DÜZENİ + SAF BEYAZ INPUT
+# CSS DÜZENLEMELERİ: TAM İSTEDİĞİN ÖZEL RENK KOMBİNASYONU
 # ==========================================================================================
 st.markdown("""
     <style>
-    /* 1. 4 Köşeden Muhteşem Siber Mavi Ambiyans Işık Efektli Arka Plan */
+    /* Genel Arka Plan */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
-        background-color: #020617 !important;
-        background-image: 
-            radial-gradient(circle at 0% 0%, #1e3a8a 0%, transparent 45%),
-            radial-gradient(circle at 100% 0%, #1e3a8a 0%, transparent 45%),
-            radial-gradient(circle at 0% 100%, #0f172a 0%, transparent 45%),
-            radial-gradient(circle at 100% 100%, #0369a1 0%, transparent 45%) !important;
+        background-color: #0b0705 !important;
         background-attachment: fixed !important;
         color: #ffffff !important;
     }
@@ -107,67 +102,65 @@ st.markdown("""
         color: #ffffff !important;
     }
     
-    /* 2. ANA BAŞLIK */
+    /* 1. APOLINGO MASTER AI YAZISI - SAF MAVİ NEON */
     .havali-ana-baslik {
         text-align: center !important;
         font-family: 'Segoe UI', sans-serif !important;
-        font-size: 32px !important; 
+        font-size: 36px !important; 
         font-weight: 900 !important;
         letter-spacing: 3px !important;
-        color: #38bdf8 !important; 
-        text-shadow: 0 0 15px rgba(56, 189, 248, 0.6) !important;
+        color: #00d2ff !important; 
+        text-shadow: 0 0 20px rgba(0, 210, 255, 0.9), 0 0 40px rgba(0, 210, 255, 0.4) !important;
         margin-top: 15px !important;
     }
     
     .havali-alt-yazi {
         text-align: center !important;
-        color: #93c5fd !important;
+        color: #8be4ff !important;
         font-size: 14px !important;
         margin-bottom: 25px !important;
     }
     
-    /* 3. SIDEBAR: SİBER NEON MAVİ DÜZEN */
+    /* 2. SIDEBAR */
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
-        background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 60%, #020617 100%) !important;
-        border-right: 3px solid #38bdf8 !important;
-        box-shadow: 8px 0 30px rgba(56, 189, 248, 0.25) !important;
+        background: linear-gradient(180deg, #150d0a 0%, #3e2720 100%) !important;
+        border-right: 3px solid #00d2ff !important;
     }
     
-    [data-testid="stSidebar"] * {
-        color: #ffffff !important;
-    }
-    
-    /* 4. SOHBET BALONLARI */
+    /* 3. SOHBET BALONLARI */
     [data-testid="stChatMessage"] {
-        background-color: rgba(15, 23, 42, 0.8) !important;
-        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        background-color: rgba(30, 20, 15, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         border-radius: 12px !important;
-        margin-bottom: 15px !important;
     }
     
-    /* 5. MESAJ GİRİŞ KUTUSU - LEKESİZ SAF BEYAZ */
+    /* 4. MESAJ YAZMA ARKA PLAN ALANI - 4 KÖŞEDEN IŞIK VURAN KAHVERENGİ PANEL */
+    [data-testid="stChatInputContainer"] {
+        background-color: #2e1c16 !important;
+        background-image: 
+            radial-gradient(circle at 0% 0%, #795548 0%, transparent 40%),
+            radial-gradient(circle at 100% 0%, #5d4037 0%, transparent 40%),
+            radial-gradient(circle at 0% 100%, #4e342e 0%, transparent 40%),
+            radial-gradient(circle at 100% 100%, #8d6e63 0%, transparent 40%) !important;
+        padding: 20px !important;
+        border-radius: 20px !important;
+        border: 2px solid #5d4037 !important;
+        box-shadow: 0 0 30px rgba(121, 85, 72, 0.5) !important;
+    }
+
     textarea[data-testid="stChatInputTextArea"] {
-        color: #000000 !important;
-        border-radius: 12px !important;
-        background-color: #ffffff !important;
-        border: 2px solid #ffffff !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
-        z-index: 9999 !important;
-        position: relative !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
+        background-color: #1a0f0c !important;
+        border: 1px solid #795548 !important;
     }
     textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #38bdf8 !important;
-        background-color: #ffffff !important;
+        border-color: #00d2ff !important;
     }
-    textarea[data-testid="stChatInputTextArea"]::placeholder {
-        color: #444444 !important;
-    }
+    
     .stAudioInput {
-        background-color: #ffffff !important;
-        border: 2px solid #ffffff !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
-        z-index: 9999 !important;
-        position: relative !important;
+        background-color: #1a0f0c !important;
+        border: 1px solid #795548 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -177,7 +170,6 @@ st.markdown("""
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE PRO")
-    st.markdown("**CYBER BLUE EDITION**")
     st.write("---")
     
     secilen_mod = st.radio(
@@ -201,7 +193,7 @@ with st.sidebar:
 # ==========================================================================================
 if st.session_state.aktif_mod == "Sohbet":
     st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER AI</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="havali-alt-yazi">Kurucu: Apolingo | Siber Mavi Ambiyans Düzeni</p>', unsafe_allow_html=True)
+    st.markdown('<p class="havali-alt-yazi">Kurucu: Apolingo</p>', unsafe_allow_html=True)
     st.write("---")
 
     for mesaj in st.session_state.sohbet_hafizasi:
@@ -239,7 +231,7 @@ if st.session_state.aktif_mod == "Sohbet":
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("⚡ Apolingo Siber Panellerde Hesaplıyor..."):
+        with st.spinner("⚡ Apolingo Hesaplıyor..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
@@ -260,19 +252,19 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# %100 ÇALIŞAN ANLIK ENJEKSİYONLU BMW M3 MAKAS SİMÜLATÖRÜ
+# OYUN KISMI - NEON KIRMIZI TEMALI BMW M3 MAKAS SİMÜLATÖRÜ
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
-    st.markdown("### 🏎️ BMW M3 Ultra Neon Otoban Makas Simülatörü")
+    st.markdown("<h3 style='color:#ff003c; text-shadow: 0 0 10px #ff003c;'>🏎️ BMW M3 Ultra Kırmızı Otoban Makas Simülatörü</h3>", unsafe_allow_html=True)
     st.caption("A / D veya Klavye Yön Tuşları ile sür. Butonlar dokunmatik uyumludur.")
 
     bmw_nextgen_html = """
-    <div style="text-align:center; background:#020202; padding:15px; border-radius:16px; border:3px solid #38bdf8; box-shadow: 0 0 35px rgba(56,189,248,0.5); user-select:none; position:relative;">
-        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #38bdf8; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #38bdf8;">◀</button>
-        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #38bdf8; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #38bdf8;">▶</button>
+    <div style="text-align:center; background:#050001; padding:15px; border-radius:16px; border:3px solid #ff003c; box-shadow: 0 0 35px rgba(255,0,60,0.6); user-select:none; position:relative;">
+        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff003c; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff003c;">◀</button>
+        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff003c; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff003c;">▶</button>
         <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanel" style="margin-top:15px;">
-            <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #38bdf8;">PRO-SPEED: 120 KM/H</h2>
+            <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #ff003c;">PRO-SPEED: 120 KM/H</h2>
             <div id="restartButtonContainer"></div>
         </div>
     </div>
@@ -289,7 +281,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 
             function initGame(container) {
                 const scene = new THREE.Scene();
-                scene.fog = new THREE.FogExp2(0x020202, 0.02);
+                scene.fog = new THREE.FogExp2(0x050001, 0.02);
                 
                 const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
                 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -299,12 +291,12 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                 const sunLight = new THREE.DirectionalLight(0xffffff, 3.0);
                 sunLight.position.set(10, 50, 20);
                 scene.add(sunLight);
-                scene.add(new THREE.AmbientLight(0x111111, 1.5));
+                scene.add(new THREE.AmbientLight(0x221111, 1.5));
 
-                const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x151515, roughness: 0.7 }));
+                const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x151111, roughness: 0.7 }));
                 scene.add(road);
 
-                const leftBarrier = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.8, 1000), new THREE.MeshStandardMaterial({ color: 0x333333 }));
+                const leftBarrier = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.8, 1000), new THREE.MeshStandardMaterial({ color: 0x442222 }));
                 leftBarrier.position.set(-8.2, 0.4, 0);
                 const rightBarrier = leftBarrier.clone();
                 rightBarrier.position.x = 8.2;
@@ -312,14 +304,14 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 
                 let lines = [];
                 for(let i=0; i<25; i++){
-                    let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.11, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                    let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.11, 8), new THREE.MeshBasicMaterial({ color: 0xff003c }));
                     lMesh.position.set(0, 0.06, -i * 35);
                     scene.add(lMesh);
                     lines.push(lMesh);
                 }
 
                 const bmwM3 = new THREE.Group();
-                const bodyMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, metalness: 0.9, roughness: 0.1 });
+                const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff003c, metalness: 0.9, roughness: 0.1 });
                 const body = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.4, 3.2), bodyMat);
                 body.position.y = 0.3;
                 bmwM3.add(body);
@@ -329,7 +321,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                 cabin.position.set(0, 0.65, -0.2);
                 bmwM3.add(cabin);
 
-                const xenonMat = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+                const xenonMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
                 const stopMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
                 const fLightL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.08, 0.1), xenonMat); fLightL.position.set(-0.6, 0.3, -1.6);
                 const fLightR = fLightL.clone(); fLightR.position.x = 0.6;
@@ -341,7 +333,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                 scene.add(bmwM3);
 
                 let traffic = [];
-                const colors = [0xff1155, 0x00ffcc, 0xffcc00, 0x6600ff];
+                const colors = [0xffcc00, 0x00ffcc, 0xffffff, 0x9900ff];
                 for(let i=0; i<4; i++){
                     let tGroup = new THREE.Group();
                     let tBody = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 3.0), new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.6, roughness: 0.2 }));
@@ -401,8 +393,8 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                             }
                             if(Math.abs(bmwM3.position.x - t.position.x) < 1.45 && Math.abs(bmwM3.position.z - t.position.z) < 3.1) { 
                                 gameOver = true; 
-                                document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff0055; text-shadow:0 0 10px #ff0055;'>💥 KAZA YAPILDI! SANAYİ YOLU GÖZÜKTÜ! 💥</span>";
-                                document.getElementById("restartButtonContainer").innerHTML = '<button id="btnResetGame" style="margin-top:15px; padding:15px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #38bdf8, #0f172a); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #38bdf8;">M3\'Ü YENİDEN MARŞ ET 🔄</button>';
+                                document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff003c; text-shadow:0 0 10px #ff003c;'>💥 SANAYİ YOLU GÖZÜKTÜ! 💥</span>";
+                                document.getElementById("restartButtonContainer").innerHTML = '<button id="btnResetGame" style="margin-top:15px; padding:15px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff003c, #1a0005); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff003c;">M3\'Ü YENİDEN MARŞ ET 🔄</button>';
                                 
                                 document.getElementById("btnResetGame").addEventListener("click", () => {
                                     score = 0;
@@ -428,19 +420,19 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
     components.html(bmw_nextgen_html, height=780)
 
 # ==========================================================================================
-# %100 ÇALIŞAN ANLIK ENJEKSİYONLU ASTRO-AURA GALAKSİ JETİ OYUNU
+# OYUN KISMI - NEON KIRMIZI TEMALI ASTRO-AURA GALAKSİ JETİ
 # ==========================================================================================
 elif st.session_state.aktif_mod == "KizOyunu":
-    st.markdown("### 🌌 Astro-Aura 3-Layer Derin Uzay Savaşçısı")
-    st.caption("A / D veya Klavye Yön Tuşları ile jeti yönlendir. Katmanlı derin uzay parallax motoru devrede!")
+    st.markdown("<h3 style='color:#ff003c; text-shadow: 0 0 10px #ff003c;'>🌌 Astro-Aura Kırmızı Galaksi Savaşçısı</h3>", unsafe_allow_html=True)
+    st.caption("A / D veya Klavye Yön Tuşları ile jeti yönlendir.")
 
     astro_premium_html = """
-    <div style="text-align:center; background:#010103; padding:15px; border-radius:16px; border:3px solid #38bdf8; box-shadow: 0 0 35px rgba(56,189,248,0.5); user-select:none; position:relative;">
-        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #38bdf8; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #38bdf8;">◀</button>
-        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #38bdf8; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #38bdf8;">▶</button>
+    <div style="text-align:center; background:#050001; padding:15px; border-radius:16px; border:3px solid #ff003c; box-shadow: 0 0 35px rgba(255,0,60,0.6); user-select:none; position:relative;">
+        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff003c; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff003c;">◀</button>
+        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff003c; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff003c;">▶</button>
         <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanelKiz" style="margin-top:15px;">
-            <h2 id="kizScoreDisplay" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #38bdf8;">COSMIC MATRİX: 0</h2>
+            <h2 id="kizScoreDisplay" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #ff003c;">COSMIC MATRİX: 0</h2>
             <div id="restartButtonContainerKiz"></div>
         </div>
     </div>
@@ -457,17 +449,17 @@ elif st.session_state.aktif_mod == "KizOyunu":
 
             function initKizGame(container) {
                 const scene = new THREE.Scene();
-                scene.fog = new THREE.FogExp2(0x010103, 0.015);
+                scene.fog = new THREE.FogExp2(0x050001, 0.015);
                 
                 const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
                 const renderer = new THREE.WebGLRenderer({ antialias: true });
                 renderer.setSize(container.clientWidth, 550);
                 container.appendChild(renderer.domElement);
 
-                const neonLight = new THREE.PointLight(0x00ffff, 4, 200);
+                const neonLight = new THREE.PointLight(0xff003c, 4, 200);
                 neonLight.position.set(0, 10, -20);
                 scene.add(neonLight);
-                scene.add(new THREE.AmbientLight(0x051d2f, 2.0));
+                scene.add(new THREE.AmbientLight(0x2a050c, 2.0));
 
                 function createStars(color, size, count) {
                     const geo = new THREE.BufferGeometry();
@@ -481,11 +473,11 @@ elif st.session_state.aktif_mod == "KizOyunu":
                     return new THREE.Points(geo, new THREE.PointsMaterial({ color: color, size: size, transparent: true, opacity: 0.9 }));
                 }
                 const layer1 = createStars(0xffffff, 0.2, 300);
-                const layer2 = createStars(0x38bdf8, 0.35, 200);
+                const layer2 = createStars(0xff003c, 0.35, 200);
                 scene.add(layer1, layer2);
 
                 const playerJet = new THREE.Group();
-                const jetMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.95, roughness: 0.05 });
+                const jetMat = new THREE.MeshStandardMaterial({ color: 0xff003c, metalness: 0.95, roughness: 0.05 });
                 const core = new THREE.Mesh(new THREE.ConeGeometry(0.5, 2.5, 4), jetMat);
                 core.rotation.x = Math.PI / 2;
                 const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.04, 1.0), jetMat); wingL.position.set(-0.8, -0.1, 0.3); wingL.rotation.y = 0.2;
@@ -504,7 +496,7 @@ elif st.session_state.aktif_mod == "KizOyunu":
                 let asteroids = [];
                 for(let i=0; i<5; i++){
                     let astGeo = new THREE.DodecahedronGeometry(1.3, 1);
-                    let astMat = new THREE.MeshStandardMaterial({ color: 0x0f2b48, roughness: 0.2, metalness: 0.8, emissive: 0x05182a });
+                    let astMat = new THREE.MeshStandardMaterial({ color: 0x3d000c, roughness: 0.2, metalness: 0.8, emissive: 0x1a0005 });
                     let ast = new THREE.Mesh(astGeo, astMat);
                     ast.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -60 - (i * 40));
                     scene.add(ast);
@@ -562,8 +554,8 @@ elif st.session_state.aktif_mod == "KizOyunu":
                             
                             if(Math.abs(playerJet.position.x - a.position.x) < 1.5 && Math.abs(playerJet.position.z - a.position.z) < 2.2) { 
                                 gameOver = true; 
-                                document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#38bdf8; text-shadow:0 0 10px #38bdf8;'>🔮 GRAVİTASYONEL DARBE ALINDI! 🔮</span>";
-                                document.getElementById("restartButtonContainerKiz").innerHTML = '<button id="btnResetKiz" style="margin-top:15px; padding:15px 45px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #38bdf8, #020617); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #38bdf8;">KARA DELİKTEN HIZLAN 🔄</button>';
+                                document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff003c; text-shadow:0 0 10px #ff003c;'>🔮 DARBE ALINDI! 🔮</span>";
+                                document.getElementById("restartButtonContainerKiz").innerHTML = '<button id="btnResetKiz" style="margin-top:15px; padding:15px 45px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff003c, #050001); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff003c;">YENİDEN BAŞLA 🔄</button>';
                                 
                                 document.getElementById("btnResetKiz").addEventListener("click", () => {
                                     score = 0;
