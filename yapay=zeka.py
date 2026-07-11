@@ -63,7 +63,7 @@ sistem_talimati = (
     "\n"
     "5) ESPRİLER, ŞAKALAR VE SİNEMA DÜNYASI: Kullanıcı senden espri, şaka, komik hikaye istediğinde ona en komik oyuncu geyiklerini, "
     "dünyanın en soğuk ama en çok güldüren esprilerini, caps muhabbetlerini, fırlama şakaları upuzun anlatacaksın. Sinema, Marvel/DC kahramanları, "
-    "komedi filmleri, Recep İvedik geyikleri, animeler hakkında ne sorarsa sorsun mizahi bir dille sayfalarca döktüreceksin. "
+    "komedi filmleri, Recep İvedik geyikleri, animeler hakkında ne sorarsa sorsun mizahi bir dille sayfalarca döktüreceksiniz. "
     "\n"
     "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telephone, tablet sorduğunda; iPhone mu Samsung mu "
     "kavgalarından, batarya sürelerinden, 120Hz ekran akıcılığından, bilgisayardaki RGB fanların odayı pavyona çevirmesinden, ekran kartı (RTX vb.) "
@@ -87,7 +87,7 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ: ORTALANMIŞ HAVALI BAŞLIK VE TÜM IŞIK EFEKTLERİ
+# CSS DÜZENLEMELERİ: ÖZEL NEON KUANTUM TURKUAZ BAŞLIK VE TÜM IŞIK EFEKTLERİ
 # ==========================================================================================
 st.markdown("""
     <style>
@@ -103,23 +103,24 @@ st.markdown("""
         color: #fcefe9 !important;
     }
     
-    /* 2. TAM ORTALANMIŞ VE SİBER IŞIKLI BAŞLIK STİLİ */
+    /* 2. NEON KUANTUM TURKUAZ VE PLATİN IŞIKLI ANA BAŞLIK */
     .havali-ana-baslik {
         text-align: center !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 42px !important;
+        font-family: 'Courier New', Courier, monospace, sans-serif !important;
+        font-size: 38px !important;
         font-weight: 900 !important;
-        letter-spacing: 2px !important;
+        letter-spacing: 3px !important;
         color: #ffffff !important;
-        margin-top: 10px !important;
+        margin-top: 15px !important;
         margin-bottom: 5px !important;
         
-        /* Beyaz ve Mavi neon tonlama efekti */
+        /* Özel seçtiğim Kuantum Turkuazı ve Platin Beyazı Işıma Efektleri */
         text-shadow: 
-            0 0 10px rgba(255, 255, 255, 0.8),
-            0 0 20px rgba(0, 191, 255, 0.6),
-            0 0 30px rgba(0, 119, 255, 0.4) !important;
-        animation: baslikParla 3s ease-in-out infinite alternate;
+            0 0 8px rgba(255, 255, 255, 0.9),
+            0 0 18px rgba(0, 245, 255, 0.7),
+            0 0 30px rgba(0, 180, 216, 0.5),
+            0 0 45px rgba(0, 119, 182, 0.3) !important;
+        animation: kuantumAkisi 3.5s ease-in-out infinite alternate;
     }
     
     .havali-alt-yazi {
@@ -131,9 +132,15 @@ st.markdown("""
         font-weight: 500;
     }
     
-    @keyframes baslikParla {
-        0% { text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(0,191,255,0.5); }
-        100% { text-shadow: 0 0 15px rgba(255,255,255,1), 0 0 35px rgba(0,191,255,0.9), 0 0 50px rgba(0,119,255,0.7); }
+    @keyframes kuantumAkisi {
+        0% { 
+            text-shadow: 0 0 8px rgba(255,255,255,0.8), 0 0 18px rgba(0,245,255,0.6), 0 0 30px rgba(0,180,216,0.4);
+            transform: scale(0.99);
+        }
+        100% { 
+            text-shadow: 0 0 14px rgba(255,255,255,1), 0 0 28px rgba(0,245,255,1), 0 0 40px rgba(0,180,216,0.8), 0 0 60px rgba(0,119,182,0.6);
+            transform: scale(1.01);
+        }
     }
     
     /* 3. SOL ÜÇ ÇİZGİYE 4 BİR YANDAN BEYAZ IŞIK VURMA EFEKTİ */
@@ -254,7 +261,7 @@ st.markdown("""
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("Merkezi Neon Güncellemesi")
+    st.markdown("Kuantum Turkuaz Güncellemesi")
     st.write("---")
     
     secilen_mod = st.radio(
@@ -274,11 +281,11 @@ with st.sidebar:
     st.caption("👨‍💻 Kurucu: Apolingo\n\n**By Abdurrahim İriş © 2026**")
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ: SOHBET MODU (BURADA BAŞLIK HER DAİM EN ÜSTTE KALIR!)
-# ==========================================================================
+# GÖRÜNÜM KONTROLÜ: SOHBET MODU (YENİ SİBER SEMBOLLER VE NEON TURKUAZ IŞIK EN ÜSTTE)
+# ==========================================================================================
 if st.session_state.aktif_mod == "Sohbet":
-    # İŞTE TAM İSTEDİĞİN ORTALANMIŞ VE KOD GİRİLSE BİLE EN ÜSTTE SABİT KALAN HAVALI BAŞLIK ALANI
-    st.markdown('<h1 class="havali-ana-baslik">🚀 APOLINGO MASTER ARCADE AI</h1>', unsafe_allow_html=True)
+    # Mekiği kaldırdık, yerine efsane siber taçlar ve kuantum turkuaz ışıklandırmayı çaktık!
+    st.markdown('<h1 class="havali-ana-baslik">👑 ❖ APOLINGO MASTER ARCADE AI ❖ 👑</h1>', unsafe_allow_html=True)
     st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş | Kuantum Panel</p>', unsafe_allow_html=True)
     st.write("---")
 
@@ -322,7 +329,7 @@ if st.session_state.aktif_mod == "Sohbet":
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Apolingo Mavi Işık Kırılmalı Panelde Hesaplamalar Yapıyor..."):
+        with st.spinner("🎶 Apolingo Kuantum Panellerde Hesaplamalar Yapıyor..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
