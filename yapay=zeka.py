@@ -21,7 +21,7 @@ if "client" not in st.session_state:
 if "ses_isleme_aktif" not in st.session_state:
     st.session_state.ses_isleme_aktif = True
 
-# Menü ve Oyun Seçim Durumu
+# Menü ve Oyun Seçim Durumu (Sidebar entegrasyonu için)
 if "aktif_mod" not in st.session_state:
     st.session_state.aktif_mod = "Sohbet"
 
@@ -75,7 +75,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teoriisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -87,31 +87,37 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ: YENİLENMİŞ KAHVERENGİ GLOW VE KIRMIZI OYUN TEMASI
+# CSS DÜZENLEMELERİ: GİRİŞ KUTUSU BEYAZ YAPILDI, SİMSİYAH EFEKTLER KALDIRILDI
 # ==========================================================================================
 st.markdown("""
     <style>
-    /* Genel Arka Plan ve Tüm Yazıların Beyaz Yapılması */
+    /* 1. Genel Arka Plan */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
-        background-color: #0b0705 !important;
+        background-color: #120a06 !important;
+        background-image: 
+            radial-gradient(circle at 0% 0%, #613b24 0%, transparent 45%),
+            radial-gradient(circle at 100% 0%, #613b24 0%, transparent 45%),
+            radial-gradient(circle at 0% 100%, #3d2212 0%, transparent 45%),
+            radial-gradient(circle at 100% 100%, #3d2212 0%, transparent 45%) !important;
         background-attachment: fixed !important;
         color: #ffffff !important;
     }
 
-    p, span, label, div, h1, h2, h3, h4, h5, h6, small {
+    /* Genel Metin Elemanları */
+    p, span, label, div {
         color: #ffffff !important;
     }
     
-    /* 1. APOLINGO MASTER AI YAZISI - SAF BEYAZ PARLAK */
+    /* 2. ANA BAŞLIK */
     .havali-ana-baslik {
         text-align: center !important;
-        font-family: 'Segoe UI', sans-serif !important;
-        font-size: 36px !important; 
-        font-weight: 900 !important;
-        letter-spacing: 3px !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        font-size: 30px !important; 
+        font-weight: 800 !important;
+        letter-spacing: 2px !important;
         color: #ffffff !important; 
-        text-shadow: 0 0 15px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.4) !important;
         margin-top: 15px !important;
+        margin-bottom: 5px !important;
     }
     
     .havali-alt-yazi {
@@ -119,67 +125,106 @@ st.markdown("""
         color: #ffffff !important;
         font-size: 14px !important;
         margin-bottom: 25px !important;
-        opacity: 0.8;
+        opacity: 0.9;
+        font-weight: 500;
     }
     
-    /* 2. SIDEBAR - BÜTÜN YAZILAR BEYAZ, ÇERÇEVE KIRMIZI OYUN AKSANI */
-    [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
-        background: linear-gradient(180deg, #150d0a 0%, #2e1c16 100%) !important;
-        border-right: 3px solid #ff0000 !important;
+    /* 3. SOL ÜÇ ÇİZGİ BUTONU */
+    button[data-testid="stSidebarCollapseButton"] {
+        background-color: #1a1a1a !important;
+        border-radius: 50% !important;
+        border: 2px solid #ffffff !important;
+        padding: 5px !important;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6) !important;   
+        transition: all 0.3s ease-in-out !important;
     }
-    [data-testid="stSidebar"] *, [data-testid="stSidebarUserContent"] * {
+    
+    button[data-testid="stSidebarCollapseButton"]:hover {
+        transform: rotate(90deg) scale(1.15) !important;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    button[data-testid="stSidebarCollapseButton"] svg {
+        fill: #ffffff !important;
         color: #ffffff !important;
     }
     
-    /* 3. SOHBET BALONLARI */
-    [data-testid="stChatMessage"] {
-        background-color: rgba(30, 20, 15, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 12px !important;
+    /* 4. SIDEBAR OYUN PANELİ: TONLAMALI PREMİUM KIRMIZI */
+    [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
+        background: linear-gradient(180deg, #4a0000 0%, #220000 50%, #050000 100%) !important;
+        border-right: 2px solid #8b0000 !important;
+        box-shadow: 5px 0 25px rgba(139, 0, 0, 0.3) !important;
     }
     
-    /* 4. MESAJ YAZMA ARKA PLAN ALANI - 4 KÖŞEDEN KAHVERENGİ IŞIK VURAN ÖZEL PANEL */
-    [data-testid="stChatInputContainer"] {
-        background-color: #1a0f0c !important;
-        background-image: 
-            radial-gradient(circle at 0% 0%, #a16e53 0%, transparent 45%),
-            radial-gradient(circle at 100% 0%, #8d5b42 0%, transparent 45%),
-            radial-gradient(circle at 0% 100%, #6e432d 0%, transparent 45%),
-            radial-gradient(circle at 100% 100%, #bc8567 0%, transparent 45%) !important;
-        padding: 20px !important;
-        border-radius: 20px !important;
-        border: 2px solid #6e432d !important;
-        box-shadow: 0 0 35px rgba(141, 91, 66, 0.6) !important;
+    [data-testid="stSidebar"] * {
+        color: #ffffff !important;
     }
 
-    textarea[data-testid="stChatInputTextArea"] {
-        color: #ffffff !important;
-        border-radius: 10px !important;
-        background-color: #0b0705 !important;
-        border: 1px solid #8d5b42 !important;
-    }
-    textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #ffffff !important;
-        box-shadow: 0 0 10px rgba(255,255,255,0.5) !important;
+    div[data-testid="stRadio"] label div[data-slide="true"] {
+        background-color: #ff3333 !important;
     }
     
+    /* 5. SOHBET BALONLARI */
+    [data-testid="stChatMessage"] {
+        background-color: rgba(20, 10, 5, 0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+        backdrop-filter: blur(8px);
+        margin-bottom: 15px !important;
+    }
+
+    [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] span {
+        color: #ffffff !important;
+    }
+    
+    /* 6. MESAJ GİRİŞ KUTUSU - ARTIK NORMAL VE BEYAZ */
+    textarea[data-testid="stChatInputTextArea"] {
+        color: #111111 !important; /* Beyaz zeminde rahat okunsun diye koyu yazı */
+        border-radius: 14px !important;
+        font-size: 16px !important;
+        background-color: #ffffff !important; /* KUTUNUN İÇİ NORMAL SAF BEYAZ */
+        border: 2px solid #cccccc !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    textarea[data-testid="stChatInputTextArea"]:focus {
+        border-color: #999999 !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Giriş alanındaki placeholder (ipucu) yazısının rengi */
+    textarea[data-testid="stChatInputTextArea"]::placeholder {
+        color: #666666 !important;
+        opacity: 0.8 !important;
+    }
+
+    /* Mikrofon Yuvası */
     .stAudioInput {
-        background-color: #0b0705 !important;
-        border: 1px solid #8d5b42 !important;
+        background-color: #ffffff !important;
+        border-radius: 50% !important;
+        border: 2px solid #cccccc !important;
+    }
+
+    /* Spinner Dönüşü */
+    div[data-testid="stSpinner"] i {
+        border-top-color: #ff3333 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================================================================
-# SOL TARAFTAKİ MENÜ
+# SOL TARAFTAKİ MENÜ (SIDEBAR) ALANI VE OYUNLARIN BURAYA BAĞLANMASI
 # ==========================================================================================
 with st.sidebar:
-    st.markdown("## 🎮 APOLINGO ARCADE PRO")
+    st.markdown("## 🎮 APOLINGO ARCADE")
+    st.markdown("Kırmızı Tonlamalı Özel Sürüm")
     st.write("---")
     
     secilen_mod = st.radio(
         "Aparatı Seç Be Gardaşşş:",
-        ["💬 Sohbet Modu", "🏎️ BMW M3 Hyper Makas", "🌌 Astro-Aura Galaksi Jeti"],
+        ["💬 Sohbet Modu", "🏎️ BMW M3 Makas Oyunu", "🌌 Astro-Aura Kuantum Oyunu"],
         index=0
     )
     
@@ -194,13 +239,14 @@ with st.sidebar:
     st.caption("👨‍💻 Kurucu: Apolingo\n\n**By Abdurrahim İriş © 2026**")
 
 # ==========================================================================================
-# SOHBET MODU
+# GÖRÜNÜM KONTROLÜ: SOHBET MODU
 # ==========================================================================================
 if st.session_state.aktif_mod == "Sohbet":
-    st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER AI</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="havali-alt-yazi">Kurucu: Apolingo</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER ARCADE AI</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş | Net Beyaz Görünüm</p>', unsafe_allow_html=True)
     st.write("---")
 
+    # Sohbet hafızasını ekrana basıyoruz
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
             with st.chat_message("user"):
@@ -210,9 +256,13 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.write(mesaj["content"])
 
     gelen_soru = None
+
+    # MİKROFON VE METİN GİRİŞİ YAN YANA
     c_mic, c_text = st.columns([0.10, 0.90])
+    
     with c_mic:
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
+        
     with c_text:
         yazi_soru = st.chat_input("Mesajını buraya yaz be gardaşşşş...")
         if yazi_soru:
@@ -227,7 +277,7 @@ if st.session_state.aktif_mod == "Sohbet":
                 if soylenen_soz:
                     gelen_soru = soylenen_soz
                     st.session_state.ses_isleme_aktif = False
-        except:
+        except Exception as e:
             pass
 
     if gelen_soru:
@@ -236,7 +286,7 @@ if st.session_state.aktif_mod == "Sohbet":
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("⚡ Apolingo Hesaplıyor..."):
+        with st.spinner("🎶 Apolingo Panellerde Hesaplamalar Yapıyor..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
@@ -250,337 +300,159 @@ if st.session_state.aktif_mod == "Sohbet":
                 with st.chat_message("assistant"):
                     st.write(cevap)
                 st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
+                
                 st.session_state.ses_isleme_aktif = True
                 sesi_cal(cevap)
                 st.rerun()
-            except:
+            except Exception as e:
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# OYUN KISMI - SAF KIRMIZI TEMALI BMW M3 MAKAS SİMÜLATÖRÜ
+# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
-    st.markdown("<h3 style='color:#ff0000; text-shadow: 0 0 15px #ff0000; font-weight:bold;'>🏎️ BMW M3 Ultra Kırmızı Otoban Makas Simülatörü</h3>", unsafe_allow_html=True)
-    st.caption("A / D veya Klavye Yön Tuşları ile sür. Butonlar dokunmatik uyumludur.")
+    st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
+    st.caption("Sol üstteki parıldayan Üç Çizgiye basarak istediğin an ana panele dönebilirsin gardaşşş!")
 
-    bmw_nextgen_html = """
-    <div style="text-align:center; background:#050001; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 35px rgba(255,0,0,0.7); user-select:none; position:relative;">
-        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">◀</button>
-        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">▶</button>
+    bmw_full_screen_html = """
+    <div style="text-align:center; background:#0d0603; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.5); user-select:none; position:relative;">
+        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(23,13,7,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(23,13,7,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
         <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanel" style="margin-top:15px;">
-            <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #ff0000;">PRO-SPEED: 120 KM/H</h2>
+            <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">4D Makas Skoru: 0 🌀</h2>
             <div id="restartButtonContainer"></div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        (function() {
-            const checkContainer = setInterval(() => {
-                const container = document.getElementById("bmwFullCanvasContainer");
-                if (container && typeof THREE !== 'undefined') {
-                    clearInterval(checkContainer);
-                    initGame(container);
-                }
-            }, 50);
+        const container = document.getElementById("bmwFullCanvasContainer");
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0503);
+        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
+        const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
+        scene.add(new THREE.AmbientLight(0x555555));
+        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x140b06, roughness: 0.5 })); scene.add(road);
+        let lines = [];
+        for(let i=0; i<20; i++){
+            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: '#ff3333' }));
+            lMesh.position.set(0, 0.09, -i * 30); scene.add(lMesh); lines.push(lMesh);
+        }
+        const bmwM3 = new THREE.Group();
+        const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 3.0), new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.9, roughness: 0.1 }));
+        baseMesh.position.y = 0.28; bmwM3.add(baseMesh);
+        const cabinMesh = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.45, 1.5), new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.05 }));
+        cabinMesh.position.set(0, 0.65, -0.1); bmwM3.add(cabinMesh);
+        const spMesh = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.08, 0.25), cabinMesh.material);
+        spMesh.position.set(0, 0.55, -1.35); bmwM3.add(spMesh);
+        bmwM3.position.set(0, 0, -8); scene.add(bmwM3);
+        let traffic = []; const colors = [0xffaa00, 0xff3366, 0x00ccff, 0x9933ff];
+        for(let i=0; i<4; i++){
+            let tMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.65, 2.8), new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.5 }));
+            tMesh.position.set((Math.random() - 0.5) * 11, 0.35, -50 - (i * 40)); scene.add(tMesh); traffic.push(tMesh);
+        }
+        camera.position.set(0, 4.2, -1.0); camera.lookAt(new THREE.Vector3(0, 0.5, -25));
+        let score = 0; let gameOver = false; let keys = {};
+        window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
+        let touchLeft = false, touchRight = false;
+        const bLeft = document.getElementById("btnLeft"); const bRight = document.getElementById("btnRight");
+        bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
+        bLeft.addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; }); bLeft.addEventListener("touchend", () => touchLeft = false);
+        bRight.addEventListener("mousedown", () => touchRight = true); bRight.addEventListener("mouseup", () => touchRight = false);
+        bRight.addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; }); bRight.addEventListener("touchend", () => touchRight = false);
 
-            function initGame(container) {
-                const scene = new THREE.Scene();
-                scene.fog = new THREE.FogExp2(0x050001, 0.02);
-                
-                const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ antialias: true });
-                renderer.setSize(container.clientWidth, 550);
-                container.appendChild(renderer.domElement);
-
-                const sunLight = new THREE.DirectionalLight(0xffffff, 3.0);
-                sunLight.position.set(10, 50, 20);
-                scene.add(sunLight);
-                scene.add(new THREE.AmbientLight(0x221111, 1.5));
-
-                const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x151111, roughness: 0.7 }));
-                scene.add(road);
-
-                const leftBarrier = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.8, 1000), new THREE.MeshStandardMaterial({ color: 0x442222 }));
-                leftBarrier.position.set(-8.2, 0.4, 0);
-                const rightBarrier = leftBarrier.clone();
-                rightBarrier.position.x = 8.2;
-                scene.add(leftBarrier, rightBarrier);
-
-                let lines = [];
-                for(let i=0; i<25; i++){
-                    let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.11, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
-                    lMesh.position.set(0, 0.06, -i * 35);
-                    scene.add(lMesh);
-                    lines.push(lMesh);
-                }
-
-                const bmwM3 = new THREE.Group();
-                const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff0000, metalness: 0.9, roughness: 0.1 });
-                const body = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.4, 3.2), bodyMat);
-                body.position.y = 0.3;
-                bmwM3.add(body);
-
-                const glassMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.0, metalness: 1.0 });
-                const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.4, 1.6), glassMat);
-                cabin.position.set(0, 0.65, -0.2);
-                bmwM3.add(cabin);
-
-                const xenonMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const stopMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-                const fLightL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.08, 0.1), xenonMat); fLightL.position.set(-0.6, 0.3, -1.6);
-                const fLightR = fLightL.clone(); fLightR.position.x = 0.6;
-                const bLightL = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.08, 0.1), stopMat); bLightL.position.set(-0.6, 0.3, 1.6);
-                const bLightR = bLightL.clone(); bLightR.position.x = 0.6;
-                bmwM3.add(fLightL, fLightR, bLightL, bLightR);
-
-                bmwM3.position.set(0, 0, -8);
-                scene.add(bmwM3);
-
-                let traffic = [];
-                const colors = [0xffcc00, 0x00ffcc, 0xffffff, 0x9900ff];
-                for(let i=0; i<4; i++){
-                    let tGroup = new THREE.Group();
-                    let tBody = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 3.0), new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.6, roughness: 0.2 }));
-                    tBody.position.y = 0.35;
-                    let tCabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.45, 1.4), glassMat);
-                    tCabin.position.set(0, 0.75, -0.1);
-                    tGroup.add(tBody, tCabin);
-                    tGroup.position.set((Math.random() - 0.5) * 12, 0, -50 - (i * 50));
-                    scene.add(tGroup);
-                    traffic.push(tGroup);
-                }
-
-                camera.position.set(0, 4.5, -3.5);
-                camera.lookAt(new THREE.Vector3(0, 0.6, -25));
-
-                let score = 0; let gameOver = false; let keys = {};
-                let tilt = 0;
-                window.addEventListener("keydown", e => keys[e.key] = true);
-                window.addEventListener("keyup", e => keys[e.key] = false);
-
-                let touchLeft = false, touchRight = false;
-                
-                document.getElementById("btnLeft").addEventListener("mousedown", () => touchLeft = true);
-                document.getElementById("btnLeft").addEventListener("mouseup", () => touchLeft = false);
-                document.getElementById("btnLeft").addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; });
-                document.getElementById("btnLeft").addEventListener("touchend", () => touchLeft = false);
-
-                document.getElementById("btnRight").addEventListener("mousedown", () => touchRight = true);
-                document.getElementById("btnRight").addEventListener("mouseup", () => touchRight = false);
-                document.getElementById("btnRight").addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; });
-                document.getElementById("btnRight").addEventListener("touchend", () => touchRight = false);
-
-                function animate() {
-                    if(!gameOver) {
-                        let speed = 1.2 + (score * 0.04);
-                        
-                        if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
-                            if(bmwM3.position.x > -6.8) { bmwM3.position.x -= 0.26; if(tilt < 0.16) tilt += 0.03; }
-                        } else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { 
-                            if(bmwM3.position.x < 6.8) { bmwM3.position.x += 0.26; if(tilt > -0.16) tilt -= 0.03; }
-                        } else {
-                            tilt *= 0.8;
-                        }
-                        bmwM3.rotation.z = tilt;
-                        bmwM3.rotation.y = tilt * 0.5;
-
-                        camera.position.y = 4.5 + Math.sin(Date.now() * 0.06) * (score * 0.003);
-                        lines.forEach(l => { l.position.z += speed; if(l.position.z > 20) l.position.z = -350; });
-
-                        traffic.forEach(t => {
-                            t.position.z += speed * 0.45;
-                            if(t.position.z > 3) { 
-                                t.position.z = -200 - Math.random()*60; 
-                                t.position.x = (Math.random() - 0.5) * 12; 
-                                score++; 
-                                document.getElementById("scoreDisplay4D").innerText = "PRO-SPEED: " + (120 + score * 8) + " KM/H"; 
-                            }
-                            if(Math.abs(bmwM3.position.x - t.position.x) < 1.45 && Math.abs(bmwM3.position.z - t.position.z) < 3.1) { 
-                                gameOver = true; 
-                                document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff0000; text-shadow:0 0 10px #ff0000;'>💥 SANAYİ YOLU GÖZÜKTÜ! 💥</span>";
-                                document.getElementById("restartButtonContainer").innerHTML = '<button id="btnResetGame" style="margin-top:15px; padding:15px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #1a0005); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">M3\'Ü YENİDEN MARŞ ET 🔄</button>';
-                                
-                                document.getElementById("btnResetGame").addEventListener("click", () => {
-                                    score = 0;
-                                    gameOver = false;
-                                    bmwM3.position.x = 0;
-                                    document.getElementById("scoreDisplay4D").innerText = "PRO-SPEED: 120 KM/H";
-                                    document.getElementById("restartButtonContainer").innerHTML = "";
-                                    traffic.forEach((trf, idx) => {
-                                        trf.position.set((Math.random() - 0.5) * 12, 0, -50 - (idx * 50));
-                                    });
-                                });
-                            }
-                        });
+        function animate() {
+            if(!gameOver) {
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
+                if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
+                lines.forEach(l => { l.position.z += 0.7 + (score * 0.02); if(l.position.z > 10) l.position.z = -280; });
+                let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.04, 0.02 * phase, 0.01 * (1 - phase));
+                traffic.forEach(t => {
+                    t.position.z += 0.7 + (score * 0.03);
+                    if(t.position.z > 2) { t.position.z = -140 - Math.random()*30; t.position.x = (Math.random() - 0.5) * 11; score++; document.getElementById("scoreDisplay4D").innerText = "4D Makas Skoru: " + score + " 🌀"; }
+                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) { 
+                        gameOver = true; 
+                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff5555; font-size:26px;'>💥 M3 PERT OLDU! 💥</span>";
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#ff0000; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #ff0000;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
                     }
-                    renderer.render(scene, camera);
-                    requestAnimationFrame(animate);
-                }
-                animate();
+                });
             }
-        })();
+            renderer.render(scene, camera); requestAnimationFrame(animate);
+        }
+        animate();
     </script>
     """
-    components.html(bmw_nextgen_html, height=780)
+    components.html(bmw_full_screen_html, height=780)
 
 # ==========================================================================================
-# OYUN KISMI - SAF KIRMIZI TEMALI ASTRO-AURA GALAKSİ JETİ
+# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
 # ==========================================================================================
 elif st.session_state.aktif_mod == "KizOyunu":
-    st.markdown("<h3 style='color:#ff0000; text-shadow: 0 0 15px #ff0000; font-weight:bold;'>🌌 Astro-Aura Kırmızı Galaksi Savaşçısı</h3>", unsafe_allow_html=True)
-    st.caption("A / D veya Klavye Yön Tuşları ile jeti yönlendir.")
+    st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
+    st.caption("Sol üstteki parıldayan Üç Çizgiye basarak istediğin an ana panele dönebilirsin gardaşşş!")
 
-    astro_premium_html = """
-    <div style="text-align:center; background:#050001; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 35px rgba(255,0,0,0.7); user-select:none; position:relative;">
-        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">◀</button>
-        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">▶</button>
+    kiz_full_screen_html = """
+    <div style="text-align:center; background:#0a0503; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.5); user-select:none; position:relative;">
+        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(10,5,3,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(10,5,3,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
         <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanelKiz" style="margin-top:15px;">
-            <h2 id="kizScoreDisplay" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #ff0000;">COSMIC MATRİX: 0</h2>
+            <h2 id="kizScoreDisplay" style="color:#ffffff; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">Aura Enerjisi: 0 ⭐</h2>
             <div id="restartButtonContainerKiz"></div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        (function() {
-            const checkContainerKiz = setInterval(() => {
-                const container = document.getElementById("kizFullCanvasContainer");
-                if (container && typeof THREE !== 'undefined') {
-                    clearInterval(checkContainerKiz);
-                    initKizGame(container);
-                }
-            }, 50);
+        const container = document.getElementById("kizFullCanvasContainer");
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0503);
+        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
+        const pLight = new THREE.PointLight(0xff0000, 3, 100); pLight.position.set(0, 10, -5); scene.add(pLight);
+        scene.add(new THREE.AmbientLight(0x24140c));
+        const starGeo = new THREE.BufferGeometry(); const starCount = 400; const starPositions = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i+=3) { starPositions[i] = (Math.random() - 0.5) * 60; starPositions[i+1] = (Math.random() - 0.5) * 40; starPositions[i+2] = -Math.random() * 150; }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        const starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffaaaa, size: 0.4 })); scene.add(starField);
+        const playerMesh = new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.0, 4), new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x8b0000, roughness: 0.1 }));
+        playerMesh.rotation.x = Math.PI / 2; playerMesh.position.set(0, 0, -6); scene.add(playerMesh);
+        let obstacles = []; const obsColors = [0xff3333, 0x8b0000, 0xff0000];
+        for(let i=0; i<4; i++){
+            let oMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), new THREE.MeshStandardMaterial({ color: obsColors[i % 3], emissive: obsColors[i % 3] }));
+            oMesh.position.set((Math.random() - 0.5) * 12, 0, -40 - (i * 30)); scene.add(oMesh); obstacles.push(oMesh);
+        }
+        camera.position.set(0, 5, 2); camera.lookAt(new THREE.Vector3(0, -0.5, -20));
+        let score = 0; let gameOver = false; let keys = {};
+        window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
+        let touchLeft = false, touchRight = false;
+        const bLeft = document.getElementById("btnLeftKiz"); const bRight = document.getElementById("btnRightKiz");
+        bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
+        bLeft.addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; }); bLeft.addEventListener("touchend", () => touchLeft = false);
+        bRight.addEventListener("mousedown", () => touchRight = true); bRight.addEventListener("mouseup", () => touchRight = false);
+        bRight.addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; }); bRight.addEventListener("touchend", () => touchRight = false);
 
-            function initKizGame(container) {
-                const scene = new THREE.Scene();
-                scene.fog = new THREE.FogExp2(0x050001, 0.015);
-                
-                const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ antialias: true });
-                renderer.setSize(container.clientWidth, 550);
-                container.appendChild(renderer.domElement);
-
-                const neonLight = new THREE.PointLight(0xff0000, 4, 200);
-                neonLight.position.set(0, 10, -20);
-                scene.add(neonLight);
-                scene.add(new THREE.AmbientLight(0x2a050c, 2.0));
-
-                function createStars(color, size, count) {
-                    const geo = new THREE.BufferGeometry();
-                    const positions = new Float32Array(count * 3);
-                    for(let i=0; i<count*3; i+=3) {
-                        positions[i] = (Math.random() - 0.5) * 80;
-                        positions[i+1] = (Math.random() - 0.5) * 50;
-                        positions[i+2] = -Math.random() * 250;
+        function animate() {
+            if(!gameOver) {
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.16; }
+                if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.16; }
+                playerMesh.rotation.z += 0.05;
+                const positions = starField.geometry.attributes.position.array;
+                for(let i=2; i<positions.length; i+=3) { positions[i] += 0.4; if(positions[i] > 5) positions[i] = -150; }
+                starField.geometry.attributes.position.needsUpdate = true;
+                obstacles.forEach(o => {
+                    o.position.z += 0.55 + (score * 0.02); o.rotation.x += 0.02; o.rotation.y += 0.02;
+                    if(o.position.z > 5) { o.position.z = -120 - Math.random()*20; o.position.x = (Math.random() - 0.5) * 12; score++; document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐ ✨"; }
+                    if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) { 
+                        gameOver = true; 
+                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff3333; font-size:24px;'>🔮 AURA DAĞILDI! 🔮</span>";
+                        document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#ff0000; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #ff0000;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
                     }
-                    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                    return new THREE.Points(geo, new THREE.PointsMaterial({ color: color, size: size, transparent: true, opacity: 0.9 }));
-                }
-                const layer1 = createStars(0xffffff, 0.2, 300);
-                const layer2 = createStars(0xff0000, 0.35, 200);
-                scene.add(layer1, layer2);
-
-                const playerJet = new THREE.Group();
-                const jetMat = new THREE.MeshStandardMaterial({ color: 0xff0000, metalness: 0.95, roughness: 0.05 });
-                const core = new THREE.Mesh(new THREE.ConeGeometry(0.5, 2.5, 4), jetMat);
-                core.rotation.x = Math.PI / 2;
-                const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.04, 1.0), jetMat); wingL.position.set(-0.8, -0.1, 0.3); wingL.rotation.y = 0.2;
-                const wingR = wingL.clone(); wingR.position.x = 0.8; wingR.rotation.y = -0.2;
-                playerJet.add(core, wingL, wingR);
-
-                const fireMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const thruster = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.8, 8), fireMat);
-                thruster.position.set(0, 0, 1.4);
-                thruster.rotation.x = -Math.PI / 2;
-                playerJet.add(thruster);
-
-                playerJet.position.set(0, 0, -7);
-                scene.add(playerJet);
-
-                let asteroids = [];
-                for(let i=0; i<5; i++){
-                    let astGeo = new THREE.DodecahedronGeometry(1.3, 1);
-                    let astMat = new THREE.MeshStandardMaterial({ color: 0x3d000c, roughness: 0.2, metalness: 0.8, emissive: 0x1a0005 });
-                    let ast = new THREE.Mesh(astGeo, astMat);
-                    ast.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -60 - (i * 40));
-                    scene.add(ast);
-                    asteroids.push(ast);
-                }
-
-                camera.position.set(0, 4.0, 4);
-                camera.lookAt(new THREE.Vector3(0, 0, -15));
-
-                let score = 0; let gameOver = false; let keys = {};
-                window.addEventListener("keydown", e => keys[e.key] = true);
-                window.addEventListener("keyup", e => keys[e.key] = false);
-
-                let touchLeft = false, touchRight = false;
-                
-                document.getElementById("btnLeftKiz").addEventListener("mousedown", () => touchLeft = true);
-                document.getElementById("btnLeftKiz").addEventListener("mouseup", () => touchLeft = false);
-                document.getElementById("btnLeftKiz").addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; });
-                document.getElementById("btnLeftKiz").addEventListener("touchend", () => touchLeft = false);
-
-                document.getElementById("btnRightKiz").addEventListener("mousedown", () => touchRight = true);
-                document.getElementById("btnRightKiz").addEventListener("mouseup", () => touchRight = false);
-                document.getElementById("btnRightKiz").addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; });
-                document.getElementById("btnRightKiz").addEventListener("touchend", () => touchRight = false);
-
-                function animate() {
-                    if(!gameOver) {
-                        let speed = 1.0 + (score * 0.035);
-
-                        if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerJet.position.x > -7.5) playerJet.position.x -= 0.24; playerJet.rotation.z = 0.4; }
-                        else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerJet.position.x < 7.5) playerJet.position.x += 0.24; playerJet.rotation.z = -0.4; }
-                        else { playerJet.rotation.z *= 0.8; }
-
-                        thruster.scale.set(1 + Math.sin(Date.now()*0.1)*0.2, 1 + Math.cos(Date.now()*0.1)*0.3, 1);
-
-                        const p1 = layer1.geometry.attributes.position.array;
-                        for(let i=2; i<p1.length; i+=3) { p1[i] += speed * 0.8; if(p1[i] > 10) p1[i] = -240; }
-                        layer1.geometry.attributes.position.needsUpdate = true;
-
-                        const p2 = layer2.geometry.attributes.position.array;
-                        for(let i=2; i<p2.length; i+=3) { p2[i] += speed * 1.4; if(p2[i] > 10) p2[i] = -240; }
-                        layer2.geometry.attributes.position.needsUpdate = true;
-
-                        asteroids.forEach(a => {
-                            a.position.z += speed;
-                            a.rotation.x += 0.02;
-                            a.rotation.y += 0.04;
-
-                            if(a.position.z > 6) { 
-                                a.position.z = -160 - Math.random()*40; 
-                                a.position.x = (Math.random() - 0.5) * 14; 
-                                score++; 
-                                document.getElementById("kizScoreDisplay").innerText = "COSMIC MATRİX: " + score; 
-                            }
-                            
-                            if(Math.abs(playerJet.position.x - a.position.x) < 1.5 && Math.abs(playerJet.position.z - a.position.z) < 2.2) { 
-                                gameOver = true; 
-                                document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff0000; text-shadow:0 0 10px #ff0000;'>🔮 DARBE ALINDI! 🔮</span>";
-                                document.getElementById("restartButtonContainerKiz").innerHTML = '<button id="btnResetKiz" style="margin-top:15px; padding:15px 45px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #050001); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">YENİDEN BAŞLA 🔄</button>';
-                                
-                                document.getElementById("btnResetKiz").addEventListener("click", () => {
-                                    score = 0;
-                                    gameOver = false;
-                                    playerJet.position.x = 0;
-                                    document.getElementById("kizScoreDisplay").innerText = "COSMIC MATRİX: 0";
-                                    document.getElementById("restartButtonContainerKiz").innerHTML = "";
-                                    asteroids.forEach((ast, idx) => {
-                                        ast.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -60 - (idx * 40));
-                                    });
-                                });
-                            }
-                        });
-                    }
-                    renderer.render(scene, camera);
-                    requestAnimationFrame(animate);
-                }
-                animate();
+                });
             }
-        })();
+            renderer.render(scene, camera); requestAnimationFrame(animate);
+        }
+        animate();
     </script>
     """
-    components.html(astro_premium_html, height=780)
+    components.html(kiz_full_screen_html, height=780)
