@@ -80,16 +80,16 @@ sistem_talimati = (
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
-    "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
+    "PUBG and Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# HER ŞEYİ AŞAĞIYA SABİTLEYEN VE OYUNLARI DİP DİPE GETİREN CSS
+# SESTRE DEVRİM YAPTIK: MİKROFONU NORMALE DÖNDÜREN, OYUNLARI SAĞDA BİRLEŞTİREN CSS
 st.markdown("""
     <style>
-    /* Mesajlaşma panelini ve tüm butonları ekranın en altına mühürle */
+    /* Paneli en alta sabitle */
     .stApp {
         display: flex;
         flex-direction: column;
@@ -97,46 +97,52 @@ st.markdown("""
         height: 100vh;
     }
     
-    /* Bütün yuvarlak butonları ilk sürümdeki gibi tam stabil ve hizalı yap */
-    div[data-testid="stButton"] > button {
-        border-radius: 50% !important;
-        width: 46px !important;
-        height: 46px !important;
-        padding: 0 !important;
-        line-height: 46px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 20px !important;
-        margin-top: 22px !important;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.3) !important;
-        transition: 0.2s !important;
-    }
-    
-    /* Buton Renk Kombinasyonları */
-    div[data-testid="stButton"]:nth-of-type(1) > button { background-color: #3b82f6 !important; color: white !important; }
-    div[data-testid="stButton"]:nth-of-type(2) > button { background-color: #10b981 !important; color: white !important; }
-    div[data-testid="stButton"]:nth-of-type(3) > button { background-color: #ec4899 !important; color: white !important; }
-    
-    /* Canlı Kırmızı Mikrofon Pulse Efekti */
-    .mic-kirmizi button {
-        background-color: #ef4444 !important;
-        color: white !important;
-        border: 2px solid white !important;
-        animation: pulse 1.0s infinite !important;
-    }
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
-        70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-    }
-    
-    /* Sütun aralarını eriterek sağdaki oyun butonlarını tam anlamıyla dip dipe getiriyoruz */
+    /* Sağdaki butonların dip dipe gelmesi ve hizalanması için boşlukları erit */
     div[data-testid="column"] {
         padding: 0px 1px !important;
     }
     .stHorizontalBlock {
-        gap: 2px !important;
+        align-items: center !important;
+        gap: 1px !important;
+    }
+    
+    /* Sağdaki oyun butonlarını yuvarlak ve yapışık yap */
+    .sag-oyun-btn div[data-testid="stButton"] > button {
+        border-radius: 50% !important;
+        width: 44px !important;
+        height: 44px !important;
+        padding: 0 !important;
+        font-size: 20px !important;
+        margin-top: 24px !important;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important;
+    }
+    
+    /* Mikrofon Butonunu Yuvarlaktan Çıkarıp Orijinal Dikdörtgen/Normal Formuna Döndürme */
+    .sol-normal-mic div[data-testid="stButton"] > button {
+        border-radius: 8px !important; /* Yuvarlak değil, normal buton tasarımı */
+        width: 100% !important;
+        height: 42px !important;
+        margin-top: 24px !important;
+        background-color: #3b82f6 !important;
+        color: white !important;
+        font-size: 18px !important;
+    }
+    
+    /* Mikrofon Aktifken Kırmızı Yanıp Sönme Efekti */
+    .sol-normal-mic-aktif div[data-testid="stButton"] > button {
+        border-radius: 8px !important;
+        width: 100% !important;
+        height: 42px !important;
+        margin-top: 24px !important;
+        background-color: #ef4444 !important;
+        color: white !important;
+        font-size: 18px !important;
+        animation: normalMicPulse 1.0s infinite !important;
+    }
+    @keyframes normalMicPulse {
+        0% { opacity: 1.0; }
+        50% { opacity: 0.6; }
+        100% { opacity: 1.0; }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -160,7 +166,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # İLK BAŞTAKİ ESKİ STABİL MİKROFON MOTORU (TARAYICI ENGELSİZ DİREKT TETİKLEMELİ)
+    # ESKİ TARAYICI ENGELSİZ SES TANIMA TETİKLEYİCİSİ
     JS_DIREK_MAN_MIC = """
     <script>
     if (window.parent && !window.parent.micSistemKuruldu) {
@@ -200,44 +206,49 @@ if st.session_state.aktif_oyun is None:
     """
     components.html(JS_DIREK_MAN_MIC, height=0)
 
-    # İLK BAŞTAKİ ESKİ YAN YANA YERLEŞİM DÜZENİ (OYUNLAR SAĞDA DİP DİPE)
-    c1, c2, c3, c4 = st.columns([0.82, 0.06, 0.06, 0.06])
-    with c1:
-        yazi_soru = st.chat_input("Buraya yaz veya mikrofona basıp direkt konuş be gardaşşşşş...")
+    # TAM İSTEDİĞİN DÜZEN: SOLDA NORMAL MİKROFON - ORTADA MESAJ KUTUSU - SAĞDA DİP DİPE İKİ OYUN
+    c_mic, c_chat, c_g1, c_g2 = st.columns([0.08, 0.80, 0.06, 0.06])
+    
+    with c_mic:
+        # Sol Taraf: Yuvarlaktan çıkmış, normal haline dönen mikrofon butonu
+        mic_simge = "🔴 DİNLEYOR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
+        mic_div_class = "sol-normal-mic-aktif" if st.session_state.mic_aktif else "sol-normal-mic"
+        
+        st.markdown(f'<div class="{mic_div_class}">', unsafe_allow_html=True)
+        if st.button(mic_simge, key="normal_mic_tasarim", help="Bas ve Konuş be Gardaşşş!"):
+            st.session_state.mic_aktif = True
+            st.markdown("""<script>const evt = new CustomEvent('TetikleDirekMic'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    with c_chat:
+        # Orta Taraf: Mesaj kutusu
+        yazi_soru = st.chat_input("Buraya yaz veya soldaki butona basıp direkt konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
             st.session_state.mic_aktif = False 
-    with c2:
-        # Eski Stabil Mikrofon Buton Düzeni
-        mic_simge = "🔴" if st.session_state.mic_aktif else "🎙️"
-        
-        if st.session_state.mic_aktif:
-            st.markdown('<div class="mic-kirmizi">', unsafe_allow_html=True)
             
-        if st.button(mic_simge, key="eski_mic_btn", help="Tıkla ve Konuş be Gardaşşş!"):
-            st.session_state.mic_aktif = True
-            st.markdown("""<script>const evt = new CustomEvent('TetikleDirekMic'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
-            st.rerun() 
-            
-        if st.session_state.mic_aktif:
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-    with c3:
-        # Dip Dipe Hizalanmış Erkek Oyunu Butonu
+    with c_g1:
+        # Sağ Taraf 1: Dip dipe duran Erkek Oyunu Butonu
+        st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
         if st.button("🏎️", key="rk_game", help="Erkek Oyunu (BMW M3) Başlat!"):
             st.session_state.aktif_oyun = "erkek"
             st.rerun()
-    with c4:
-        # Dip Dipe Hizalanmış Kız Oyunu Butonu
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    with c_g2:
+        # Sağ Taraf 2: Hemen yanındaki yapışık Kız Oyunu Butonu
+        st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
         if st.button("🌌", key="kz_game", help="Kız Oyunu (Astro-Aura) Başlat!"):
             st.session_state.aktif_oyun = "kiz"
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    # İLK BAŞTAKİ ALTTAN ÇIKAN SES ALGILAMA VE KONUŞMA BİLGİ PANELİ
+    # ALTTAN ÇIKAN SES ALGILAMA BİLGİ PANELİ
     if st.session_state.mic_aktif:
         st.info("🎙️ Ses algılama sistemi devrede... Dinleniyor be gardaşşşşş!")
 
-    # Girdi gelirse yapay zekayı ateşle
+    # Girdi gelirse sistemi çalıştır
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
