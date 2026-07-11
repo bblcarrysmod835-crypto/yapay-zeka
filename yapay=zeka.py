@@ -10,7 +10,7 @@ import base64
 import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları
+# Sayfa Ayarları (Apolingo Kahverengi Premium Konsept)
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -21,9 +21,9 @@ if "client" not in st.session_state:
 if "ses_isleme_aktif" not in st.session_state:
     st.session_state.ses_isleme_aktif = True
 
-# Oyun panelinin aktiflik durumu
-if "aktif_oyun" not in st.session_state:
-    st.session_state.aktif_oyun = None
+# Menü ve Oyun Seçim Durumu (Sidebar entegrasyonu için)
+if "aktif_mod" not in st.session_state:
+    st.session_state.aktif_mod = "Sohbet"
 
 # Ses çalma fonksiyonu
 def sesi_cal(metin):
@@ -86,36 +86,100 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# HIGH-END ALIGNMENT VE CHAT INPUT CSS DÜZENLEMESİ
+# HIGH-END ALIGNMENT VE PREMIUM CANLI KAHVERENGİ DOKU CSS DÜZENLEMESİ
 st.markdown("""
     <style>
+    /* Ana Arka Plan ve Kahverengi Tonlama */
+    .stApp {
+        background: linear-gradient(135deg, #2b1810 0%, #1e110b 50%, #120a06 100%) !important;
+        color: #f5ebe6 !important;
+    }
+    
+    /* Sol Menü (Sidebar) Kahverengi Derinlik Ayarı */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #3d251a 0%, #2b1810 100%) !important;
+        border-right: 2px solid #8c624e !important;
+    }
+    
+    /* Yan Paneldeki Yazı Renkleri */
+    [data-testid="stSidebar"] * {
+        color: #f5ebe6 !important;
+    }
+    
     /* Mikrofon dikey hizalama ayarı */
     .stAudioInput {
         margin-top: 6px !important;
     }
     
-    /* Butonların chat input hizasına getirilmesi */
+    /* Butonların chat input hizasına getirilmesi ve Karamel/Kahve Dokusu */
     div[data-testid="stButton"] > button {
         margin-top: 6px !important;
-        background-color: #1e293b !important;
-        border: 1px solid #4b5563 !important;
+        background: linear-gradient(135deg, #5c3a21 0%, #4a2e1b 100%) !important;
+        border: 1px solid #8c624e !important;
         border-radius: 8px !important;
+        color: #f5ebe6 !important;
         height: 44px !important;
         width: 100% !important;
         font-size: 18px !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
     }
     div[data-testid="stButton"] > button:hover {
-        border-color: #3b82f6 !important;
+        border-color: #d4a373 !important;
+        background: linear-gradient(135deg, #734a29 0%, #5c3a21 100%) !important;
+        box-shadow: 0 0 15px rgba(212, 163, 115, 0.4);
+    }
+    
+    /* Sidebar içi Radyo Buton Şıklığı */
+    div[data-testid="stRadio"] label {
+        background-color: #4a2e1b !important;
+        padding: 10px 15px !important;
+        border-radius: 8px !important;
+        border: 1px solid #6e473b !important;
+        margin-bottom: 8px !important;
+        display: block !important;
+        cursor: pointer !important;
+        transition: 0.2s;
+    }
+    div[data-testid="stRadio"] label:hover {
+        border-color: #d4a373 !important;
+        background-color: #5c3a21 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ
+# SOL TARAFTAKİ 3 ÇİZGİLİ MENÜ (SIDEBAR) ALANI VE OYUNLARIN BURAYA BAĞLANMASI
 # ==========================================================================================
-if st.session_state.aktif_oyun is None:
+with st.sidebar:
+    st.markdown("## 🎮 APOLINGO ARCADE")
+    st.markdown("Kahverengi Vizon & Karamel Premium Salonuna Hoş Geldin Gardaşşş!")
+    st.write("---")
+    
+    # 3 Çizgili menü mantığıyla yan panel mod seçimi
+    secilen_mod = st.radio(
+        "Aparatı Seç Be Gardaşşş:",
+        ["💬 Sohbet Modu", "🏎️ BMW M3 Makas Oyunu", "🌌 Astro-Aura Kuantum Oyunu"],
+        index=0
+    )
+    
+    # Seçime göre durum eşitleme
+    if "💬 Sohbet Modu" in secilen_mod:
+        st.session_state.aktif_mod = "Sohbet"
+    elif "🏎️ BMW M3" in secilen_mod:
+        st.session_state.aktif_mod = "ErkekOyunu"
+    elif "🌌 Astro-Aura" in secilen_mod:
+        st.session_state.aktif_mod = "KizOyunu"
+
+    st.write("---")
+    st.caption("👨‍💻 Kurucu: Apolingo\n\n**By Abdurrahim İriş © 2026**")
+
+# ==========================================================================================
+# GÖRÜNÜM KONTROLÜ: SOHBET MODU
+# ==========================================================================================
+if st.session_state.aktif_mod == "Sohbet":
     st.title("🚀 APOLINGO MASTER ARCADE AI")
-    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş**")
+    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | Canlı Kahve Premium Vibe ☕")
     st.write("---")
 
     # Mesaj geçmişi ekrana yazılıyor
@@ -129,26 +193,16 @@ if st.session_state.aktif_oyun is None:
 
     gelen_soru = None
 
-    # ELEMAN DİZİLİMİ: MİKROFON SOLDA, CHAT INPUT ORTADA, OYUNLAR SAĞDA BİTİŞİK
-    c_mic, c_text, c_game1, c_game2 = st.columns([0.12, 0.76, 0.06, 0.06])
+    # ELEMAN DİZİLİMİ: MİKROFON SOLDA, CHAT INPUT SAĞDA GENİŞÇE
+    c_mic, c_text = st.columns([0.12, 0.88])
     
     with c_mic:
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
         
     with c_text:
-        yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
+        yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş, kahveler hazır...")
         if yazi_soru:
             gelen_soru = yazi_soru
-            
-    with c_game1:
-        if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!"):
-            st.session_state.aktif_oyun = "erkek"
-            st.rerun()
-            
-    with c_game2:
-        if st.button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!"):
-            st.session_state.aktif_oyun = "kiz"
-            st.rerun()
 
     # KESİNTİSİZ SES DİNLEME VE OTOMATİK GÖNDERİM SİSTEMİ
     if ses_dosyasi is not None and st.session_state.ses_isleme_aktif:
@@ -170,7 +224,7 @@ if st.session_state.aktif_oyun is None:
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Apolingo Düşünüyor ve Seslendiriyor..."):
+        with st.spinner("🎶 Apolingo Kahve Kokulu Derin Düşüncelerde..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
@@ -194,23 +248,21 @@ if st.session_state.aktif_oyun is None:
 # ==========================================================================================
 # FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE (SOL-SAĞ BUTONLAR VE DİNAMİK YENİDEN BAŞLAMA)
 # ==========================================================================================
-elif st.session_state.aktif_oyun == "erkek":
+elif st.session_state.aktif_mod == "ErkekOyunu":
     st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
-    if st.button("❌ Yapay Zekaya Geri Dön be Gardaşşş!", help="Oyundan Çık"):
-        st.session_state.aktif_oyun = None
-        st.rerun()
+    st.caption("Sol taraftaki menüden (3 Çizgi) istediğin an Sohbet Moduna geri dönebilirsin gardaşşş!")
 
     bmw_full_screen_html = """
-    <div style="text-align:center; background:#05050a; padding:15px; border-radius:16px; border:3px solid #00ffcc; user-select:none; position:relative;">
+    <div style="text-align:center; background:#1f120c; padding:15px; border-radius:16px; border:3px solid #d4a373; user-select:none; position:relative;">
         
         <!-- SOL VE SAĞ KONTROL BUTONLARI (DIŞ KENARLARA SABİTLENDİ) -->
-        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(30,41,59,0.85); color:#00ffcc; border:2px solid #00ffcc; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
-        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(30,41,59,0.85); color:#00ffcc; border:2px solid #00ffcc; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
+        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(74,46,27,0.9); color:#d4a373; border:2px solid #d4a373; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(74,46,27,0.9); color:#d4a373; border:2px solid #d4a373; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
 
         <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         
         <div id="uiPanel" style="margin-top:15px;">
-            <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">4D Makas Skoru: 0 🌀</h2>
+            <h2 id="scoreDisplay4D" style="color:#d4a373; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">4D Makas Skoru: 0 🌀</h2>
             <!-- YENİLİNCE BURAYA DİNAMİK OLARAK BUTON GELECEK -->
             <div id="restartButtonContainer"></div>
         </div>
@@ -219,16 +271,16 @@ elif st.session_state.aktif_oyun == "erkek":
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
-        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x020208);
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x120a06);
         const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
         const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
         scene.add(new THREE.AmbientLight(0x666666));
-        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x15151c, roughness: 0.5 })); scene.add(road);
+        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x1f120c, roughness: 0.5 })); scene.add(road);
         let lines = [];
         for(let i=0; i<20; i++){
-            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: #d4a373 }));
             lMesh.position.set(0, 0.09, -i * 30); scene.add(lMesh); lines.push(lMesh);
         }
         const bmwM3 = new THREE.Group();
@@ -261,15 +313,14 @@ elif st.session_state.aktif_oyun == "erkek":
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
                 if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
                 lines.forEach(l => { l.position.z += 0.7 + (score * 0.02); if(l.position.z > 10) l.position.z = -280; });
-                let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.01, 0.04 * phase, 0.09 * (1 - phase));
+                let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.07, 0.04 * phase, 0.02 * (1 - phase));
                 traffic.forEach(t => {
                     t.position.z += 0.7 + (score * 0.03);
                     if(t.position.z > 2) { t.position.z = -140 - Math.random()*30; t.position.x = (Math.random() - 0.5) * 11; score++; document.getElementById("scoreDisplay4D").innerText = "4D Makas Skoru: " + score + " 🌀"; }
                     if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) { 
                         gameOver = true; 
-                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>";
-                        // YENİLİNCE EN ALTTA TEKRAR BAŞLA BUTONU OLUŞTURULUYOR
-                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#00ffcc; color:#000; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #00ffcc;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
+                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff5555; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>";
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#d4a373; color:#000; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #d4a373;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
                     }
                 });
             }
@@ -283,18 +334,16 @@ elif st.session_state.aktif_oyun == "erkek":
 # ==========================================================================================
 # FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE (SOL-SAĞ BUTONLAR VE DİNAMİK YENİDEN BAŞLAMA)
 # ==========================================================================================
-elif st.session_state.aktif_oyun == "kiz":
+elif st.session_state.aktif_mod == "KizOyunu":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
-    if st.button("❌ Yapay Zekaya Geri Dön be Gardaşşş!", help="Oyundan Çık"):
-        st.session_state.aktif_oyun = None
-        st.rerun()
+    st.caption("Sol taraftaki menüden (3 Çizgi) istediğin an Sohbet Moduna geri dönebilirsin gardaşşş!")
 
     kiz_full_screen_html = """
-    <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none; position:relative;">
+    <div style="text-align:center; background:#1a0f0a; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none; position:relative;">
         
         <!-- SOL VE SAĞ KONTROL BUTONLARI (DIŞ KENARLARA SABİTLENDİ) -->
-        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(45,0,77,0.85); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
-        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(45,0,77,0.85); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
+        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(51,26,15,0.9); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(51,26,15,0.9); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
 
         <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         
@@ -308,12 +357,12 @@ elif st.session_state.aktif_oyun == "kiz":
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("kizFullCanvasContainer");
-        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x11001c);
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x1a0f0a);
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
         const pLight = new THREE.PointLight(0xff69b4, 3, 100); pLight.position.set(0, 10, -5); scene.add(pLight);
-        scene.add(new THREE.AmbientLight(0x3d0066));
+        scene.add(new THREE.AmbientLight(0x3d1f11));
         const starGeo = new THREE.BufferGeometry(); const starCount = 400; const starPositions = new Float32Array(starCount * 3);
         for(let i=0; i<starCount*3; i+=3) { starPositions[i] = (Math.random() - 0.5) * 60; starPositions[i+1] = (Math.random() - 0.5) * 40; starPositions[i+2] = -Math.random() * 150; }
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
@@ -351,7 +400,6 @@ elif st.session_state.aktif_oyun == "kiz":
                     if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) { 
                         gameOver = true; 
                         document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:24px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>";
-                        // YENİLİNCE EN ALTTA TEKRAR BAŞLA BUTONU OLUŞTURULUYOR
                         document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#ff69b4; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #ff69b4;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
                     }
                 });
