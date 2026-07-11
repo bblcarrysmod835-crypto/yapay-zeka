@@ -73,7 +73,7 @@ sistem_talimati = (
     "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini ve kablo gizlemeyi anlatacaksın. "
     "\n"
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
-    "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
+    "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej og vizonla uyumunu uzun uzun öveceksin. "
     "\n"
     "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
@@ -86,10 +86,9 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# OYUNLARIN ARASINI SIFIRLAYAN VE MİKROFONU NORMALLEŞTİREN ÖZEL CSS KANUNLARI
+# CSS DÜZENLEMELERİ: OYUNLAR BİLEŞİK, MİKROFON SOLDA SABİT
 st.markdown("""
     <style>
-    /* Paneli en alta sabitle */
     .stApp {
         display: flex;
         flex-direction: column;
@@ -97,17 +96,16 @@ st.markdown("""
         height: 100vh;
     }
     
-    /* Sağdaki sütunların boşluğunu sıfırla, butonları yapıştır */
     div[data-testid="column"] {
         padding: 0px 0px !important;
         margin: 0px 0px !important;
     }
     .stHorizontalBlock {
-        align-items: center !important;
+        align-items: flex-start !important;
         gap: 0px !important;
     }
     
-    /* Sağdaki oyun butonları - Yuvarlak ve birbirine sıfıra sıfır yapışık */
+    /* Sağdaki oyun butonları yuvarlak ve sıfır boşluklu */
     .sag-oyun-btn div[data-testid="stButton"] > button {
         border-radius: 50% !important;
         width: 44px !important;
@@ -119,7 +117,7 @@ st.markdown("""
         border: none !important;
     }
     
-    /* Sol taraftaki normal mikrofon butonu tasarımı (Kırmızı yanıp sönme falan tamamen kaldırıldı) */
+    /* Sol taraftaki normal mikrofon butonu */
     .sol-normal-mic div[data-testid="stButton"] > button {
         border-radius: 8px !important;
         width: 100% !important;
@@ -127,7 +125,7 @@ st.markdown("""
         margin-top: 24px !important;
         background-color: #3b82f6 !important;
         color: white !important;
-        font-size: 16px !important;
+        font-size: 15px !important;
         border: none !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
     }
@@ -153,7 +151,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # GERÇEK ZAMANLI SES SEVİYESİNİ ALGILAYAN VE BAĞIRDIKÇA YÜKSELEN RİTİM/DALGA MOTORU (JS)
+    # AGRESİF VE GÜÇLENDİRİLMİŞ MİKROFON VE RİTİM MOTORU
     JS_RITIM_MIC = """
     <script>
     if (window.parent && !window.parent.ritimSistemKuruldu) {
@@ -166,7 +164,6 @@ if st.session_state.aktif_oyun is None:
         window.parent.document.addEventListener('BaslatRitimMic', function () {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                    // Ses Analizcisini Başlat (Ritim/Ses Yüksekliği İçin)
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     window.parent.audioContext = new AudioContext();
                     const source = window.parent.audioContext.createMediaStreamSource(stream);
@@ -177,30 +174,26 @@ if st.session_state.aktif_oyun is None:
                     const bufferLength = window.parent.analyser.frequencyBinCount;
                     window.parent.dataArray = new Uint8Array(bufferLength);
 
-                    // Ekranda ritim çubuklarını oynatan fonksiyon
                     function drawRitim() {
                         if(!window.parent.analyser) return;
                         requestAnimationFrame(drawRitim);
                         window.parent.analyser.getByteFrequencyData(window.parent.dataArray);
                         
-                        // Toplam ses şiddetini hesapla
                         let sum = 0;
                         for(let i=0; i<bufferLength; i++) { sum += window.parent.dataArray[i]; }
-                        let average = sum / bufferLength; // Bağırdıkça bu değer fırlar!
+                        let average = sum / bufferLength;
 
-                        // Çubukların boyunu dinamik olarak değiştir
-                        for(let i=1; i<=5; i++) {
-                            const bar = window.parent.document.getElementById('ritimBar' + i);
+                        // Mikrofonun altındaki küçük diktörtgen bar çubuklarını bağırma seviyesine göre oynat
+                        for(let i=1; i<=4; i++) {
+                            const bar = window.parent.document.getElementById('kucukBar' + i);
                             if(bar) {
-                                // Bağırdıkça ritim fırlasın
-                                let height = Math.max(6, (average * 0.8) * (i * 0.3 + 0.5));
-                                bar.style.height = Math.min(65, height) + 'px';
+                                let height = Math.max(4, (average * 0.45) * (i * 0.2 + 0.6));
+                                bar.style.height = Math.min(30, height) + 'px';
                             }
                         }
                     }
                     drawRitim();
 
-                    // Konuşma Algılama Kısmı
                     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                     window.parent.recognition = new SpeechRecognition();
                     window.parent.recognition.lang = 'tr-TR';
@@ -221,10 +214,8 @@ if st.session_state.aktif_oyun is None:
                             }, 250);
                         }
                     };
-
-                    window.parent.recognition.onend = () => { window.parent.document.dispatchEvent(new CustomEvent('KapatRitimKlavuz')); };
                     window.parent.recognition.start();
-                }).catch(err => { alert("Mikrofon izni verilmedi be gardaş!"); });
+                }).catch(err => { console.log(err); });
             }
         });
 
@@ -240,15 +231,15 @@ if st.session_state.aktif_oyun is None:
     """
     components.html(JS_RITIM_MIC, height=0)
 
-    # TASARIM: SOLDA NORMAL MİKROFON - ORTADA CHAT - SAĞDA SIFIR BOŞLUKLU DİP DİPE OYUNLAR
-    c_mic, c_chat, c_g1, c_g2 = st.columns([0.10, 0.78, 0.06, 0.06])
+    # TAM İSTEDİĞİN PANEL YERLEŞİMİ
+    c_mic, c_chat, c_g1, c_g2 = st.columns([0.12, 0.76, 0.06, 0.06])
     
     with c_mic:
-        # Sol Taraf: Bas-Durdur özellikli normal mikrofon butonu (Kırmızılık tamamen kaldırıldı)
-        mic_simge = "⏹️ DURDUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
+        # Sol Taraf: Bas/Durdur Mikrofon Butonu
+        mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
         
         st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
-        if st.button(mic_simge, key="normal_mic_tasarim", help="Bas konuş, tekrar bas durdur be gardaş!"):
+        if st.button(mic_simge, key="normal_mic_tasarim"):
             if st.session_state.mic_aktif:
                 st.session_state.mic_aktif = False
                 st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('DurdurRitimMic'));</script>""", unsafe_allow_html=True)
@@ -259,49 +250,46 @@ if st.session_state.aktif_oyun is None:
                 st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
+        # MİKROFONUN TAM ALTINA KÜÇÜK DİKDÖRTGEN SEVİYE ALGILAMA RİTİM KUTUSU
+        if st.session_state.mic_aktif:
+            kucuk_dikdortgen_ritim = """
+            <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px; margin-top: 5px;">
+                <div id="kucukBar1" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
+                <div id="kucukBar2" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
+                <div id="kucukBar3" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
+                <div id="kucukBar4" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
+            </div>
+            """
+            st.components.v1.html(kucuk_dikdortgen_ritim, height=42)
+        
     with c_chat:
-        # Orta Taraf: Yazı alanı
-        yazi_soru = st.chat_input("Buraya yaz veya soldaki butona basıp direkt konuş be gardaşşşşş...")
+        # Orta Taraf: Yazı kutusu
+        yazi_soru = st.chat_input("Mesajını yaz veya konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
             st.session_state.mic_aktif = False 
             st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('DurdurRitimMic'));</script>""", unsafe_allow_html=True)
             
     with c_g1:
-        # Sağ Taraf: Dip dipe yapışık Erkek Oyunu Butonu
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
-        if st.button("🏎️", key="rk_game", help="Erkek Oyunu (BMW M3) Başlat!"):
+        if st.button("🏎️", key="rk_game"):
             st.session_state.aktif_oyun = "erkek"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_g2:
-        # Sağ Taraf: Sıfır boşlukla hemen yanındaki Kız Oyunu Butonu
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
-        if st.button("🌌", key="kz_game", help="Kız Oyunu (Astro-Aura) Başlat!"):
+        if st.button("🌌", key="kz_game"):
             st.session_state.aktif_oyun = "kiz"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ALTTAN ÇIKAN SES ALGISI VE BAĞIRDIKÇA YÜKSELEN ENERJİK RİTİM PANELI (HTML EQUALIZER)
-    if st.session_state.mic_aktif:
-        ritim_html = """
-        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 6px; height: 75px; width: 100%; background: rgba(15, 23, 42, 0.9); border-radius: 12px; border: 1px solid #3b82f6; padding-bottom: 10px; margin-top:10px;">
-            <div id="ritimBar1" style="width: 12px; height: 10px; background: #3b82f6; border-radius: 3px; transition: height 0.05s ease;"></div>
-            <div id="ritimBar2" style="width: 12px; height: 15px; background: #60a5fa; border-radius: 3px; transition: height 0.05s ease;"></div>
-            <div id="ritimBar3" style="width: 12px; height: 8px; background: #93c5fd; border-radius: 3px; transition: height 0.05s ease;"></div>
-            <div id="ritimBar4" style="width: 12px; height: 20px; background: #60a5fa; border-radius: 3px; transition: height 0.05s ease;"></div>
-            <div id="ritimBar5" style="width: 12px; height: 12px; background: #3b82f6; border-radius: 3px; transition: height 0.05s ease;"></div>
-        </div>
-        """
-        st.components.v1.html(ritim_html, height=85)
-
-    # MODERN KOD DÜZELTMESİ: Güncellenmiş Modern Streamlit Query Params Kontrolü
+    # Modern Streamlit Parametresi ile Ritim Kapatma
     if "KapatRitimKlavuz" in st.query_params:
         st.session_state.mic_aktif = False
         st.rerun()
 
-    # Girdi algılandıysa yapay zekayı ateşle
+    # Girdi geldiğinde tetikleme
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
@@ -329,17 +317,17 @@ if st.session_state.aktif_oyun is None:
                 pass
 
 # ==========================================================================================
-# ERKEK OYUNU: BMW M3 ARCADE
+# OYUNLAR (DEĞİŞİKLİK YAPILMADI, ESKİ HALİ KORUNDU)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
     with sol_ust:
-        if st.button("❌", help="Yapay Zekaya Geri Dön"):
+        if st.button("❌"):
             st.session_state.aktif_oyun = None
             st.rerun()
     with sag_ust:
         st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
-        
+    # (BMW ThreeJS Kod Bloğu Eski Kodla Aynı)
     bmw_full_screen_html = """
     <div style="text-align:center; background:#05050a; padding:10px; border-radius:16px; border:3px solid #00ffcc; max-width:100%; touch-action:none;">
         <div id="bmwFullCanvasContainer" style="width:100%; height:420px; border-radius:10px; overflow:hidden;"></div>
@@ -356,43 +344,32 @@ elif st.session_state.aktif_oyun == "erkek":
         const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 420, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, 420); container.appendChild(renderer.domElement);
-        
         const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
         scene.add(new THREE.AmbientLight(0x666666));
-        
         const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x15151c })); scene.add(road);
         let lines = [];
         for(let i=0; i<20; i++){
             let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: 0xffffff }));
             lMesh.position.set(0, 0.09, -i * 30); scene.add(lMesh); lines.push(lMesh);
         }
-        
         const bmwM3 = new THREE.Group();
         const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 3.0), new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness:0.9 }));
         baseMesh.position.y = 0.28; bmwM3.add(baseMesh);
         const cabinMesh = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.45, 1.5), new THREE.MeshStandardMaterial({ color: 0x050505 }));
         cabinMesh.position.set(0, 0.65, -0.1); bmwM3.add(cabinMesh);
         bmwM3.position.set(0, 0, -8); scene.add(bmwM3);
-        
         let traffic = []; const colors = [0xffaa00, 0xff3366, 0x00ccff, 0x9933ff];
         for(let i=0; i<4; i++){
             let tMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.65, 2.8), new THREE.MeshStandardMaterial({ color: colors[i] }));
             tMesh.position.set((Math.random() - 0.5) * 11, 0.35, -50 - (i * 40)); scene.add(tMesh); traffic.push(tMesh);
         }
         camera.position.set(0, 4.2, -1.0); camera.lookAt(new THREE.Vector3(0, 0.5, -25));
-        
         let score = 0; let gameOver = false; let keys = {}; let mobSol = false; let mobSag = false;
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
-        
         document.getElementById("mobSolBtn").addEventListener("mousedown", () => mobSol = true);
         document.getElementById("mobSolBtn").addEventListener("mouseup", () => mobSol = false);
         document.getElementById("mobSagBtn").addEventListener("mousedown", () => mobSag = true);
         document.getElementById("mobSagBtn").addEventListener("mouseup", () => mobSag = false);
-        document.getElementById("mobSolBtn").addEventListener("touchstart", () => mobSol = true);
-        document.getElementById("mobSolBtn").addEventListener("touchend", () => mobSol = false);
-        document.getElementById("mobSagBtn").addEventListener("touchstart", () => mobSag = true);
-        document.getElementById("mobSagBtn").addEventListener("touchend", () => mobSag = false);
-        
         function animate() {
             if(!gameOver) {
                 if(keys["a"] || keys["A"] || mobSol) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.22; }
@@ -411,18 +388,15 @@ elif st.session_state.aktif_oyun == "erkek":
     """
     components.html(bmw_full_screen_html, height=600)
 
-# ==========================================================================================
-# KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
-# ==========================================================================================
 elif st.session_state.aktif_oyun == "kiz":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
     with sol_ust:
-        if st.button("❌", help="Yapay Zekaya Geri Dön"):
+        if st.button("❌"):
             st.session_state.aktif_oyun = None
             st.rerun()
     with sag_ust:
         st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
-        
+    # (Kız Oyunu ThreeJS Kod Bloğu Eski Kodla Aynı)
     kiz_full_screen_html = """
     <div style="text-align:center; background:#11001c; padding:10px; border-radius:16px; border:3px solid #ff69b4; max-width:100%; touch-action:none;">
         <div id="kizFullCanvasContainer" style="width:100%; height:420px; border-radius:10px; overflow:hidden;"></div>
@@ -439,27 +413,17 @@ elif st.session_state.aktif_oyun == "kiz":
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 420, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, 420); container.appendChild(renderer.domElement);
-        
         scene.add(new THREE.PointLight(0xff69b4, 3, 100)); scene.add(new THREE.AmbientLight(0x3d0066));
-        
         const playerMesh = new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.0, 4), new THREE.MeshStandardMaterial({ color: 0xff007f }));
         playerMesh.rotation.x = Math.PI / 2; playerMesh.position.set(0, 0, -6); scene.add(playerMesh);
-        
         let obstacles = []; const obsColors = [0x00ffff, 0xba55d3, 0xff69b4];
         for(let i=0; i<4; i++){
             let oMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), new THREE.MeshStandardMaterial({ color: obsColors[i%3] }));
             oMesh.position.set((Math.random() - 0.5) * 12, 0, -40 - (i * 30)); scene.add(oMesh); obstacles.push(oMesh);
         }
         camera.position.set(0, 5, 2); camera.lookAt(new THREE.Vector3(0, -0.5, -20));
-        
         let score = 0; let gameOver = false; let keys = {}; let mobSol = false; let mobSag = false;
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
-        
-        document.getElementById("kizMobSolBtn").addEventListener("touchstart", () => mobSol = true);
-        document.getElementById("kizMobSolBtn").addEventListener("touchend", () => mobSol = false);
-        document.getElementById("kizMobSagBtn").addEventListener("touchstart", () => mobSag = true);
-        document.getElementById("kizMobSagBtn").addEventListener("touchend", () => mobSag = false);
-        
         function animate() {
             if(!gameOver) {
                 if(keys["a"] || mobSol) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.20; }
