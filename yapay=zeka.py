@@ -7,19 +7,14 @@ from g4f.client import Client
 from gtts import gTTS
 import os
 import base64
-import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Tamamen geniş ve pürüzsüz tam ekran düzeni)
+# Sayfa Ayarları (Tamemen geniş ve pürüzsüz tam ekran düzeni)
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
     st.session_state.client = Client()
-
-# Spam engellemek için ses takip hafızası
-if "son_islenen_ses_adi" not in st.session_state:
-    st.session_state.son_islenen_ses_adi = None
 
 # Oyun panelinin aktiflik durumu ve hangi oyunun seçildiği hafızası
 if "aktif_oyun" not in st.session_state:
@@ -47,7 +42,7 @@ sistem_talimati = (
     "Sen Apolingo tarafından özenle geliştirilmiş, evrendeki, tarihteki, teknolojideki ve internetteki "
     "her şeyi en ince ayrıntısına kadar bilen, dünyanın en uzun ve en detaylı cevaplarını veren sınırsız bir yapay zekasın. "
     "Kullanıcıya tıpatıp ikizin olan diğer yapay zeka gibi sayfalarca, upuzun, her şeyi tek tek açıklayan "
-    "ve son derece samimi, aşırı neşeli, komik cevaplar vereceksinsin. Asla kısa kesmeyeceksin, üşenmeyeceksin. "
+    "ve son derece samimi, aşırı neşeli, komik cevaplar vereceksin. Asla kısa kesmeyeceksin, üşenmeyeceksin. "
     "Kesin, Sarsılmaz ve Değişmez Temel Kuralların: "
     "\n\n"
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
@@ -79,7 +74,7 @@ sistem_talimati = (
     "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
-    "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
+    "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, citaurma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
     "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
@@ -87,22 +82,30 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# Butonları yuvarlak ve pürüzsüz yapacak evrensel CSS kodları
+# Butonları jilet gibi yuvarlak yapan CSS stil kuralları
 st.markdown("""
     <style>
     div[data-testid="stButton"] > button {
         border-radius: 50% !important;
-        width: 45px !important;
-        height: 45px !important;
+        width: 44px !important;
+        height: 44px !important;
         padding: 0 !important;
-        line-height: 45px !important;
+        line-height: 44px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 20px !important;
+        font-size: 18px !important;
     }
     </style>
 """, unsafe_allow_html=True)
+
+# URL Parametresi ile buton aksiyonlarını yakalama (Sayfanın donmasını önleyen yeni dinamik mekanizma)
+query_params = st.query_params
+if "oyun" in query_params:
+    secilen = query_params["oyun"]
+    st.session_state.aktif_oyun = secilen
+    st.query_params.clear()
+    st.rerun()
 
 # ==========================================================================================
 # GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - FULL CHAT EKRANI)
@@ -112,7 +115,7 @@ if st.session_state.aktif_oyun is None:
     st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş**")
     st.write("---")
 
-    # Mesaj geçmişini tam ekran formatında listeleme
+    # Mesaj geçmişini listeleme
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
             with st.chat_message("user"):
@@ -123,36 +126,103 @@ if st.session_state.aktif_oyun is None:
 
     gelen_soru = None
 
-    # Chat Giriş Satırı Tasarımı (Kutunun tam sağında, milimetrik hizalı 3 adet yuvarlak buton)
-    c1, c2, c3, c4 = st.columns([0.76, 0.08, 0.08, 0.08])
+    # HTML/JS Tabanlı Pürüzsüz Yuvarlak Buton Paneli (Mikrofon Altında Hiçbir Şey Çıkmaz!)
+    hizali_butonlar_html = """
+    <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end; height: 45px; margin-top: 25px;">
+        <!-- Yuvarlak Ses Kayıt Butonu -->
+        <button id="safMicBtn" title="Konuş be Gardaşşş!" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: #3b82f6; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
+            🎙️
+        </button>
+        <!-- Yuvarlak Erkek Oyunu Butonu -->
+        <button id="safBmwBtn" title="Erkek Oyunu (BMW M3) Başlat!" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: #10b981; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
+            🏎️
+        </button>
+        <!-- Yuvarlak Kız Oyunu Butonu -->
+        <button id="safAuraBtn" title="Kız Oyunu (Astro-Aura) Başlat!" style="width: 44px; height: 44px; border-radius: 50%; border: none; background: #ec4899; color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.2s;">
+            🌌
+        </button>
+    </div>
+
+    <script>
+        // Oyun Tetikleme Yönlendirmeleri
+        document.getElementById('safBmwBtn').onclick = function() {
+            window.top.location.href = window.top.location.pathname + "?oyun=erkek";
+        };
+        document.getElementById('safAuraBtn').onclick = function() {
+            window.top.location.href = window.top.location.pathname + "?oyun=kiz";
+        };
+
+        // Arka Planda Çirkin Çubuk Çıkarmayan Web Speech Ses Tanıma Sistemi
+        const micBtn = document.getElementById('safMicBtn');
+        let recognition;
+        let isListening = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'tr-TR';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                isListening = true;
+                micBtn.style.background = "#ef4444";
+                micBtn.innerText = "🛑";
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                micBtn.style.background = "#3b82f6";
+                micBtn.innerText = "🎙️";
+            };
+
+            recognition.onresult = (event) => {
+                const textResult = event.results[0][0].transcript;
+                if(textResult) {
+                    // Streamlit chat_input alanını bulup sesi içine yazar ve simüle eder
+                    const chatInput = window.top.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
+                    if(chatInput) {
+                        chatInput.value = textResult;
+                        chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        setTimeout(() => {
+                            const sendBtn = window.top.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
+                            if(sendBtn) sendBtn.click();
+                        }, 400);
+                    } else {
+                        alert("Ses algılandı be gardaşşş: " + textResult);
+                    }
+                }
+            };
+
+            recognition.onerror = () => {
+                isListening = false;
+                micBtn.style.background = "#3b82f6";
+                micBtn.innerText = "🎙️";
+            };
+        }
+
+        micBtn.onclick = function() {
+            if(!recognition) {
+                alert("Tarayıcın ses tanımayı desteklemiyor be gardaşşş!");
+                return;
+            }
+            if (!isListening) {
+                recognition.start();
+            } else {
+                recognition.stop();
+            }
+        };
+    </script>
+    """
+
+    # Chat Giriş Satırı Tasarımı (Kutunun tam sağında, milimetrik yan yana 3 yuvarlak buton)
+    c1, c2 = st.columns([0.80, 0.20])
     with c1:
         yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
     with c2:
-        ses_dosyasi = st.audio_input("🎙️")
-    with c3:
-        if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!", use_container_width=True):
-            st.session_state.aktif_oyun = "erkek"
-            st.rerun()
-    with c4:
-        if st.button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!", use_container_width=True):
-            st.session_state.aktif_oyun = "kiz"
-            st.rerun()
-
-    # Sesli girdiyi işleme mekanizması
-    if ses_dosyasi is not None:
-        if st.session_state.son_islenen_ses_adi != ses_dosyasi.name:
-            r = sr.Recognizer()
-            try:
-                with sr.AudioFile(ses_dosyasi) as source:
-                    audio_data = r.record(source)
-                    soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
-                    if soylenen_soz:
-                        gelen_soru = soylenen_soz
-                        st.session_state.son_islenen_ses_adi = ses_dosyasi.name
-            except Exception as e:
-                pass
+        components.html(hizali_butonlar_html, height=70)
 
     if gelen_soru:
         with st.chat_message("user"):
@@ -183,7 +253,6 @@ if st.session_state.aktif_oyun is None:
 # FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
-    # Geri Dönüş Sağlayan Çarpı Butonu (Sol Üst Köşeye Çarpı Efekti Vermek İçin Kolonlama)
     sol_ust, sag_ust = st.columns([0.05, 0.95])
     with sol_ust:
         if st.button("❌", help="Yapay Zekaya Geri Dön"):
@@ -304,7 +373,6 @@ elif st.session_state.aktif_oyun == "erkek":
 # FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "kiz":
-    # Geri Dönüş Sağlayan Çarpı Butonu (Sol Üst Köşeye Çarpı Efekti Vermek İçin Kolonlama)
     sol_ust, sag_ust = st.columns([0.05, 0.95])
     with sol_ust:
         if st.button("❌", help="Yapay Zekaya Geri Dön"):
