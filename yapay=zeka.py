@@ -10,7 +10,7 @@ import base64
 import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Apolingo Mesaj Kutusu İçi Mavi & Menü Butonu Beyaz Işıklı Premium Konsept)
+# Sayfa Ayarları
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -87,7 +87,7 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ: BEYAZ YAZILAR VE TONLAMALI KIRMIZI OYUN PANELİ (SIDEBAR)
+# CSS DÜZENLEMELERİ: MAVİ EFEKTLER TAMAMEN KALDIRILDI, SAF BEYAZ VE KIRMIZI TONLARI KALDI
 # ==========================================================================================
 st.markdown("""
     <style>
@@ -108,7 +108,7 @@ st.markdown("""
         color: #ffffff !important;
     }
     
-    /* 2. ORTA BOY VE SAF BEYAZ ANA BAŞLIK */
+    /* 2. ANA BAŞLIK (Mavi Gölgeler Tamamen Silindi) */
     .havali-ana-baslik {
         text-align: center !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
@@ -118,11 +118,6 @@ st.markdown("""
         color: #ffffff !important; 
         margin-top: 15px !important;
         margin-bottom: 5px !important;
-        
-        /* Net görünmesi için arkaya hafif bir neon mavi gölge */
-        text-shadow: 
-            0 0 6px rgba(0, 191, 255, 0.6),
-            0 0 15px rgba(0, 119, 255, 0.4) !important;
     }
     
     .havali-alt-yazi {
@@ -161,7 +156,7 @@ st.markdown("""
         box-shadow: 5px 0 25px rgba(139, 0, 0, 0.3) !important;
     }
     
-    /* Yan menüdeki tüm metinleri beyaz yapıyoruz ki net gözüksün */
+    /* Yan menüdeki tüm metinleri beyaz yapıyoruz */
     [data-testid="stSidebar"] * {
         color: #ffffff !important;
     }
@@ -171,41 +166,41 @@ st.markdown("""
         background-color: #ff3333 !important;
     }
     
-    /* 5. Sohbet Balonları ve Yazı Renkleri */
+    /* 5. SOHBET BALONLARI (Mavi sınırlar/gölgeler tamamen temizlendi) */
     [data-testid="stChatMessage"] {
         background-color: rgba(20, 10, 5, 0.7) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 16px !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
         backdrop-filter: blur(8px);
         margin-bottom: 15px !important;
     }
 
     [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] span {
-        color: #ffffff !important; /* Mesajların içi kabak gibi beyaz */
+        color: #ffffff !important; /* Yazılar net beyaz */
     }
     
-    /* 6. MESAJ GİRİŞ KUTUSU */
+    /* 6. MESAJ GİRİŞ KUTUSU (Mavi Neon Çerçeve Kaldırıldı, Beyaz/Gri Yapıldı) */
     textarea[data-testid="stChatInputTextArea"] {
         color: #ffffff !important;
         border-radius: 14px !important;
         font-size: 16px !important;
         background-color: #0b0f14 !important; 
-        border: 2px solid #1e3a5f !important;
-        box-shadow: 0 4px 15px rgba(0, 191, 255, 0.15) !important;
+        border: 2px solid #333333 !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
     }
     
     textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #00bfff !important;
+        border-color: #ffffff !important;
         background-color: #0d1520 !important;
-        box-shadow: 0 0 20px rgba(0, 191, 255, 0.45) !important;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
     }
 
     /* Mikrofon Yuvası */
     .stAudioInput {
         background-color: #0b0f14 !important;
         border-radius: 50% !important;
-        border: 2px solid #1e3a5f !important;
+        border: 2px solid #333333 !important;
     }
 
     /* Spinner Dönüşü */
@@ -252,7 +247,7 @@ if st.session_state.aktif_mod == "Sohbet":
         if mesaj["role"] == "user":
             with st.chat_message("user"):
                 st.write(mesaj["content"])
-        elif mesaje := mesaj["role"] == "assistant":
+        elif mesaj["role"] == "assistant":
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
@@ -309,7 +304,7 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE (ÇERÇEVESİ KIRMIZI TONLAMALI YAPILDI)
+# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
     st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
@@ -387,7 +382,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
     components.html(bmw_full_screen_html, height=780)
 
 # ==========================================================================================
-# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE (ÇERÇEVESİ KIRMIZI TONLAMALI YAPILDI)
+# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
 # ==========================================================================================
 elif st.session_state.aktif_mod == "KizOyunu":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
