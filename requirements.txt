@@ -1,4 +1,4 @@
-g4f
 streamlit
+g4f
 gTTS
 streamlit-mic-recorder
