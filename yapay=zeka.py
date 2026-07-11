@@ -24,9 +24,9 @@ if "aktif_oyun" not in st.session_state:
 if "mic_aktif" not in st.session_state:
     st.session_state.mic_aktif = False
 
-# Gizli ses girdisi hafızası (Sorunu çözen anahtar kutu)
-if "sesli_girdi_hafizasi" not in st.session_state:
-    st.session_state.sesli_girdi_hafizasi = None
+# Sesli girdinin chat kutusuna doldurulması için ara hafıza
+if "chat_kutu_degeri" not in st.session_state:
+    st.session_state.chat_kutu_degeri = ""
 
 # Ses çalma fonksiyonu
 def sesi_cal(metin):
@@ -149,7 +149,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # IFRAME ENGELLERİNİ AŞAN VE ARKA PLANDA YAZI YAKALAYAN KULLANICI KÖPRÜSÜ
+    # IFRAME ENGELLERİNİ AŞAN SES TANIMA VE RİTİM MOTORU
     if st.session_state.mic_aktif:
         JS_RITIM_MIC = """
         <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px;">
@@ -160,7 +160,6 @@ if st.session_state.aktif_oyun is None:
         </div>
         
         <script>
-        // Ses algılama ve görselleştirme motoru
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -190,7 +189,6 @@ if st.session_state.aktif_oyun is None:
                 }
                 drawRitim();
 
-                // Güvenli Ses Tanıma ve Üst Pencere Köprüsü
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'tr-TR';
@@ -200,34 +198,36 @@ if st.session_state.aktif_oyun is None:
                 recognition.onresult = (event) => {
                     const metinSonuc = event.results[0][0].transcript;
                     if(metinSonuc && metinSonuc.trim() !== "") {
-                        // Streamlit Query Params engeline takılmamak için görünmez bir inputa basıyoruz
+                        // Sesi hem gizli köprüye hem de chat alanına postMessage ile fırlatıyoruz!
                         window.parent.postMessage({type: 'sesli_konusma', text: metinSonuc}, '*');
                     }
                 };
-                
-                recognition.onerror = (e) => { console.log(e); };
                 recognition.start();
-            }).catch(err => { console.log("Mikrofon izni yok be gardaş:", err); });
+            }).catch(err => { console.log(err); });
         }
         </script>
         """
-        # HTML köprüsünü çalıştırıyoruz
-        girdi_yakalayici = components.html(JS_RITIM_MIC, height=42)
+        components.html(JS_RITIM_MIC, height=42)
 
-    # ÜST PENCEREDEN GELEN POSTMESSAGE VERİSİNİ KOD TARAFINDA YAKALAYAN HACK
-    # Streamlit'in yenilenmesini tetiklemek için deneysel bir text_input kullanıyoruz
+    # SESİ AYNI ANDA HEM SİSTEME HEM DE CHAT INPUT ALANINA DOLDURAN JAVASCRIPT ENJEKSİYONU
     gizemli_veri = st.text_input("Ses Köprüsü", key="gizemli_ses_koprusu", label_visibility="collapsed")
     
-    # HTML'den gelen postMessage verilerini Streamlit inputuna aktarmak için küçük bir JavaScript enjeksiyonu
     st.markdown("""
         <script>
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'sesli_konusma') {
-                const inputs = window.parent.document.querySelectorAll('input[aria-label="Ses Köprüsü"]');
-                if(inputs.length > 0) {
-                    inputs[0].value = event.data.text;
-                    inputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-                    inputs[0].dispatchEvent(new Event('change', { bubbles: true }));
+                // 1. Gizli ses köprüsünü doldur ve tetikle
+                const gizliInputs = window.parent.document.querySelectorAll('input[aria-label="Ses Köprüsü"]');
+                if(gizliInputs.length > 0) {
+                    gizliInputs[0].value = event.data.text;
+                    gizliInputs[0].dispatchEvent(new Event('input', { bubbles: true }));
+                    gizliInputs[0].dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                // 2. Mesaj yazma yerine (st.chat_input) sesi anlık olarak yazdır!
+                const chatTextArea = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
+                if(chatTextArea) {
+                    chatTextArea.value = event.data.text;
+                    chatTextArea.dispatchEvent(new Event('input', { bubbles: true }));
                 }
             }
         });
@@ -255,6 +255,7 @@ if st.session_state.aktif_oyun is None:
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_chat:
+        # Konuştuğunda bu kutu da otomatik dolacak şekilde senkronize edildi be gardaşşşşş!
         yazi_soru = st.chat_input("Mesajını yaz veya konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
