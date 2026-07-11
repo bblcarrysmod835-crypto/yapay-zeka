@@ -95,10 +95,10 @@ st.markdown("""
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #070403 !important;
         background-image: 
-            radial-gradient(circle at 0% 0%, #522915 0%, transparent 40%),
-            radial-gradient(circle at 100% 0%, #522915 0%, transparent 40%),
-            radial-gradient(circle at 0% 100%, #3a1c0e 0%, transparent 40%),
-            radial-gradient(circle at 100% 100%, #3a1c0e 0%, transparent 40%) !important;
+            radial-gradient(circle at 0% 0%, #522915 0%, transparent 45%),
+            radial-gradient(circle at 100% 0%, #522915 0%, transparent 45%),
+            radial-gradient(circle at 0% 100%, #3a1c0e 0%, transparent 45%),
+            radial-gradient(circle at 100% 100%, #3a1c0e 0%, transparent 45%) !important;
         background-attachment: fixed !important;
         color: #ffffff !important;
     }
@@ -259,7 +259,7 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# ULTRA GERÇEKÇİ ÇALIŞAN BMW M3 MAKAS SİMÜLATÖRÜ
+# ULTRA GERÇEKÇİ ÇALIŞAN BMW M3 MAKAS SİMÜLATÖRÜ (TAMAMEN OPTİMİZE EDİLDİ)
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
     st.markdown("### 🏎️ BMW M3 Ultra 4K Otoban Makas Simülatörü")
@@ -267,8 +267,8 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 
     bmw_nextgen_html = """
     <div style="text-align:center; background:#020202; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 35px rgba(255,0,0,0.6); user-select:none; position:relative;">
-        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 20px #ff0000;">◀</button>
-        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 20px #ff0000;">▶</button>
+        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">◀</button>
+        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">▶</button>
         <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanel" style="margin-top:15px;">
             <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #ff0000;">PRO-SPEED: 120 KM/H</h2>
@@ -277,123 +277,142 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const container = document.getElementById("bmwFullCanvasContainer");
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x020202, 0.02);
-        
-        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 550);
-        container.appendChild(renderer.domElement);
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const container = document.getElementById("bmwFullCanvasContainer");
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x020202, 0.02);
+            
+            const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, 550);
+            container.appendChild(renderer.domElement);
 
-        const sunLight = new THREE.DirectionalLight(0xffffff, 3.0);
-        sunLight.position.set(10, 50, 20);
-        scene.add(sunLight);
-        scene.add(new THREE.AmbientLight(0x111111, 1.5));
+            const sunLight = new THREE.DirectionalLight(0xffffff, 3.0);
+            sunLight.position.set(10, 50, 20);
+            scene.add(sunLight);
+            scene.add(new THREE.AmbientLight(0x111111, 1.5));
 
-        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x151515, roughness: 0.7 }));
-        scene.add(road);
+            const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x151515, roughness: 0.7 }));
+            scene.add(road);
 
-        const leftBarrier = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.8, 1000), new THREE.MeshStandardMaterial({ color: 0x333333 }));
-        leftBarrier.position.set(-8.2, 0.4, 0);
-        const rightBarrier = leftBarrier.clone();
-        rightBarrier.position.x = 8.2;
-        scene.add(leftBarrier, rightBarrier);
+            const leftBarrier = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.8, 1000), new THREE.MeshStandardMaterial({ color: 0x333333 }));
+            leftBarrier.position.set(-8.2, 0.4, 0);
+            const rightBarrier = leftBarrier.clone();
+            rightBarrier.position.x = 8.2;
+            scene.add(leftBarrier, rightBarrier);
 
-        let lines = [];
-        for(let i=0; i<25; i++){
-            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.11, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-            lMesh.position.set(0, 0.06, -i * 35);
-            scene.add(lMesh);
-            lines.push(lMesh);
-        }
-
-        const bmwM3 = new THREE.Group();
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xf0f0f0, metalness: 0.9, roughness: 0.1 });
-        const body = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.4, 3.2), bodyMat);
-        body.position.y = 0.3;
-        bmwM3.add(body);
-
-        const glassMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.0, metalness: 1.0 });
-        const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.4, 1.6), glassMat);
-        cabin.position.set(0, 0.65, -0.2);
-        bmwM3.add(cabin);
-
-        const xenonMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        const stopMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const fLightL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.08, 0.1), xenonMat); fLightL.position.set(-0.6, 0.3, -1.6);
-        const fLightR = fLightL.clone(); fLightR.position.x = 0.6;
-        const bLightL = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.08, 0.1), stopMat); bLightL.position.set(-0.6, 0.3, 1.6);
-        const bLightR = bLightL.clone(); bLightR.position.x = 0.6;
-        bmwM3.add(fLightL, fLightR, bLightL, bLightR);
-
-        bmwM3.position.set(0, 0, -8);
-        scene.add(bmwM3);
-
-        let traffic = [];
-        const colors = [0xff1155, 0x00ffcc, 0xffcc00, 0x6600ff];
-        for(let i=0; i<4; i++){
-            let tGroup = new THREE.Group();
-            let tBody = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 3.0), new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.6, roughness: 0.2 }));
-            tBody.position.y = 0.35;
-            let tCabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.45, 1.4), glassMat);
-            tCabin.position.set(0, 0.75, -0.1);
-            tGroup.add(tBody, tCabin);
-            tGroup.position.set((Math.random() - 0.5) * 12, 0, -50 - (i * 50));
-            scene.add(tGroup);
-            traffic.push(tGroup);
-        }
-
-        camera.position.set(0, 4.5, -3.5);
-        camera.lookAt(new THREE.Vector3(0, 0.6, -25));
-
-        let score = 0; let gameOver = false; let keys = {};
-        let tilt = 0;
-        window.addEventListener("keydown", e => keys[e.key] = true);
-        window.addEventListener("keyup", e => keys[e.key] = false);
-
-        let touchLeft = false, touchRight = false;
-        document.getElementById("btnLeft").addEventListener("pointerdown", () => touchLeft = true);
-        document.getElementById("btnLeft").addEventListener("pointerup", () => touchLeft = false);
-        document.getElementById("btnRight").addEventListener("pointerdown", () => touchRight = true);
-        document.getElementById("btnRight").addEventListener("pointerup", () => touchRight = false);
-
-        function animate() {
-            if(!gameOver) {
-                let speed = 1.2 + (score * 0.04);
-                
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
-                    if(bmwM3.position.x > -6.8) { bmwM3.position.x -= 0.26; if(tilt < 0.16) tilt += 0.03; }
-                } else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { 
-                    if(bmwM3.position.x < 6.8) { bmwM3.position.x += 0.26; if(tilt > -0.16) tilt -= 0.03; }
-                } else {
-                    tilt *= 0.8;
-                }
-                bmwM3.rotation.z = tilt;
-                bmwM3.rotation.y = tilt * 0.5;
-
-                camera.position.y = 4.5 + Math.sin(Date.now() * 0.06) * (score * 0.003);
-                lines.forEach(l => { l.position.z += speed; if(l.position.z > 20) l.position.z = -350; });
-
-                traffic.forEach(t => {
-                    t.position.z += speed * 0.45;
-                    if(t.position.z > 3) { 
-                        t.position.z = -200 - Math.random()*60; 
-                        t.position.x = (Math.random() - 0.5) * 12; 
-                        score++; 
-                        document.getElementById("scoreDisplay4D").innerText = "PRO-SPEED: " + (120 + score * 8) + " KM/H"; 
-                    }
-                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.45 && Math.abs(bmwM3.position.z - t.position.z) < 3.1) { 
-                        gameOver = true; 
-                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff0000; text-shadow:0 0 10px #ff0000;'>💥 KAZA YAPILDI! OTOBAN KİLİT! 💥</span>";
-                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #440000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">M3\'Ü SANAYİDEN ÇIKAR 🔄</button>';
-                    }
-                });
+            let lines = [];
+            for(let i=0; i<25; i++){
+                let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.11, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                lMesh.position.set(0, 0.06, -i * 35);
+                scene.add(lMesh);
+                lines.push(lMesh);
             }
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-        animate();
+
+            const bmwM3 = new THREE.Group();
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0xf0f0f0, metalness: 0.9, roughness: 0.1 });
+            const body = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.4, 3.2), bodyMat);
+            body.position.y = 0.3;
+            bmwM3.add(body);
+
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.0, metalness: 1.0 });
+            const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.4, 1.6), glassMat);
+            cabin.position.set(0, 0.65, -0.2);
+            bmwM3.add(cabin);
+
+            const xenonMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const stopMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const fLightL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.08, 0.1), xenonMat); fLightL.position.set(-0.6, 0.3, -1.6);
+            const fLightR = fLightL.clone(); fLightR.position.x = 0.6;
+            const bLightL = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.08, 0.1), stopMat); bLightL.position.set(-0.6, 0.3, 1.6);
+            const bLightR = bLightL.clone(); bLightR.position.x = 0.6;
+            bmwM3.add(fLightL, fLightR, bLightL, bLightR);
+
+            bmwM3.position.set(0, 0, -8);
+            scene.add(bmwM3);
+
+            let traffic = [];
+            const colors = [0xff1155, 0x00ffcc, 0xffcc00, 0x6600ff];
+            for(let i=0; i<4; i++){
+                let tGroup = new THREE.Group();
+                let tBody = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 3.0), new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.6, roughness: 0.2 }));
+                tBody.position.y = 0.35;
+                let tCabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.45, 1.4), glassMat);
+                tCabin.position.set(0, 0.75, -0.1);
+                tGroup.add(tBody, tCabin);
+                tGroup.position.set((Math.random() - 0.5) * 12, 0, -50 - (i * 50));
+                scene.add(tGroup);
+                traffic.push(tGroup);
+            }
+
+            camera.position.set(0, 4.5, -3.5);
+            camera.lookAt(new THREE.Vector3(0, 0.6, -25));
+
+            let score = 0; let gameOver = false; let keys = {};
+            let tilt = 0;
+            window.addEventListener("keydown", e => keys[e.key] = true);
+            window.addEventListener("keyup", e => keys[e.key] = false);
+
+            let touchLeft = false, touchRight = false;
+            
+            document.getElementById("btnLeft").addEventListener("mousedown", () => touchLeft = true);
+            document.getElementById("btnLeft").addEventListener("mouseup", () => touchLeft = false);
+            document.getElementById("btnLeft").addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; });
+            document.getElementById("btnLeft").addEventListener("touchend", () => touchLeft = false);
+
+            document.getElementById("btnRight").addEventListener("mousedown", () => touchRight = true);
+            document.getElementById("btnRight").addEventListener("mouseup", () => touchRight = false);
+            document.getElementById("btnRight").addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; });
+            document.getElementById("btnRight").addEventListener("touchend", () => touchRight = false);
+
+            function animate() {
+                if(!gameOver) {
+                    let speed = 1.2 + (score * 0.04);
+                    
+                    if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
+                        if(bmwM3.position.x > -6.8) { bmwM3.position.x -= 0.26; if(tilt < 0.16) tilt += 0.03; }
+                    } else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { 
+                        if(bmwM3.position.x < 6.8) { bmwM3.position.x += 0.26; if(tilt > -0.16) tilt -= 0.03; }
+                    } else {
+                        tilt *= 0.8;
+                    }
+                    bmwM3.rotation.z = tilt;
+                    bmwM3.rotation.y = tilt * 0.5;
+
+                    camera.position.y = 4.5 + Math.sin(Date.now() * 0.06) * (score * 0.003);
+                    lines.forEach(l => { l.position.z += speed; if(l.position.z > 20) l.position.z = -350; });
+
+                    traffic.forEach(t => {
+                        t.position.z += speed * 0.45;
+                        if(t.position.z > 3) { 
+                            t.position.z = -200 - Math.random()*60; 
+                            t.position.x = (Math.random() - 0.5) * 12; 
+                            score++; 
+                            document.getElementById("scoreDisplay4D").innerText = "PRO-SPEED: " + (120 + score * 8) + " KM/H"; 
+                        }
+                        if(Math.abs(bmwM3.position.x - t.position.x) < 1.45 && Math.abs(bmwM3.position.z - t.position.z) < 3.1) { 
+                            gameOver = true; 
+                            document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff0000; text-shadow:0 0 10px #ff0000;'>💥 KAZA YAPILDI! OTOBAN KİLİT! 💥</span>";
+                            document.getElementById("restartButtonContainer").innerHTML = '<button id="btnResetGame" style="margin-top:15px; padding:15px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #440000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">M3\'Ü SANAYİDEN ÇIKAR 🔄</button>';
+                            
+                            document.getElementById("btnResetGame").addEventListener("click", () => {
+                                score = 0;
+                                gameOver = false;
+                                bmwM3.position.x = 0;
+                                document.getElementById("scoreDisplay4D").innerText = "PRO-SPEED: 120 KM/H";
+                                document.getElementById("restartButtonContainer").innerHTML = "";
+                                traffic.forEach((trf, idx) => {
+                                    trf.position.set((Math.random() - 0.5) * 12, 0, -50 - (idx * 50));
+                                });
+                            });
+                        }
+                    });
+                }
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate();
+        });
     </script>
     """
     components.html(bmw_nextgen_html, height=780)
@@ -407,8 +426,8 @@ elif st.session_state.aktif_mod == "KizOyunu":
 
     astro_premium_html = """
     <div style="text-align:center; background:#010103; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 35px rgba(255,0,0,0.6); user-select:none; position:relative;">
-        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 20px #ff0000;">◀</button>
-        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:10; box-shadow:0 0 20px #ff0000;">▶</button>
+        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">◀</button>
+        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">▶</button>
         <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanelKiz" style="margin-top:15px;">
             <h2 id="kizScoreDisplay" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:32px; letter-spacing:2px; text-shadow: 0 0 10px #ff3366;">COSMIC MATRİX: 0</h2>
@@ -417,116 +436,135 @@ elif st.session_state.aktif_mod == "KizOyunu":
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const container = document.getElementById("kizFullCanvasContainer");
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x010103, 0.015);
-        
-        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 550);
-        container.appendChild(renderer.domElement);
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const container = document.getElementById("kizFullCanvasContainer");
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x010103, 0.015);
+            
+            const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, 550);
+            container.appendChild(renderer.domElement);
 
-        const neonLight = new THREE.PointLight(0xff0055, 4, 200);
-        neonLight.position.set(0, 10, -20);
-        scene.add(neonLight);
-        scene.add(new THREE.AmbientLight(0x0f051d, 2.0));
+            const neonLight = new THREE.PointLight(0xff0055, 4, 200);
+            neonLight.position.set(0, 10, -20);
+            scene.add(neonLight);
+            scene.add(new THREE.AmbientLight(0x0f051d, 2.0));
 
-        function createStars(color, size, count) {
-            const geo = new THREE.BufferGeometry();
-            const positions = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i+=3) {
-                positions[i] = (Math.random() - 0.5) * 80;
-                positions[i+1] = (Math.random() - 0.5) * 50;
-                positions[i+2] = -Math.random() * 250;
+            function createStars(color, size, count) {
+                const geo = new THREE.BufferGeometry();
+                const positions = new Float32Array(count * 3);
+                for(let i=0; i<count*3; i+=3) {
+                    positions[i] = (Math.random() - 0.5) * 80;
+                    positions[i+1] = (Math.random() - 0.5) * 50;
+                    positions[i+2] = -Math.random() * 250;
+                }
+                geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                return new THREE.Points(geo, new THREE.PointsMaterial({ color: color, size: size, transparent: true, opacity: 0.9 }));
             }
-            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            return new THREE.Points(geo, new THREE.PointsMaterial({ color: color, size: size, transparent: true, opacity: 0.9 }));
-        }
-        const layer1 = createStars(0xffffff, 0.2, 300);
-        const layer2 = createStars(0xff33aa, 0.35, 200);
-        scene.add(layer1, layer2);
+            const layer1 = createStars(0xffffff, 0.2, 300);
+            const layer2 = createStars(0xff33aa, 0.35, 200);
+            scene.add(layer1, layer2);
 
-        const playerJet = new THREE.Group();
-        const jetMat = new THREE.MeshStandardMaterial({ color: 0xff1144, metalness: 0.95, roughness: 0.05 });
-        const core = new THREE.Mesh(new THREE.ConeGeometry(0.5, 2.5, 4), jetMat);
-        core.rotation.x = Math.PI / 2;
-        const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.04, 1.0), jetMat); wingL.position.set(-0.8, -0.1, 0.3); wingL.rotation.y = 0.2;
-        const wingR = wingL.clone(); wingR.position.x = 0.8; wingR.rotation.y = -0.2;
-        playerJet.add(core, wingL, wingR);
+            const playerJet = new THREE.Group();
+            const jetMat = new THREE.MeshStandardMaterial({ color: 0xff1144, metalness: 0.95, roughness: 0.05 });
+            const core = new THREE.Mesh(new THREE.ConeGeometry(0.5, 2.5, 4), jetMat);
+            core.rotation.x = Math.PI / 2;
+            const wingL = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.04, 1.0), jetMat); wingL.position.set(-0.8, -0.1, 0.3); wingL.rotation.y = 0.2;
+            const wingR = wingL.clone(); wingR.position.x = 0.8; wingR.rotation.y = -0.2;
+            playerJet.add(core, wingL, wingR);
 
-        const fireMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        const thruster = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.8, 8), fireMat);
-        thruster.position.set(0, 0, 1.4);
-        thruster.rotation.x = -Math.PI / 2;
-        playerJet.add(thruster);
+            const fireMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            const thruster = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.8, 8), fireMat);
+            thruster.position.set(0, 0, 1.4);
+            thruster.rotation.x = -Math.PI / 2;
+            playerJet.add(thruster);
 
-        playerJet.position.set(0, 0, -7);
-        scene.add(playerJet);
+            playerJet.position.set(0, 0, -7);
+            scene.add(playerJet);
 
-        let asteroids = [];
-        for(let i=0; i<5; i++){
-            let astGeo = new THREE.DodecahedronGeometry(1.3, 1);
-            let astMat = new THREE.MeshStandardMaterial({ color: 0x4a0e2e, roughness: 0.2, metalness: 0.8, emissive: 0x220211 });
-            let ast = new THREE.Mesh(astGeo, astMat);
-            ast.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -60 - (i * 40));
-            scene.add(ast);
-            asteroids.push(ast);
-        }
-
-        camera.position.set(0, 4.0, 4);
-        camera.lookAt(new THREE.Vector3(0, 0, -15));
-
-        let score = 0; let gameOver = false; let keys = {};
-        window.addEventListener("keydown", e => keys[e.key] = true);
-        window.addEventListener("keyup", e => keys[e.key] = false);
-
-        let touchLeft = false, touchRight = false;
-        document.getElementById("btnLeftKiz").addEventListener("pointerdown", () => touchLeft = true);
-        document.getElementById("btnLeftKiz").addEventListener("pointerup", () => touchLeft = false);
-        document.getElementById("btnRightKiz").addEventListener("pointerdown", () => touchRight = true);
-        document.getElementById("btnRightKiz").addEventListener("pointerup", () => touchRight = false);
-
-        function animate() {
-            if(!gameOver) {
-                let speed = 1.0 + (score * 0.035);
-
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerJet.position.x > -7.5) playerJet.position.x -= 0.24; playerJet.rotation.z = 0.4; }
-                else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerJet.position.x < 7.5) playerJet.position.x += 0.24; playerJet.rotation.z = -0.4; }
-                else { playerJet.rotation.z *= 0.8; }
-
-                thruster.scale.set(1 + Math.sin(Date.now()*0.1)*0.2, 1 + Math.cos(Date.now()*0.1)*0.3, 1);
-
-                const p1 = layer1.geometry.attributes.position.array;
-                for(let i=2; i<p1.length; i+=3) { p1[i] += speed * 0.8; if(p1[i] > 10) p1[i] = -240; }
-                layer1.geometry.attributes.position.needsUpdate = true;
-
-                const p2 = layer2.geometry.attributes.position.array;
-                for(let i=2; i<p2.length; i+=3) { p2[i] += speed * 1.4; if(p2[i] > 10) p2[i] = -240; }
-                layer2.geometry.attributes.position.needsUpdate = true;
-
-                asteroids.forEach(a => {
-                    a.position.z += speed;
-                    a.rotation.x += 0.02;
-                    a.rotation.y += 0.04;
-
-                    if(a.position.z > 6) { 
-                        a.position.z = -160 - Math.random()*40; 
-                        a.position.x = (Math.random() - 0.5) * 14; 
-                        score++; 
-                        document.getElementById("kizScoreDisplay").innerText = "COSMIC MATRİX: " + score; 
-                    }
-                    
-                    if(Math.abs(playerJet.position.x - a.position.x) < 1.5 && Math.abs(playerJet.position.z - a.position.z) < 2.2) { 
-                        gameOver = true; 
-                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff0055; text-shadow:0 0 10px #ff0055;'>🔮 GRAVİTASYONEL DARBE ALINDI! 🔮</span>";
-                        document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 45px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0055, #220011); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0055;">KARA DELİKTEN ÇIK 🔄</button>';
-                    }
-                });
+            let asteroids = [];
+            for(let i=0; i<5; i++){
+                let astGeo = new THREE.DodecahedronGeometry(1.3, 1);
+                let astMat = new THREE.MeshStandardMaterial({ color: 0x4a0e2e, roughness: 0.2, metalness: 0.8, emissive: 0x220211 });
+                let ast = new THREE.Mesh(astGeo, astMat);
+                ast.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -60 - (i * 40));
+                scene.add(ast);
+                asteroids.push(ast);
             }
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-        animate();
+
+            camera.position.set(0, 4.0, 4);
+            camera.lookAt(new THREE.Vector3(0, 0, -15));
+
+            let score = 0; let gameOver = false; let keys = {};
+            window.addEventListener("keydown", e => keys[e.key] = true);
+            window.addEventListener("keyup", e => keys[e.key] = false);
+
+            let touchLeft = false, touchRight = false;
+            
+            document.getElementById("btnLeftKiz").addEventListener("mousedown", () => touchLeft = true);
+            document.getElementById("btnLeftKiz").addEventListener("mouseup", () => touchLeft = false);
+            document.getElementById("btnLeftKiz").addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; });
+            document.getElementById("btnLeftKiz").addEventListener("touchend", () => touchLeft = false);
+
+            document.getElementById("btnRightKiz").addEventListener("mousedown", () => touchRight = true);
+            document.getElementById("btnRightKiz").addEventListener("mouseup", () => touchRight = false);
+            document.getElementById("btnRightKiz").addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; });
+            document.getElementById("btnRightKiz").addEventListener("touchend", () => touchRight = false);
+
+            function animate() {
+                if(!gameOver) {
+                    let speed = 1.0 + (score * 0.035);
+
+                    if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerJet.position.x > -7.5) playerJet.position.x -= 0.24; playerJet.rotation.z = 0.4; }
+                    else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerJet.position.x < 7.5) playerJet.position.x += 0.24; playerJet.rotation.z = -0.4; }
+                    else { playerJet.rotation.z *= 0.8; }
+
+                    thruster.scale.set(1 + Math.sin(Date.now()*0.1)*0.2, 1 + Math.cos(Date.now()*0.1)*0.3, 1);
+
+                    const p1 = layer1.geometry.attributes.position.array;
+                    for(let i=2; i<p1.length; i+=3) { p1[i] += speed * 0.8; if(p1[i] > 10) p1[i] = -240; }
+                    layer1.geometry.attributes.position.needsUpdate = true;
+
+                    const p2 = layer2.geometry.attributes.position.array;
+                    for(let i=2; i<p2.length; i+=3) { p2[i] += speed * 1.4; if(p2[i] > 10) p2[i] = -240; }
+                    layer2.geometry.attributes.position.needsUpdate = true;
+
+                    asteroids.forEach(a => {
+                        a.position.z += speed;
+                        a.rotation.x += 0.02;
+                        a.rotation.y += 0.04;
+
+                        if(a.position.z > 6) { 
+                            a.position.z = -160 - Math.random()*40; 
+                            a.position.x = (Math.random() - 0.5) * 14; 
+                            score++; 
+                            document.getElementById("kizScoreDisplay").innerText = "COSMIC MATRİX: " + score; 
+                        }
+                        
+                        if(Math.abs(playerJet.position.x - a.position.x) < 1.5 && Math.abs(playerJet.position.z - a.position.z) < 2.2) { 
+                            gameOver = true; 
+                            document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff0055; text-shadow:0 0 10px #ff0055;'>🔮 GRAVİTASYONEL DARBE ALINDI! 🔮</span>";
+                            document.getElementById("restartButtonContainerKiz").innerHTML = '<button id="btnResetKiz" style="margin-top:15px; padding:15px 45px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0055, #220011); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0055;">KARA DELİKTEN ÇIK 🔄</button>';
+                            
+                            document.getElementById("btnResetKiz").addEventListener("click", () => {
+                                score = 0;
+                                gameOver = false;
+                                playerJet.position.x = 0;
+                                document.getElementById("kizScoreDisplay").innerText = "COSMIC MATRİX: 0";
+                                document.getElementById("restartButtonContainerKiz").innerHTML = "";
+                                asteroids.forEach((ast, idx) => {
+                                    ast.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -60 - (idx * 40));
+                                });
+                            });
+                        }
+                    });
+                }
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate();
+        });
     </script>
     """
     components.html(astro_premium_html, height=780)
