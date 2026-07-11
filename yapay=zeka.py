@@ -80,7 +80,7 @@ sistem_talimati = (
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
-    "PUBG and Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
+    "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
 if "sohbet_hafizasi" not in st.session_state:
@@ -133,7 +133,6 @@ if st.session_state.aktif_oyun is None:
     c_mic, c_text, c_game1, c_game2 = st.columns([0.12, 0.76, 0.06, 0.06])
     
     with c_mic:
-        # st.audio_input her seferinde benzersiz key alarak kilitlenmeyi kırar
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
         
     with c_text:
@@ -160,7 +159,6 @@ if st.session_state.aktif_oyun is None:
                 soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
                 if soylenen_soz:
                     gelen_soru = soylenen_soz
-                    # Bir sonraki ses için mekanizmayı hemen tazelemek üzere bayrağı kaldırıyoruz
                     st.session_state.ses_isleme_aktif = False
         except Exception as e:
             pass
@@ -187,16 +185,14 @@ if st.session_state.aktif_oyun is None:
                     st.write(cevap)
                 st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
                 
-                # Ses işlemeyi bir sonraki tur için yeniden açıyoruz
                 st.session_state.ses_isleme_aktif = True
-                
                 sesi_cal(cevap)
                 st.rerun()
             except Exception as e:
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE
+# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE (YÖN BUTONLARI EKLENDİ)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
@@ -204,21 +200,28 @@ elif st.session_state.aktif_oyun == "erkek":
         st.session_state.aktif_oyun = None
         st.rerun()
         
-    st.markdown("**🕹️ KONTROLLER:** **A / D** tuşları veya **Sol / Sağ Yön Tuşları**. Makasını at, rekoru kır!")
+    st.markdown("**🕹️ KONTROLLER:** Ekrandaki **YÖN BUTONLARI**, Klavyede **A / D** veya **Yön Tuşları**.")
 
     bmw_full_screen_html = """
-    <div style="text-align:center; background:#05050a; padding:15px; border-radius:16px; border:3px solid #00ffcc;">
-        <div id="bmwFullCanvasContainer" style="width:100%; height:600px; border-radius:10px; overflow:hidden;"></div>
-        <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:15px 0; font-weight:bold;">4D Makas Skoru: 0 🌀</h2>
-        <button onclick="location.reload()" style="padding:12px 30px; font-size:16px; font-weight:bold; background:#00ffcc; color:#000; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #00ffcc;">Pisti Yeniden Yükle 🏎️</button>
+    <div style="text-align:center; background:#05050a; padding:15px; border-radius:16px; border:3px solid #00ffcc; user-select:none;">
+        <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
+        <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:10px 0; font-weight:bold;">4D Makas Skoru: 0 🌀</h2>
+        
+        <!-- DOKUNMATİK / TIKLAMALI YÖN TUŞLARI PANELİ -->
+        <div style="margin: 15px 0;">
+            <button id="btnLeft" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#1e293b; color:#00ffcc; border:2px solid #00ffcc; border-radius:12px; cursor:pointer; margin-right:20px;">◀ SOL</button>
+            <button id="btnRight" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#1e293b; color:#00ffcc; border:2px solid #00ffcc; border-radius:12px; cursor:pointer;">SAĞ ▶</button>
+        </div>
+
+        <button onclick="location.reload()" style="padding:10px 25px; font-size:14px; font-weight:bold; background:#00ffcc; color:#000; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #00ffcc;">Pisti Yeniden Yükle 🏎️</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
         const scene = new THREE.Scene(); scene.background = new THREE.Color(0x020208);
-        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 600, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 600); container.appendChild(renderer.domElement);
+        renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
         const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
         scene.add(new THREE.AmbientLight(0x666666));
         const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x15151c, roughness: 0.5 })); scene.add(road);
@@ -242,11 +245,22 @@ elif st.session_state.aktif_oyun == "erkek":
         }
         camera.position.set(0, 4.2, -1.0); camera.lookAt(new THREE.Vector3(0, 0.5, -25));
         let score = 0; let gameOver = false; let keys = {};
+        
+        // Klavye Kontrolleri
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
+        
+        // Buton Kontrolleri (Dokunmatik ve Mouse)
+        let touchLeft = false, touchRight = false;
+        const bLeft = document.getElementById("btnLeft"); const bRight = document.getElementById("btnRight");
+        bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
+        bLeft.addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; }); bLeft.addEventListener("touchend", () => touchLeft = false);
+        bRight.addEventListener("mousedown", () => touchRight = true); bRight.addEventListener("mouseup", () => touchRight = false);
+        bRight.addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; }); bRight.addEventListener("touchend", () => touchRight = false);
+
         function animate() {
             if(!gameOver) {
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
-                if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
+                if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
                 lines.forEach(l => { l.position.z += 0.7 + (score * 0.02); if(l.position.z > 10) l.position.z = -280; });
                 let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.01, 0.04 * phase, 0.09 * (1 - phase));
                 traffic.forEach(t => {
@@ -260,10 +274,10 @@ elif st.session_state.aktif_oyun == "erkek":
         animate();
     </script>
     """
-    components.html(bmw_full_screen_html, height=730)
+    components.html(bmw_full_screen_html, height=760)
 
 # ==========================================================================================
-# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
+# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE (YÖN BUTONLARI EKLENDİ)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "kiz":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
@@ -271,21 +285,28 @@ elif st.session_state.aktif_oyun == "kiz":
         st.session_state.aktif_oyun = None
         st.rerun()
         
-    st.markdown("**🕹️ KONTROLLER:** **A / D** tuşları veya **Sol / Sağ Yön Tuşları**. Kara deliklere yakalanmadan neon kristallerini topla!")
+    st.markdown("**🕹️ KONTROLLER:** Ekrandaki **YÖN BUTONLARI**, Klavyede **A / D** veya **Yön Tuşları**.")
 
     kiz_full_screen_html = """
-    <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4;">
-        <div id="kizFullCanvasContainer" style="width:100%; height:600px; border-radius:10px; overflow:hidden;"></div>
-        <h2 id="kizScoreDisplay" style="color:#ff69b4; font-family:sans-serif; margin:15px 0; font-weight:bold;">Aura Enerjisi: 0 ⭐</h2>
-        <button onclick="location.reload()" style="padding:12px 30px; font-size:16px; font-weight:bold; background:#ff69b4; color:#fff; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #ff69b4;">Evreni Yenile ✨</button>
+    <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none;">
+        <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
+        <h2 id="kizScoreDisplay" style="color:#ff69b4; font-family:sans-serif; margin:10px 0; font-weight:bold;">Aura Enerjisi: 0 ⭐</h2>
+        
+        <!-- DOKUNMATİK / TIKLAMALI YÖN TUŞLARI PANELİ -->
+        <div style="margin: 15px 0;">
+            <button id="btnLeftKiz" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#2d004d; color:#ff69b4; border:2px solid #ff69b4; border-radius:12px; cursor:pointer; margin-right:20px;">◀ SOL</button>
+            <button id="btnRightKiz" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#2d004d; color:#ff69b4; border:2px solid #ff69b4; border-radius:12px; cursor:pointer;">SAĞ ▶</button>
+        </div>
+
+        <button onclick="location.reload()" style="padding:10px 25px; font-size:14px; font-weight:bold; background:#ff69b4; color:#fff; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #ff69b4;">Evreni Yenile ✨</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("kizFullCanvasContainer");
         const scene = new THREE.Scene(); scene.background = new THREE.Color(0x11001c);
-        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 600, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 600); container.appendChild(renderer.domElement);
+        renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
         const pLight = new THREE.PointLight(0xff69b4, 3, 100); pLight.position.set(0, 10, -5); scene.add(pLight);
         scene.add(new THREE.AmbientLight(0x3d0066));
         const starGeo = new THREE.BufferGeometry(); const starCount = 400; const starPositions = new Float32Array(starCount * 3);
@@ -301,11 +322,22 @@ elif st.session_state.aktif_oyun == "kiz":
         }
         camera.position.set(0, 5, 2); camera.lookAt(new THREE.Vector3(0, -0.5, -20));
         let score = 0; let gameOver = false; let keys = {};
+        
+        // Klavye Kontrolleri
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
+        
+        // Buton Kontrolleri (Dokunmatik ve Mouse)
+        let touchLeft = false, touchRight = false;
+        const bLeft = document.getElementById("btnLeftKiz"); const bRight = document.getElementById("btnRightKiz");
+        bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
+        bLeft.addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; }); bLeft.addEventListener("touchend", () => touchLeft = false);
+        bRight.addEventListener("mousedown", () => touchRight = true); bRight.addEventListener("mouseup", () => touchRight = false);
+        bRight.addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; }); bRight.addEventListener("touchend", () => touchRight = false);
+
         function animate() {
             if(!gameOver) {
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.16; }
-                if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.16; }
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.16; }
+                if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.16; }
                 playerMesh.rotation.z += 0.05;
                 const positions = starField.geometry.attributes.position.array;
                 for(let i=2; i<positions.length; i+=3) { positions[i] += 0.4; if(positions[i] > 5) positions[i] = -150; }
@@ -321,4 +353,4 @@ elif st.session_state.aktif_oyun == "kiz":
         animate();
     </script>
     """
-    components.html(kiz_full_screen_html, height=730)
+    components.html(kiz_full_screen_html, height=760)
