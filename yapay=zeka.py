@@ -7,7 +7,8 @@ from g4f.client import Client
 from gtts import gTTS
 import os
 import base64
-from streamlit_mic_recorder import mic_recorder
+import speech_recognition as sr
+from io import BytesIO
 
 # Sayfa Ayarları
 st.set_page_config(page_title="Apolingo Ultra Yapay Zeka", page_icon="🚀", layout="centered")
@@ -57,7 +58,7 @@ sistem_talimati = (
     "dünyanın en soğuk ama en çok güldüren esprilerini, caps muhabbetlerini, fırlama şakaları upuzun anlatacaksın. Sinema, Marvel/DC kahramanları, "
     "komedi filmleri, Recep İvedik geyikleri, animeler hakkında ne sorarsa sorsun mizahi bir dille sayfalarca döktüreceksin. "
     "\n"
-    "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telefon, tablet sorduğunda; iPhone mu Samsung mu "
+    "6) TELEFON VE BİLGİSAYAR DÜNYASI (TEKNOLOJİ GEYİKLERİ): Kullanıcı bilgisayar, telephone, tablet sorduğunda; iPhone mu Samsung mu "
     "kavgalarından, batarya sürelerinden, 120Hz ekran akıcılığından, bilgisayardaki RGB fanların odayı pavyona çevirmesinden, ekran kartı (RTX vb.) "
     "ve işlemci darboğazlarından, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
     "\n"
@@ -72,7 +73,7 @@ sistem_talimati = (
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
-    "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
+    "PUBG and Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
 if "sohbet_hafizasi" not in st.session_state:
@@ -95,8 +96,7 @@ for mesaj in st.session_state.sohbet_hafizasi:
 gelen_soru = None
 
 # --- MESAJ YAZMA VE SABİT MİKROFON ALANI ---
-# Mesaj kutusunun hemen üzerinde/sağında butonun sabit kalması için yan yana düzen kurduk
-col1, col2 = st.columns([0.75, 0.25])
+col1, col2 = st.columns([0.80, 0.20])
 
 with col1:
     yazi_soru = st.chat_input("Buraya mesajını yaz be gardaşşşşş...")
@@ -104,14 +104,22 @@ with col1:
         gelen_soru = yazi_soru
 
 with col2:
-    # İnternet sunucusunda hata vermeyen, tarayıcı mikrofonunu kullanan sabit buton
-    audio_kayit = mic_recorder(start_prompt="🎙️ Ses Aç", stop_prompt="🛑 Bitir", key='recorder')
+    # Tarayıcının kendi mikrofon kaydetme widget'ı (Hata vermeyen güvenli buton)
+    ses_dosyasi = st.audio_input("🎙️ Seslen")
 
-# Ses kaydı başarıyla tamamlandığında tetiklenir
-if audio_kayit and 'bytes' in audio_kayit:
-    # Sunucu ortamında sesi yazıya döken g4f modelini ses tetikleyiciyle uyandırıyoruz
-    gelen_soru = "Bana sesli harika bir hikaye anlat ve efsane bir espri patlat be gardaşşşşş!"
-    st.toast("🎙️ Sesin sunucuya ulaştı gardaşşşşş, cevap geliyor!")
+# Eğer mikrofon widget'ından gerçek bir ses kaydedildiyse devreye girer
+if ses_dosyasi is not None:
+    r = sr.Recognizer()
+    try:
+        # Gelen ses verisini okuyup işliyoruz
+        with sr.AudioFile(ses_dosyasi) as source:
+            audio_data = r.record(source)
+            # Google ses tanıma motoru ile Türkçeye çeviriyoruz
+            soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
+            if soylenen_soz:
+                gelen_soru = soylenen_soz
+    except Exception as e:
+        st.toast("Ses tam anlaşılamadı gardaşşşşş, tekrar dener misin?")
 
 # --- ANA MOTOR ---
 if gelen_soru:
@@ -121,19 +129,23 @@ if gelen_soru:
     
     soru_lower = gelen_soru.lower().strip()
 
-    with st.spinner("🎶 Spot ışıkları kilitlendi, yapay zeka kız sesiyle cevap veriyor..."):
+    with st.spinner("🎶 Cevap hazırlanıyor, kız sesiyle okunuyor..."):
         try:
-            response = st.session_state.client.chat.completions.create(
-                model="gpt-4o",
-                messages=st.session_state.sohbet_hafizasi
-            )
-            cevap = response.choices[0].message.content
+            # Özel Durum: Eğer kullanıcı gerçekten Ahmet dediyse direkt kuralı çalıştır
+            if "ahmet" in soru_lower or "çişli" in soru_lower:
+                cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
+            else:
+                response = st.session_state.client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=st.session_state.sohbet_hafizasi
+                )
+                cevap = response.choices[0].message.content
             
             with st.chat_message("assistant"):
                 st.write(cevap)
             st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
             
-            # Cevabı seslendir
+            # Cevabı kız sesiyle oku
             sesi_cal(cevap)
             st.rerun()
 
@@ -144,7 +156,7 @@ if gelen_soru:
                 elif "2+2" in soru_lower or "4" in soru_lower:
                     hata_cevabi = "Matematik motoru devrede gardaşşşşş! 2+2=4 işlemi sarsılmaz bir gerçektir! 🎯"
                 else:
-                    hata_cevabi = "Ufak bir yoğunluk oldu be gardaşşşşş, bir daha dene hele!"
+                    hata_cevabi = "Sunucu hattında ufak bir yoğunluk oldu be gardaşşşşş! Bir daha yaz veya söyle hele!"
                 
                 st.write(hata_cevabi)
                 sesi_cal(hata_cevabi)
