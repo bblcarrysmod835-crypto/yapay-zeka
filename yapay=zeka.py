@@ -296,8 +296,8 @@ if st.session_state.aktif_oyun is None:
         """
         st.components.v1.html(ritim_html, height=85)
 
-    # Gizli tetikleyici (Konuşma bittiğinde ritmi kapatmak için)
-    if "KapatRitimKlavuz" in st.experimental_get_query_params():
+    # MODERN KOD DÜZELTMESİ: Güncellenmiş Modern Streamlit Query Params Kontrolü
+    if "KapatRitimKlavuz" in st.query_params:
         st.session_state.mic_aktif = False
         st.rerun()
 
