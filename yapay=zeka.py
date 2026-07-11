@@ -20,6 +20,10 @@ if "client" not in st.session_state:
 if "aktif_oyun" not in st.session_state:
     st.session_state.aktif_oyun = None  # None, "erkek" veya "kiz"
 
+# Mikrofonun o an aktif (kırmızı) olup olmadığını tutan hafıza
+if "mic_aktif" not in st.session_state:
+    st.session_state.mic_aktif = False
+
 # Ses çalma fonksiyonu (Kız sesi için gTTS)
 def sesi_cal(metin):
     try:
@@ -82,28 +86,40 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# Butonları mesaj kutusunun hemen dibine yanaştıran ve kusursuz yuvarlak yapan CSS
+# Butonları mesaj kutusunun hemen dibine yanaştıran, kusursuz yuvarlak yapan ve mikrofonu kırmızıya boyayan CSS
 st.markdown("""
     <style>
     /* Bütün ana yuvarlak butonları tam yuvarlak ve hizalı yap */
     div[data-testid="stButton"] > button {
         border-radius: 50% !important;
-        width: 42px !important;
-        height: 42px !important;
+        width: 44px !important;
+        height: 44px !important;
         padding: 0 !important;
-        line-height: 42px !important;
+        line-height: 44px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         font-size: 18px !important;
         margin-top: 24px !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
         transition: 0.2s !important;
     }
-    /* Buton renk atamaları */
+    /* Normal Butonların Renk Atamaları */
     div[data-testid="stButton"]:nth-of-type(1) > button { background-color: #3b82f6 !important; color: white !important; }
     div[data-testid="stButton"]:nth-of-type(2) > button { background-color: #10b981 !important; color: white !important; }
     div[data-testid="stButton"]:nth-of-type(3) > button { background-color: #ec4899 !important; color: white !important; }
+    
+    /* Eğer mikrofon aktifse butonu anında canlı parlak kırmızı yap */
+    .mic-kirmizi button {
+        background-color: #ef4444 !important;
+        color: white !important;
+        animation: pulse 1.2s infinite !important;
+    }
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
     
     div[data-testid="column"] {
         padding: 0px 2px !important;
@@ -130,33 +146,42 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # Sessizlik algıladığı anda Enter'sız otomatik fırlatan JavaScript Akıllı Mikrofon Motoru
-    JS_AKILLI_MIC = """
+    # Direk Man fırlatan ve sıfır gecikmeli JavaScript Akıllı Mikrofon Motoru
+    JS_DIREK_MAN_MIC = """
     <script>
-    window.parent.document.addEventListener('TetikleAkilliSes', function (e) {
+    window.parent.document.addEventListener('TetikleDirekMic', function (e) {
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
             recognition.lang = 'tr-TR';
             recognition.interimResults = false;
-            recognition.continuous = false; // Konuşmayı kesince dursun
+            recognition.continuous = false;
 
             recognition.onresult = (event) => {
-                const sonucMetni = event.results[0][0].transcript;
-                if(sonucMetni && sonucMetni.trim() !== "") {
+                const metinSonuc = event.results[0][0].transcript;
+                if(metinSonuc && metinSonuc.trim() !== "") {
                     const chatInput = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
                     if(chatInput) {
-                        chatInput.value = sonucMetni;
+                        chatInput.value = metinSonuc;
                         chatInput.dispatchEvent(new Event('input', { bubbles: true }));
                         
-                        // Konuşma bittiği salise butona basıp otomatik gönderiyor!
+                        // Konuşma bittiği milisaniye direkt gönder butonunu tetikler!
                         setTimeout(() => {
                             const sendBtn = window.parent.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
                             if(sendBtn) sendBtn.click();
-                        }, 400);
+                        }, 200);
                     }
                 }
             };
+            
+            // Konuşma bittiğinde veya hata alındığında kırmızı buton durumunu sıfırlamak için tetik at
+            recognition.onend = () => {
+                window.parent.document.dispatchEvent(new CustomEvent('MicKapatSinyal'));
+            };
+            recognition.onerror = () => {
+                window.parent.document.dispatchEvent(new CustomEvent('MicKapatSinyal'));
+            };
+            
             recognition.start();
         } else {
             alert("Gardaşşş tarayıcın ses tanımayı desteklemiyor!");
@@ -164,7 +189,12 @@ if st.session_state.aktif_oyun is None:
     });
     </script>
     """
-    components.html(JS_AKILLI_MIC, height=0)
+    components.html(JS_DIREK_MAN_MIC, height=0)
+
+    # JavaScript'ten gelen kapatma sinyalini dinleyen mekanizma
+    if "mic_kapat_tetik" in st.session_state and st.session_state.mic_kapat_tetik:
+        st.session_state.mic_aktif = False
+        st.session_state.mic_kapat_tetik = False
 
     # Chat Giriş Satırı ve Hemen Yanına Yakınlaştırılmış Orijinal Yuvarlak Butonlar
     c1, c2, c3, c4 = st.columns([0.85, 0.05, 0.05, 0.05])
@@ -172,11 +202,24 @@ if st.session_state.aktif_oyun is None:
         yazi_soru = st.chat_input("Buraya yaz veya mikrofona basıp direkt konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
+            st.session_state.mic_aktif = False # Gönderilince kırmızılık sönsün
     with c2:
-        # Mikrofon Butonu (Konuşunca otomatik gönderir)
-        if st.button("🎙️", help="Konuş be Gardaşşş! Konuşman bitince otomatik gider."):
-            st.markdown("""<script>const evt = new CustomEvent('TetikleAkilliSes'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
-            st.toast("📢 Dinliyorum be gardaşşş... Konuşman bitince kendisi otomatik fırlatacak!")
+        # Mikrofon Butonu (Basınca kırmızıya döner, konuşma bitince direk man fırlatır)
+        mic_simge = "🔴" if st.session_state.mic_aktif else "🎙️"
+        
+        # Dinamik class enjeksiyonu için container yapısı
+        mic_container = st.container()
+        if st.session_state.mic_aktif:
+            st.markdown('<div class="mic-kirmizi">', unsafe_allow_html=True)
+            
+        if st.button(mic_simge, help="Tıkla ve Konuş be Gardaşşş! Konuşman bittiği an direkt gider."):
+            st.session_state.mic_aktif = True
+            st.markdown("""<script>const evt = new CustomEvent('TetikleDirekMic'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
+            st.invalidate() # Butonun anında kırmızılaşması için sayfayı hafifçe tazele
+            
+        if st.session_state.mic_aktif:
+            st.markdown('</div>', unsafe_allow_html=True)
+            
     with c3:
         # Erkek Oyunu Butonu
         if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!"):
@@ -209,6 +252,7 @@ if st.session_state.aktif_oyun is None:
                 with st.chat_message("assistant"):
                     st.write(cevap)
                 st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
+                st.session_state.mic_aktif = False # Cevap gelince tamamen sıfırla
                 sesi_cal(cevap)
                 st.rerun()
             except Exception as e:
