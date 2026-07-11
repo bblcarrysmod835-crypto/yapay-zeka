@@ -10,7 +10,7 @@ import base64
 import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Apolingo Mesaj Kutusu İçi 4 Köşe Mavi Işıklı Premium Konsept)
+# Sayfa Ayarları (Apolingo Mesaj Kutusu İçi Mavi & Menü Butonu Beyaz Işıklı Premium Konsept)
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -50,7 +50,7 @@ sistem_talimati = (
     "Kesin, Sarsılmaz ve Değişmez Temel Kuralların: "
     "\n\n"
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
-    "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksin. "
+    "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksiniz. "
     "\n"
     "2) HITAP KANUNU: Konuşma tarzın mahalleden çok yakın bir dost, candan bir sırdaş gibi olacak. "
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
@@ -87,7 +87,7 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# 4 Köşeden Işıklı Arka Plan VE TAM İSTEDİĞİN GİBİ MESAJ KUTUSUNA MAVİ 4 YANDAN IŞIK VURAN CSS
+# SİBER DETAYLARLA GÜÇLENDİRİLMİŞ, 4 YANDAN BEYAZ IŞIKLI MENÜ VE UZAY MEKİĞİ PLACplaceholder CSS
 # ==========================================================================================
 st.markdown("""
     <style>
@@ -103,7 +103,40 @@ st.markdown("""
         color: #fcefe9 !important;
     }
     
-    /* 2. Sidebar Uyumu */
+    /* 2. O ÜÇ ÇİZGİYE (SIDEBAR TETİKLEME BUTONUNA) 4 BİR YANDAN BEYAZ IŞIK VURMA EFEKTİ */
+    button[data-testid="stSidebarCollapseButton"] {
+        background-color: #1a1a1a !important;
+        border-radius: 50% !important;
+        border: 2px solid #ffffff !important;
+        padding: 5px !important;
+        
+        /* 4 bir köşeden içeri ve dışarı doğru vuran beyaz projektör ışık aurası */
+        box-shadow: 
+            inset 8px 8px 15px rgba(255, 255, 255, 0.4),    /* İç sol üstten beyaz ışık */
+            inset -8px 8px 15px rgba(255, 255, 255, 0.4),   /* İç sağ üstten beyaz ışık */
+            inset 8px -8px 15px rgba(255, 255, 255, 0.4),   /* İç sol alttan beyaz ışık */
+            inset -8px -8px 15px rgba(255, 255, 255, 0.4),  /* İç sağ alttan beyaz ışık */
+            0 0 20px rgba(255, 255, 255, 0.6) !important;   /* Dışarıya fırlayan saf beyaz parlama */
+            
+        transition: all 0.3s ease-in-out !important;
+    }
+    
+    /* Üç çizginin üzerine gelince beyaz ışık patlaması artar */
+    button[data-testid="stSidebarCollapseButton"]:hover {
+        transform: rotate(90deg) scale(1.15) !important;
+        box-shadow: 
+            inset 12px 12px 20px rgba(255, 255, 255, 0.6),
+            inset -12px 12px 20px rgba(255, 255, 255, 0.6),
+            0 0 35px rgba(255, 255, 255, 0.9) !important;
+    }
+    
+    /* Üç çizginin kendi rengini de net beyaz yapalım */
+    button[data-testid="stSidebarCollapseButton"] svg {
+        fill: #ffffff !important;
+        color: #ffffff !important;
+    }
+    
+    /* 3. Sidebar İç Gövdesi */
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
         background: linear-gradient(180deg, #1f110a 0%, #0d0603 100%) !important;
         border-right: 1px solid #4a2b1a !important;
@@ -113,7 +146,7 @@ st.markdown("""
         color: #fcefe9 !important;
     }
     
-    /* 3. Sohbet Balonları */
+    /* 4. Sohbet Balonları */
     [data-testid="stChatMessage"] {
         background-color: rgba(18, 10, 6, 0.6) !important;
         border: 1px solid rgba(212, 163, 115, 0.15) !important;
@@ -124,7 +157,7 @@ st.markdown("""
         margin-bottom: 15px !important;
     }
     
-    /* 4. AMAAA MESAJ YERİNE HAAA! İŞTE KUTUNUN TAM İÇİNE 4 YANDAN HAFİF MAVİ IŞIK VURMA EFEKTİ */
+    /* 5. MESAJ KUTUSU: 4 YANDAN MAVİ IŞIK VE HAVALI UZAY MEKİĞİ KONSEPTİ */
     [data-testid="stChatInput"] {
         background-color: transparent !important;
         border: none !important;
@@ -135,40 +168,43 @@ st.markdown("""
         color: #ffffff !important;
         border-radius: 14px !important;
         font-size: 16px !important;
-        
-        /* KUTUNUN İÇİNDEKİ MAT ZEMİN */
         background-color: #0b0f14 !important; 
         
-        /* İŞTE SİHİRLİ DOKUNUŞ: Kutunun TAM İÇİNE 4 bir köşeden vuran hafif mavi neon ışık dalgası! */
-        /* Birden fazla 'inset' gölge kullanarak sol üst, sağ üst, sol alt ve sağ alttan mavi parlamalar akıttık */
-        border: 2px solid #1e3a5f !important; /* Hafif gece mavisi ince çerçeve çizgisi */
+        /* 4 Köşeden vuran siber mavi ışık tonlaması */
+        border: 2px solid #1e3a5f !important;
         box-shadow: 
-            inset 25px 25px 40px rgba(0, 191, 255, 0.15),   /* Sol Üst Köşeden Vuran Mavi Işık */
-            inset -25px 25px 40px rgba(0, 119, 255, 0.15),  /* Sağ Üst Köşeden Vuran Mavi Işık */
-            inset 25px -25px 40px rgba(0, 191, 255, 0.12),  /* Sol Alt Köşeden Vuran Mavi Işık */
-            inset -25px -25px 40px rgba(0, 119, 255, 0.12), /* Sağ Alt Köşeden Vuran Mavi Işık */
-            0 4px 15px rgba(0, 191, 255, 0.1) !important;   /* Dışa doğru hafif mavi aydınlatma */
+            inset 25px 25px 40px rgba(0, 191, 255, 0.18),   
+            inset -25px 25px 40px rgba(0, 119, 255, 0.18),  
+            inset 25px -25px 40px rgba(0, 191, 255, 0.15),  
+            inset -25px -25px 40px rgba(0, 119, 255, 0.15), 
+            0 4px 15px rgba(0, 191, 255, 0.15) !important;
             
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     }
     
-    /* Yazma yerine tıklayınca/odaklanınca o 4 yandan vuran mavi ışıklar çıldırıyor, daha canlı parlıyor! */
+    /* Yazma yerine odaklanınca siber efektin coşması */
     textarea[data-testid="stChatInputTextArea"]:focus {
         border-color: #00bfff !important;
         background-color: #0d1520 !important;
         box-shadow: 
-            inset 35px 35px 50px rgba(0, 191, 255, 0.3),   /* Odaklanınca Sol Üst Coşuyor */
-            inset -35px 35px 50px rgba(0, 119, 255, 0.3),  /* Odaklanınca Sağ Üst Coşuyor */
-            inset 35px -35px 50px rgba(0, 191, 255, 0.25),  /* Odaklanınca Sol Alt Coşuyor */
-            inset -35px -35px 50px rgba(0, 119, 255, 0.25), /* Odaklanınca Sağ Alt Coşuyor */
-            0 0 25px rgba(0, 191, 255, 0.35) !important;    /* Dışarıya sızan muazzam aura */
+            inset 35px 35px 50px rgba(0, 191, 255, 0.35),   
+            inset -35px 35px 50px rgba(0, 119, 255, 0.35),  
+            inset 35px -35px 50px rgba(0, 191, 255, 0.3),  
+            inset -35px -35px 50px rgba(0, 119, 255, 0.3), 
+            0 0 25px rgba(0, 191, 255, 0.45) !important;
     }
     
+    /* HAVALI UZAY MEKİĞİ/SİBER TERMINAL METİN TARZI (PLACEHOLDER) */
     textarea[data-testid="stChatInputTextArea"]::placeholder {
-        color: #4b6584 !important; /* Mavi konsepte uygun soft yer tutucu rengi */
+        color: #00bfff !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        font-weight: bold !important;
+        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
+        letter-spacing: 1px !important;
+        opacity: 0.85 !important;
     }
 
-    /* Mikrofon Yuvası da Mesaj Kutusuyla Aynı 4 Yandan Mavi Işıklı Dokuyu Alıyor */
+    /* Mikrofon Yuvası */
     .stAudioInput {
         margin-top: 5px !important;
         background-color: #0b0f14 !important;
@@ -190,7 +226,7 @@ st.markdown("""
             0 0 15px rgba(0, 191, 255, 0.4) !important;
     }
 
-    /* 5. Buton Dokuları */
+    /* Buton Dokuları */
     div[data-testid="stButton"] > button {
         margin-top: 5px !important;
         background: linear-gradient(135deg, #3b2011 0%, #170d07 100%) !important;
@@ -233,7 +269,7 @@ st.markdown("""
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("Mesaj Kutusu İçi 4 Köşe Mavi Işık")
+    st.markdown("Kuantum Kokpit Güncellemesi")
     st.write("---")
     
     secilen_mod = st.radio(
@@ -257,7 +293,7 @@ with st.sidebar:
 # ==========================================================================
 if st.session_state.aktif_mod == "Sohbet":
     st.title("🚀 APOLINGO MASTER ARCADE AI")
-    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | Mesaj Kutusundan Süzülen 4 Köşe Mavi Neon Spot 🔮")
+    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | Üç Çizgi Beyaz Aura ⚡ Mesaj Kutusu Kuantum Terminali 🛸")
     st.write("---")
 
     for mesaj in st.session_state.sohbet_hafizasi:
@@ -277,7 +313,8 @@ if st.session_state.aktif_mod == "Sohbet":
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
         
     with c_text:
-        yazi_soru = st.chat_input("İçinden 4 yanal mavi neon parlayan özel kutuya yaz be gardaşşşşş...")
+        # BURASI: Yenilenmiş Efsanevi Havalı Uzay Mekiği Terminal Yazısı!
+        yazi_soru = st.chat_input("🛸 [APOLINGO CORE] CODES ENTERED HERE... ⚡")
         if yazi_soru:
             gelen_soru = yazi_soru
 
@@ -325,7 +362,7 @@ if st.session_state.aktif_mod == "Sohbet":
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
     st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
-    st.caption("Sol taraftaki menüden (3 Çizgi) istediğin an Sohbet Moduna geri dönebilirsin gardaşşş!")
+    st.caption("Sol üstteki parıldayan Üç Çizgiye basarak istediğin an ana panele dönebilirsin gardaşşş!")
 
     bmw_full_screen_html = """
     <div style="text-align:center; background:#0d0603; padding:15px; border-radius:16px; border:3px solid #7a4b2e; user-select:none; position:relative;">
@@ -403,7 +440,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 # ==========================================================================================
 elif st.session_state.aktif_mod == "KizOyunu":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
-    st.caption("Sol taraftaki menüden (3 Çizgi) istediğin an Sohbet Moduna geri dönebilirsin gardaşşş!")
+    st.caption("Sol üstteki parıldayan Üç Çizgiye basarak istediğin an ana panele dönebilirsin gardaşşş!")
 
     kiz_full_screen_html = """
     <div style="text-align:center; background:#0a0503; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none; position:relative;">
