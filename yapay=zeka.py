@@ -75,7 +75,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -86,10 +86,10 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# BUTONLARI DİP DİPE GETİREN VE MESAJ KUTUSUNA SIFIRLAYAN CSS DÜNYASI
+# HER ŞEYİ AŞAĞIYA SABİTLEYEN VE OYUNLARI DİP DİPE GETİREN CSS
 st.markdown("""
     <style>
-    /* Sayfa yapısını tabana sabitle */
+    /* Mesajlaşma panelini ve tüm butonları ekranın en altına mühürle */
     .stApp {
         display: flex;
         flex-direction: column;
@@ -97,49 +97,45 @@ st.markdown("""
         height: 100vh;
     }
     
-    /* Butonların genel yuvarlak ve mesaj kutusuyla dikeyde tam hizalı yapısı */
+    /* Bütün yuvarlak butonları ilk sürümdeki gibi tam stabil ve hizalı yap */
     div[data-testid="stButton"] > button {
         border-radius: 50% !important;
-        width: 48px !important;
-        height: 48px !important;
+        width: 46px !important;
+        height: 46px !important;
         padding: 0 !important;
-        line-height: 48px !important;
+        line-height: 46px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 22px !important;
-        margin-top: 10px !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-        transition: 0.15s all ease-in-out !important;
-        border: none !important;
+        font-size: 20px !important;
+        margin-top: 22px !important;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.3) !important;
+        transition: 0.2s !important;
     }
     
-    /* Renk Tanımlamaları */
-    .sol-devasa-mic button { background-color: #2563eb !important; color: white !important; }
-    .erkek-game-btn button { background-color: #10b981 !important; color: white !important; }
-    .kiz-game-btn button { background-color: #ec4899 !important; color: white !important; }
+    /* Buton Renk Kombinasyonları */
+    div[data-testid="stButton"]:nth-of-type(1) > button { background-color: #3b82f6 !important; color: white !important; }
+    div[data-testid="stButton"]:nth-of-type(2) > button { background-color: #10b981 !important; color: white !important; }
+    div[data-testid="stButton"]:nth-of-type(3) > button { background-color: #ec4899 !important; color: white !important; }
     
-    /* Mikrofon Aktif Pulse Efekti */
-    .mic-kirmizi-aktif button {
+    /* Canlı Kırmızı Mikrofon Pulse Efekti */
+    .mic-kirmizi button {
         background-color: #ef4444 !important;
         color: white !important;
-        border: 2px solid #ffffff !important;
-        animation: devPulse 0.9s infinite !important;
+        border: 2px solid white !important;
+        animation: pulse 1.0s infinite !important;
     }
-    @keyframes devPulse {
-        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9); transform: scale(1.0); }
-        70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); transform: scale(1.03); }
-        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); transform: scale(1.0); }
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8); }
+        70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
     
-    /* Sütun boşluklarını eriterek butonları mesaj kutusunun dibine yanaştır */
+    /* Sütun aralarını eriterek sağdaki oyun butonlarını tam anlamıyla dip dipe getiriyoruz */
     div[data-testid="column"] {
         padding: 0px 1px !important;
     }
-    
-    /* Sağdaki butonların dip dipe gelmesi için sütun hizalaması */
     .stHorizontalBlock {
-        align-items: center !important;
         gap: 2px !important;
     }
     </style>
@@ -148,7 +144,7 @@ st.markdown("""
 gelen_soru = None
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - TABANA SABİTLENMİŞ CHAT VE ALGILAMA PANELİ)
+# GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - CHAT EKRANI)
 # ==========================================================================================
 if st.session_state.aktif_oyun is None:
     st.title("🚀 APOLINGO MASTER ARCADE AI")
@@ -164,7 +160,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # EN GELİŞMİŞ TARAYICI ENGELSİZ MİKROFON MOTORU VE KONUŞMA ALGISI HIZLANDIRICISI
+    # İLK BAŞTAKİ ESKİ STABİL MİKROFON MOTORU (TARAYICI ENGELSİZ DİREKT TETİKLEMELİ)
     JS_DIREK_MAN_MIC = """
     <script>
     if (window.parent && !window.parent.micSistemKuruldu) {
@@ -204,50 +200,44 @@ if st.session_state.aktif_oyun is None:
     """
     components.html(JS_DIREK_MAN_MIC, height=0)
 
-    # TAM İSTEDİĞİN MİLİMETRİK HİZALAMA: SOLDA KONUŞMA MİKROFONU - ORTADA MESAJ - SAĞDA DİP DİPE OYUNLAR
-    c_mic, c_chat, c_game1, c_game2 = st.columns([0.06, 0.82, 0.06, 0.06])
-    
-    with c_mic:
-        # Sol Taraf: Mesaj Kutusuna Hizalı Devasa Mikrofon
-        mic_simge = "🔴" if st.session_state.mic_aktif else "🎙️"
-        mic_class = "mic-kirmizi-aktif" if st.session_state.mic_aktif else "sol-devasa-mic"
-        st.markdown(f'<div class="{mic_class}">', unsafe_allow_html=True)
-        
-        if st.button(mic_simge, key="sol_dev_mic", help="Tıkla ve Direkt Konuş Gardaşşş!"):
-            st.session_state.mic_aktif = True
-            st.markdown("""<script>const evt = new CustomEvent('TetikleDirekMic'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
-            st.rerun()
-            
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with c_chat:
-        # Orta Taraf: Mesaj Giriş Kutusu
+    # İLK BAŞTAKİ ESKİ YAN YANA YERLEŞİM DÜZENİ (OYUNLAR SAĞDA DİP DİPE)
+    c1, c2, c3, c4 = st.columns([0.82, 0.06, 0.06, 0.06])
+    with c1:
         yazi_soru = st.chat_input("Buraya yaz veya mikrofona basıp direkt konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
             st.session_state.mic_aktif = False 
+    with c2:
+        # Eski Stabil Mikrofon Buton Düzeni
+        mic_simge = "🔴" if st.session_state.mic_aktif else "🎙️"
+        
+        if st.session_state.mic_aktif:
+            st.markdown('<div class="mic-kirmizi">', unsafe_allow_html=True)
             
-    with c_game1:
-        # Sağ Taraf 1: Mesaja Sıfır Hizalanmış Erkek Oyunu Butonu
-        st.markdown('<div class="erkek-game-btn">', unsafe_allow_html=True)
+        if st.button(mic_simge, key="eski_mic_btn", help="Tıkla ve Konuş be Gardaşşş!"):
+            st.session_state.mic_aktif = True
+            st.markdown("""<script>const evt = new CustomEvent('TetikleDirekMic'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
+            st.rerun() 
+            
+        if st.session_state.mic_aktif:
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+    with c3:
+        # Dip Dipe Hizalanmış Erkek Oyunu Butonu
         if st.button("🏎️", key="rk_game", help="Erkek Oyunu (BMW M3) Başlat!"):
             st.session_state.aktif_oyun = "erkek"
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with c_game2:
-        # Sağ Taraf 2: Dip Dipe Kız Oyunu Butonu
-        st.markdown('<div class="kiz-game-btn">', unsafe_allow_html=True)
+    with c4:
+        # Dip Dipe Hizalanmış Kız Oyunu Butonu
         if st.button("🌌", key="kz_game", help="Kız Oyunu (Astro-Aura) Başlat!"):
             st.session_state.aktif_oyun = "kiz"
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
-    # ÖZEL SEVİLEN KONUŞMA ALGISI GÖSTERGE PANELİ (EĞER AKTİFSE EN ALTTA BELİRİR)
+    # İLK BAŞTAKİ ALTTAN ÇIKAN SES ALGILAMA VE KONUŞMA BİLGİ PANELİ
     if st.session_state.mic_aktif:
-        st.info("🎙️ Konuşma algısı devrede... Ses bekleniyor be gardaşşşşş, konuş anında yazayım!")
+        st.info("🎙️ Ses algılama sistemi devrede... Dinleniyor be gardaşşşşş!")
 
-    # Eğer girdi algılandıysa yapay zekayı tetikle
+    # Girdi gelirse yapay zekayı ateşle
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
@@ -275,7 +265,7 @@ if st.session_state.aktif_oyun is None:
                 pass
 
 # ==========================================================================================
-# EN ALTA SABİTLENMİŞ ERKEK OYUNU: BMW M3 ARCADE
+# ERKEK OYUNU: BMW M3 ARCADE
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
@@ -358,7 +348,7 @@ elif st.session_state.aktif_oyun == "erkek":
     components.html(bmw_full_screen_html, height=600)
 
 # ==========================================================================================
-# EN ALTA SABİTLENMİŞ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
+# KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "kiz":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
