@@ -11,7 +11,7 @@ import speech_recognition as sr
 import streamlit.components.v1 as components
 
 # Sayfa Ayarları (Geniş ekran düzeni)
-st.set_page_config(page_title="Apolingo 4D Dimension Master AI", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Apolingo 4D Quantum AI & Game Suit", page_icon="🚀", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
@@ -81,7 +81,7 @@ sistem_talimati = (
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
-    "PUBG and Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
+    "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
 if "sohbet_hafizasi" not in st.session_state:
@@ -161,209 +161,210 @@ with sol_taraf:
                 pass
 
 # ==========================================================================================
-# SAĞ PANEL - GERÇEK 3D / 4D MOTORLU VE GERÇEK YÜZLÜ BARBIE OYUN SAHASI
+# SAĞ PANEL - FULLEDEN GÖRÜNEN 4D BMW M3 VE SİHİRLİ 4D ASTRO-AURA KIZ ODASI
 # ==========================================================================================
 with sag_taraf:
-    st.subheader("🎮 APOLINGO MULTI-DIMENSIONAL ENGINE")
+    st.subheader("🎮 APOLINGO QUANTUM REALM OYUN ALANI")
     st.write("---")
     
     if st.session_state.oyun_panel_acik:
         oyun_secimi = st.radio(
-            "Gardaşşşşş boyutlar arası yolculuğa hazır mısın? Seçimini yap:",
-            ["Henüz Seçmedim ⏳", "🏎️ 3D / 4D BMW M3 Otoban Simülatörü", "👗 Gerçek Yüzlü Barbie & Çorap Tasarımı"],
+            "Gardaşşşşş boyutlar arası kodlama şovuna hoş geldin! Birini seç:",
+            ["Henüz Seçmedim ⏳", "🏎️ FULLEDEN GÖRÜNEN 3D/4D BMW M3", "🌌 4D Sihirli Astro-Aura Kız Tasarım Odası"],
             index=0
         )
         st.write("---")
 
-        if oyun_secimi == "🏎️ 3D / 4D BMW M3 Otoban Simülatörü":
-            st.markdown("**🕹️ KONTROLLER:** Klavyeden **A/D** veya **Yön Tuşları**. Skor arttıkça **4. Boyut (Zaman Boyutu)** bükülür, otoyol geceye döner!")
+        if oyun_secimi == "🏎️ FULLEDEN GÖRÜNEN 3D/4D BMW M3":
+            st.markdown("**🕹️ ULTRA KONTROL:** **A/D** veya **Yön Tuşları**. Kamera mükemmel açıda, gümüş canavar BMW M3 tüm ihtişamıyla tam gövde gözünün önünde!")
             
-            # Three.js ile Gerçek Üç Boyutlu Perspektif ve Zaman Akışlı (4D) Otoban Makas Oyunu
-            bmw_4d_html = """
-            <div style="text-align:center; background:#111; padding:10px; border-radius:12px;">
-                <div id="canvas4dContainer" style="width:100%; height:400px; border-radius:8px; overflow:hidden;"></div>
-                <h3 id="score4dText" style="color:#00ffff; font-family:sans-serif; margin:10px 0;">4D Boyut Makas Skoru: 0</h3>
-                <button onclick="location.reload()" style="padding:10px 20px; font-weight:bold; background:#00ffff; color:#000; border:none; border-radius:6px; cursor:pointer;">Uzay-Zamanı Sıfırla (Yeniden Gazla) 🏎️</button>
+            bmw_full_3d_html = """
+            <div style="text-align:center; background:#0d0d0d; padding:10px; border-radius:12px; border:2px solid #00ffff;">
+                <div id="fullBmwContainer" style="width:100%; height:420px; border-radius:8px; overflow:hidden;"></div>
+                <h3 id="scoreText4D" style="color:#00ffff; font-family:sans-serif; margin:10px 0;">4D Makas Skoru: 0</h3>
+                <button onclick="location.reload()" style="padding:10px 20px; font-weight:bold; background:#00ffff; color:#000; border:none; border-radius:6px; cursor:pointer;">4. Boyuttan Yeniden Başla 🏎️</button>
             </div>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
             <script>
-                const container = document.getElementById("canvas4dContainer");
+                const container = document.getElementById("fullBmwContainer");
                 const scene = new THREE.Scene();
-                scene.background = new THREE.Color(0x221133); // 4D Kozmik Arka Plan
+                scene.background = new THREE.Color(0x0a0a16);
 
-                const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 400, 0.1, 1000);
+                // Kamerayı geriye ve hafif yukarı çekerek arabayı FULLEDEN gösteriyoruz
+                const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 420, 0.1, 1000);
                 const renderer = new THREE.WebGLRenderer({ antialias: true });
-                renderer.setSize(container.clientWidth, 400);
+                renderer.setSize(container.clientWidth, 420);
                 container.appendChild(renderer.domElement);
 
-                // Gerçekçi Işıklar
-                const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-                dirLight.position.set(0, 20, 5);
-                scene.add(dirLight);
-                const ambient = new THREE.AmbientLight(0x333333);
-                scene.add(ambient);
+                // Işıklar
+                const light1 = new THREE.DirectionalLight(0xffffff, 1.8); light1.position.set(0, 30, 10); scene.add(light1);
+                const light2 = new THREE.AmbientLight(0x444444); scene.add(light2);
 
-                // 3D Asfalt Zemini
-                const roadGeo = new THREE.BoxGeometry(14, 0.1, 1000);
-                const roadMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
-                const road = new THREE.Mesh(roadGeo, roadMat);
-                scene.add(road);
+                // Otoyol Pisti
+                const roadGeo = new THREE.BoxGeometry(16, 0.1, 1000);
+                const roadMat = new THREE.MeshStandardMaterial({ color: 0x1f1f1f, roughness: 0.5 });
+                const road = new THREE.Mesh(roadGeo, roadMat); scene.add(road);
 
-                // GERÇEK 3D MODEL: Gümüş Gri BMW M3 Canavarı
-                const bmwGroup = new THREE.Group();
-                const bodyGeo = new THREE.BoxGeometry(1.6, 0.8, 3.4);
-                const bodyMat = new THREE.MeshStandardMaterial({ color: 0xdcdcdc, roughness: 0.2, metalness: 0.8 });
-                const body = new THREE.Mesh(bodyGeo, bodyMat);
-                body.position.y = 0.5;
-                bmwGroup.add(body);
-                
-                // 3D Camlar
-                const glassGeo = new THREE.BoxGeometry(1.4, 0.4, 1.5);
-                const glassMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
-                const glass = new THREE.Mesh(glassGeo, glassMat);
-                glass.position.set(0, 0.9, -0.2);
-                bmwGroup.add(glass);
-                
-                bmwGroup.position.set(0, 0, -10);
-                scene.add(bmwGroup);
-
-                // Trafikteki Diğer 3D Arabalar
-                let targets = [];
-                const tColors = [0xffcc00, 0x00ffcc, 0xff3366];
-                for(let i=0; i<3; i++) {
-                    let tGeo = new THREE.BoxGeometry(1.6, 0.8, 3.2);
-                    let tMat = new THREE.MeshLambertMaterial({ color: tColors[i] });
-                    let tMesh = new THREE.Mesh(tGeo, tMat);
-                    tMesh.position.set((Math.random() - 0.5) * 10, 0.5, -60 - (i * 35));
-                    scene.add(tMesh);
-                    targets.push(tMesh);
+                // Yol şeritleri
+                let lines = [];
+                for(let i=0; i<20; i++){
+                    let lGeo = new THREE.BoxGeometry(0.3, 0.15, 10);
+                    let lMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                    let lMesh = new THREE.Mesh(lGeo, lMat);
+                    lMesh.position.set(0, 0.1, -i * 40);
+                    scene.add(lMesh); lines.push(lMesh);
                 }
 
-                camera.position.set(0, 5, -2);
-                camera.lookAt(new THREE.Vector3(0, 1, -25));
+                # FULLEDEN GÖZÜKEN GERÇEKÇİ 3D BMW M3 GÖVDESİ
+                const bmwM3 = new THREE.Group();
+                
+                // Alt Kasa ve Tekerlek Boşlukları
+                const baseGeo = new THREE.BoxGeometry(1.8, 0.4, 4);
+                const baseMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.9, roughness: 0.1 });
+                const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+                baseMesh.position.y = 0.3;
+                bmwM3.add(baseMesh);
+
+                // Üst Tavan ve Cam Alanı
+                const cabinGeo = new THREE.BoxGeometry(1.5, 0.5, 1.8);
+                const cabinMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.0 });
+                const cabinMesh = new THREE.Mesh(cabinGeo, cabinMat);
+                cabinMesh.position.set(0, 0.75, -0.2);
+                bmwM3.add(cabinMesh);
+
+                // Arka Spoiler (Kanat)
+                const spGeo = new THREE.BoxGeometry(1.7, 0.1, 0.3);
+                const spMesh = new THREE.Mesh(spGeo, cabinMat);
+                spMesh.position.set(0, 0.6, -1.8);
+                bmwM3.add(spMesh);
+
+                bmwM3.position.set(0, 0, -8);
+                scene.add(bmwM3);
+
+                // Trafikteki Diğer Araçlar
+                let traffic = [];
+                const colors = [0xffaa00, 0xff3333, 0x00aaff];
+                for(let i=0; i<3; i++){
+                    let tGeo = new THREE.BoxGeometry(1.8, 0.8, 3.8);
+                    let tMat = new THREE.MeshLambertMaterial({ color: colors[i] });
+                    let tMesh = new THREE.Mesh(tGeo, tMat);
+                    tMesh.position.set((Math.random() - 0.5) * 11, 0.4, -70 - (i*40));
+                    scene.add(tMesh); traffic.push(tMesh);
+                }
+
+                // Kamera Tam Arkada ve Muazzam Perspektifte (Arabayı Fullden Gösteriyor)
+                camera.position.set(0, 4.2, -2);
+                camera.lookAt(new THREE.Vector3(0, 0.5, -25));
 
                 let score = 0; let gameOver = false; let keys = {};
                 window.addEventListener("keydown", e => keys[e.key] = true);
                 window.addEventListener("keyup", e => keys[e.key] = false);
 
-                function tick() {
+                function loop() {
                     if(!gameOver) {
-                        if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(bmwGroup.position.x > -5) bmwGroup.position.x -= 0.15; }
-                        if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(bmwGroup.position.x < 5) bmwGroup.position.x += 0.15; }
+                        if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(bmwM3.position.x > -6) bmwM3.position.x -= 0.18; }
+                        if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(bmwM3.position.x < 6) bmwM3.position.x += 0.18; }
 
-                        // 4D (Zaman Döngüsü) Efekti: Skor arttıkça gökyüzü ve ışık rengi değişerek uzay-zaman bükülür!
-                        let timeColor = Math.sin(score * 0.1) * 0.5 + 0.5;
-                        scene.background.setRGB(0.1 * timeColor, 0.05, 0.2 * (1 - timeColor));
+                        // Sonsuz Yol Akış Efekti
+                        lines.forEach(l => {
+                            l.position.z += 0.6 + (score * 0.02);
+                            if(l.position.z > 10) l.position.z = -300;
+                        });
 
-                        targets.forEach(t => {
-                            t.position.z += 0.5 + (score * 0.03); // Zamanla hız bükülmesi
-                            if(t.position.z > -2) {
-                                t.position.z = -120 - Math.random()*30;
-                                t.position.x = (Math.random() - 0.5) * 10;
+                        // 4D Uzay Zaman Döngüsü (Skor arttıkça atmosfer pavyon gibi bükülür)
+                        let pulse = Math.abs(Math.sin(score * 0.15));
+                        scene.background.setRGB(0.02, 0.02 * pulse, 0.1 * (1 - pulse));
+
+                        traffic.forEach(t => {
+                            t.position.z += 0.6 + (score * 0.03);
+                            if(t.position.z > -1) {
+                                t.position.z = -140 - Math.random()*20;
+                                t.position.x = (Math.random() - 0.5) * 11;
                                 score++;
-                                document.getElementById("score4dText").innerText = "4D Boyut Makas Skoru: " + score + " 🌀";
+                                document.getElementById("scoreText4D").innerText = "4D Makas Skoru: " + score + " 🌀";
                             }
-                            // 3D Çarpışma Testi
-                            if(Math.abs(bmwGroup.position.x - t.position.x) < 1.5 && Math.abs(bmwGroup.position.z - t.position.z) < 3.2) {
+                            // Gelişmiş 3D Kutu Çarpışma Algoritması
+                            if(Math.abs(bmwM3.position.x - t.position.x) < 1.6 && Math.abs(bmwM3.position.z - t.position.z) < 3.8) {
                                 gameOver = true;
-                                document.getElementById("score4dText").innerHTML = "<span style='color:red;'>💥 4D ZAMAN DÖNGÜSÜ KIRILDI: BMW PERT! 💥</span>";
+                                document.getElementById("scoreText4D").innerHTML = "<span style='color:red;'>💥 4D BOYUT YIRTILDI! BMW M3 PERT OLMUŞTUR! 💥</span>";
                             }
                         });
                     }
                     renderer.render(scene, camera);
-                    requestAnimationFrame(tick);
+                    requestAnimationFrame(loop);
                 }
-                tick();
+                loop();
             </script>
             """
-            components.html(bmw_4d_html, height=520)
+            components.html(bmw_full_3d_html, height=540)
 
-        elif oyun_secimi == "👗 Gerçek Yüzlü Barbie & Çorap Tasarımı":
-            st.markdown("**💅 Gerçek Makyajlı Barbie Podyumu:** Sıfırdan çizilen gerçek yüze, dudaklara ve gözlere sahip Barbie kızımızın üzerine kıyafetleri ve çorapları hatasız ekle!")
+        elif oyun_secimi == "██ 4D Sihirli Astro-Aura Kız Tasarım Odası":
+            st.markdown("**🌌 4D KOZMİK SİMÜLATÖR:** Kızlar için özel astrolojik aura odası! Alt taraftaki Zaman Akış butonuyla odayı **4. Boyutta (Gündüz, Gün Batımı, Gece, Siber Kuantum)** canlandır!")
             
-            # Tam Detaylı Yüz Şablonu, Kirpikler ve Dudaklar Eklenmiş Gelişmiş Tasarım Stüdyosu
-            barbie_yuzlu_html = """
-            <div style="text-align:center; background:#fff0f5; padding:15px; border-radius:15px; border:4px solid #ff69b4; display:flex; justify-content:space-between; align-items:flex-start; font-family:sans-serif; max-width:560px; margin:0 auto;">
+            # Kızlar İçin 4D Zaman Akışlı Astro-Aura Tasarım Odası
+            astro_4d_html = """
+            <div style="text-align:center; background:#fff2fa; padding:15px; border-radius:15px; border:4px solid #da70d6; font-family:sans-serif; max-width:550px; margin:0 auto;">
                 
-                <!-- GERÇEK DETAYLI YÜZLÜ BARBIE MODELİ -->
-                <div style="width:170px; height:360px; background:#ffd1dc; border-radius:40px; position:relative; border:2px solid #ffb6c1; overflow:hidden; box-shadow: 0px 4px 12px rgba(0,0,0,0.2);">
+                <div id="roomBox" style="width:100%; height:260px; background:linear-gradient(135deg, #ffedfa, #ffd3f0); border-radius:20px; position:relative; border:3px solid #ee82ee; transition:1s ease; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.1);">
                     
-                    <!-- Muazzam Altın Sarısı Uzun Saçlar -->
-                    <div style="position:absolute; top:8px; left:25px; width:120px; height:120px; background:#ffd700; border-radius:45px 45px 20px 20px; z-index:1;"></div>
+                    <div id="roomWindow" style="position:absolute; top:20px; right:30px; width:90px; height:80px; background:#87ceeb; border:4px solid #fff; border-radius:10px; transition:1s; text-align:center; font-size:24px; line-height:70px;">☀️</div>
                     
-                    <!-- GERÇEKÇİ DETAYLI YÜZ MİMARİSİ -->
-                    <div style="position:absolute; top:25px; left:55px; width:60px; height:60px; background:#ffdab9; border-radius:50%; z-index:2; border:1px solid #ffb6c1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.1);">
-                        <!-- Mavi Büyük Gözler ve Kirpikler -->
-                        <div style="position:absolute; top:18px; left:10px; width:10px; height:6px; background:#00bfff; border-radius:50%; border-top:2px solid #000;"></div>
-                        <div style="position:absolute; top:18px; right:10px; width:10px; height:6px; background:#00bfff; border-radius:50%; border-top:2px solid #000;"></div>
-                        <!-- Pembe Allıklar -->
-                        <div style="position:absolute; top:26px; left:6px; width:10px; height:8px; background:#ff69b4; opacity:0.4; border-radius:50%;"></div>
-                        <div style="position:absolute; top:26px; right:6px; width:10px; height:8px; background:#ff69b4; opacity:0.4; border-radius:50%;"></div>
-                        <!-- Barbie Pembe Rujlu Dudakları -->
-                        <div style="position:absolute; top:38px; left:20px; width:20px; height:6px; background:#ff1493; border-radius:3px 3px 8px 8px;"></div>
+                    <div style="position:absolute; bottom:20px; left:40px; width:120px; height:15px; background:#8b4513; border-radius:3px; z-index:2;"></div>
+                    <div id="rgbMonitor" style="position:absolute; bottom:35px; left:65px; width:70px; height:45px; background:#111; border:3px solid #ff69b4; border-radius:5px; box-shadow: 0 0 15px #ff69b4; transition:0.5s; z-index:2; text-align:center; color:#fff; font-size:10px; line-height:40px; font-weight:bold;">Aura Active</div>
+                    
+                    <div style="position:absolute; top:0; left:50%; width:4px; height:30px; background:#333;"></div>
+                    <div id="roomChandelier" style="position:absolute; top:30px; left:calc(50% - 15px); width:30px; height:30px; background:#ffff00; border-radius:50%; box-shadow: 0 0 20px #ffff00; transition:1s;"></div>
+                    
+                    <div style="position:absolute; bottom:20px; right:50px; font-size:32px; z-index:2;">🐱</div>
+                </div>
+
+                <div style="margin-top:15px; text-align:left; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div>
+                        <h5 style="color:#ba55d3; margin:0 0 5px 0; border-bottom:2px solid #da70d6;">🔮 Neon Işık Rengi</h5>
+                        <button onclick="changeNeon('#ff007f', 'Sıcak Pembe')" style="width:100%; padding:8px; background:#ff007f; color:white; border:none; margin-bottom:5px; border-radius:5px; cursor:pointer; font-weight:bold;">Sıcak Pembe Neon</button>
+                        <button onclick="changeNeon('#00ffff', 'Galaksi Mavisi')" style="width:100%; padding:8px; background:#00ffff; color:black; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">Galaksi Mavisi Neon</button>
                     </div>
-                    
-                    <!-- Vücut Silüeti -->
-                    <div style="position:absolute; top:90px; left:48px; width:74px; height:160px; background:#ffdab9; border-radius:15px; z-index:1;"></div>
-                    <!-- Bacaklar -->
-                    <div style="position:absolute; top:245px; left:56px; width:22px; height:95px; background:#ffdab9; z-index:1; border-right:2px solid #eab699;"></div>
-                    <div style="position:absolute; top:245px; left:92px; width:22px; height:95px; background:#ffdab9; z-index:1;"></div>
-
-                    <!-- KATMANLI GİYSİ MODÜLLERİ -->
-                    <div id="uKatman" style="position:absolute; top:90px; left:46px; width:78px; height:65px; z-index:4; border-radius:6px; transition:0.2s;"></div>
-                    <div id="aKatman" style="position:absolute; top:152px; left:48px; width:74px; height:90px; z-index:3; border-radius:0 0 12px 12px; transition:0.2s;"></div>
-                    
-                    <!-- ÇORAP KATMANLARI -->
-                    <div id="cKatmanSol" style="position:absolute; top:250px; left:56px; width:22px; height:85px; z-index:2; transition:0.2s;"></div>
-                    <div id="cKatmanSag" style="position:absolute; top:250px; left:92px; width:22px; height:85px; z-index:2; transition:0.2s;"></div>
+                    <div>
+                        <h5 style="color:#ba55d3; margin:0 0 5px 0; border-bottom:2px solid #da70d6;">🌀 4. BOYUT (ZAMAN AKIŞI)</h5>
+                        <button onclick="shiftDimension('sunset')" style="width:100%; padding:8px; background:#ff8c00; color:white; border:none; margin-bottom:5px; border-radius:5px; cursor:pointer; font-weight:bold;">🌅 Gün Batımı Boyutu</button>
+                        <button onclick="shiftDimension('cyber')" style="width:100%; padding:8px; background:#4b0082; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">🌌 Siber Kuantum Gece</button>
+                    </div>
                 </div>
                 
-                <!-- STİL MAĞAZASI PANELİ -->
-                <div style="text-align:left; width:240px; padding-left:5px;">
-                    <h5 style="color:#ff1493; margin:0 0 5px 0; border-bottom:1px solid #ff69b4; font-size:14px;">👚 Üst Kıyafet</h5>
-                    <button onclick="setU('#ff1493')" style="width:100%; padding:6px; background:#ff1493; color:white; border:none; margin-bottom:4px; border-radius:4px; font-weight:bold; cursor:pointer;">💖 Premium Pembe Top</button>
-                    <button onclick="setU('#8a2be2')" style="width:100%; padding:6px; background:#8a2be2; color:white; border:none; margin-bottom:8px; border-radius:4px; font-weight:bold; cursor:pointer;">🔮 Gece Moru Bluz</button>
-                    
-                    <h5 style="color:#ff1493; margin:4px 0 5px 0; border-bottom:1px solid #ff69b4; font-size:14px;">👖 Alt Kıyafet</h5>
-                    <button onclick="setA('#4682b4')" style="width:100%; padding:6px; background:#4682b4; color:white; border:none; margin-bottom:4px; border-radius:4px; font-weight:bold; cursor:pointer;">💙 Tasarım Kot Etek</button>
-                    <button onclick="setA('#ffffff')" style="width:100%; padding:6px; background:#fff; color:#333; border:1px solid #ccc; margin-bottom:8px; border-radius:4px; font-weight:bold; cursor:pointer;">⚪ Kar Beyaz Şort</button>
-                    
-                    <h5 style="color:#ff1493; margin:4px 0 5px 0; border-bottom:1px solid #ff69b4; font-size:14px;">🧦 Çorap Entegrasyonu</h5>
-                    <button onclick="setC('mesh')" style="width:100%; padding:6px; background:#222; color:white; border:none; margin-bottom:4px; border-radius:4px; font-weight:bold; cursor:pointer;">🖤 Siyah Fileli Çorap</button>
-                    <button onclick="setC('pink')" style="width:100%; padding:6px; background:#ffb6c1; color:black; border:none; margin-bottom:4px; border-radius:4px; font-weight:bold; cursor:pointer;">🌸 Toz Pembe Çorap</button>
-                    <button onclick="setC('none')" style="width:100%; padding:6px; background:#e0 e0e0; color:#333; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">❌ Çorapsız Doğal Stil</button>
-                    
-                    <p id="infoText" style="color:#ff1493; font-weight:bold; font-size:12px; margin-top:12px; text-align:center; background:#fff; padding:6px; border-radius:6px; border:1px solid #ffb6c1;">Makyaj Tamam, Gardırop Hazır! ✨</p>
-                </div>
+                <p id="auraStatus" style="background:#fff; color:#da70d6; font-weight:bold; padding:8px; margin-top:15px; border-radius:8px; border:1px solid #da70d6;">4D Oda Enerjisi: Dengeli Standart Zaman Modu ☀️</p>
             </div>
-            
+
             <script>
-                function setU(c) {
-                    document.getElementById("uKatman").style.background = c;
-                    document.getElementById("infoText").innerText = "Yüz Hatlarıyla Uyumlu Üst Seçildi! ✨";
+                function changeNeon(hex, name) {
+                    document.getElementById("rgbMonitor").style.borderColor = hex;
+                    document.getElementById("rgbMonitor").style.boxShadow = "0 0 20px " + hex;
+                    document.getElementById("auraStatus").innerText = "Neon Işık Değişti: " + name + " Aura Aktif! ⚡";
                 }
-                function setA(c) {
-                    document.getElementById("aKatman").style.background = c;
-                    document.getElementById("infoText").innerText = "Etek/Şort Kombini Tamamlandı! 👗";
-                }
-                function setC(s) {
-                    const l = document.getElementById("cKatmanSol");
-                    const r = document.getElementById("cKatmanSag");
-                    if(s === 'mesh') {
-                        l.style.background = "repeating-linear-gradient(45deg, #111, #111 2px, transparent 2px, transparent 4px)";
-                        r.style.background = "repeating-linear-gradient(45deg, #111, #111 2px, transparent 2px, transparent 4px)";
-                    } else if(s === 'pink') {
-                        l.style.background = "#ffb6c1"; r.style.background = "#ffb6c1";
-                    } else {
-                        l.style.background = "none"; r.style.background = "none";
+
+                // 4D Zaman Mekan Bükülme Fonksiyonu
+                function shiftDimension(mode) {
+                    const room = document.getElementById("roomBox");
+                    const win = document.getElementById("roomWindow");
+                    const chan = document.getElementById("roomChandelier");
+                    const status = document.getElementById("auraStatus");
+
+                    if(mode === 'sunset') {
+                        room.style.background = "linear-gradient(135deg, #ff7f50, #ff4500)";
+                        win.style.background = "#ffaa00"; win.innerText = "🌇";
+                        chan.style.background = "#ffda89"; chan.style.boxShadow = "0 0 25px #ffaa00";
+                        status.innerText = "4D Zaman Büküldü: Büyülü Gün Batımı Modu! 🌅";
+                    } else if(mode === 'cyber') {
+                        room.style.background = "linear-gradient(135deg, #0f051d, #290b54)";
+                        win.style.background = "#050014"; win.innerText = "🔮";
+                        chan.style.background = "#00ffff"; chan.style.boxShadow = "0 0 30px #00ffff";
+                        status.innerText = "4D Boyut Yırtılması: Siber Kuantum Gece Boyutu! 🌌🛸";
                     }
-                    document.getElementById("infoText").innerText = "Özel Çorap Kombine İşlendi! 🧦";
                 }
             </script>
             """
-            components.html(barbie_yuzlu_html, height=430)
+            components.html(astro_4d_html, height=440)
             
         else:
-            st.info("🎯 Panel açıldı be gardaşşşşş! Şimdi üstteki menüden 4D veya Makyajlı tasarım modunu seç!")
+            st.info("🎯 Panel açıldı be gardaşşşşş! Şimdi üstteki menüden 4D Full BMW veya 4D Astro-Aura Kız odasını seç!")
     else:
         st.warning("🕹️ Oyun alanı kilitli. Sol tarafta mikrofonun yanındaki '🎮 Oyun Modu' butonuna basarak eğlenceyi başlatabilirsin!")
