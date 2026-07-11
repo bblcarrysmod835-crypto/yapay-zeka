@@ -10,7 +10,7 @@ import base64
 import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Apolingo 4 Köşeden Işıklı Premium Konsept)
+# Sayfa Ayarları (Apolingo 4 Köşeden Işıklı & Vizon Tonlamalı Konsept)
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -50,7 +50,7 @@ sistem_talimati = (
     "Kesin, Sarsılmaz ve Değişmez Temel Kuralların: "
     "\n\n"
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
-    "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksinc "
+    "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksin. "
     "\n"
     "2) HITAP KANUNU: Konuşma tarzın mahalleden çok yakın bir dost, candan bir sırdaş gibi olacak. "
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
@@ -80,14 +80,14 @@ sistem_talimati = (
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
     "'Doğru mu' sorularında 'Son kararınız mı?' diyeceksin. Minecraft korku modlarını (Herobrine, From the Fog), Valorant ranklarını (Plat elo cehennemi), "
-    "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
+    "PUBG and Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# Gelişmiş 4 Köşeden Işıklı Arka Plan ve Mat Siyah Gerçekçi Alt Panel CSS
+# 4 Köşeden Işıklı ve Vizon/Karamel Tonlamalı Premium CSS
 # ==========================================================================================
 st.markdown("""
     <style>
@@ -128,50 +128,50 @@ st.markdown("""
         color: #ffffff !important;
     }
     
-    /* 4. MUKEMMEL SIFIR KAHVERENGI GERÇEKÇİ PANEL */
-    /* Alt alandaki tüm gereksiz dış çerçeveleri sıfırlıyoruz */
+    /* 4. PREMIUM VİZON & KARAMEL TONLAMALI MESAJ ALANI */
     [data-testid="stChatInput"] {
         background-color: transparent !important;
         border: none !important;
         padding: 15px !important;
     }
     
-    /* Mesaj Yazma Kutusu: KAHVERENGİ TAMAMEN KALKTI - SAF MAT SİYAH VE DERİN OYUK */
+    /* Mesaj Yazma Kutusu: Kahveyle Kusursuz Uyumlu Mat Vizon, Krem ve Karamel Geçişli Tonlama */
     textarea[data-testid="stChatInputTextArea"] {
-        background-color: #0a0503 !important; /* Tamamen karanlık mat siyah taban */
-        color: #ffffff !important;
-        border: 1px solid #24140c !important; /* Koyu antrasit/siyah çerçeve çizgisi */
+        background: linear-gradient(145deg, #1d1714 0%, #110c0a 100%) !important; /* Lüks mat vizon-antrasit tonlaması */
+        color: #fcefe9 !important;
+        border: 1px solid #42352e !important; /* Yumuşak vizon çerçeve çizgisi */
         border-radius: 14px !important;
         font-size: 16px !important;
-        /* İç gölge (inset) ile içeri doğru çökmüş fiziksel ekran dokusu */
-        box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.95), 0 1px 1px rgba(255, 255, 255, 0.05) !important;
-        transition: all 0.3s ease !important;
+        /* İç gölge ile yumuşak, gerçekçi bir kadife/ekran çöküntüsü hissi */
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(212, 163, 115, 0.1) !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     }
     
-    /* Odaklanınca 4 köşedeki ışıklara uyumlu hafif parlamalı efekt */
+    /* Odaklanınca 4 köşedeki ışıkların kırılmasıyla oluşan altın/karamel parlaması */
     textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #7a4b2e !important;
-        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 1), 0 0 15px rgba(122, 75, 46, 0.4) !important;
+        border-color: #a88168 !important; /* Açık vizon/bronz parlaması */
+        background: linear-gradient(145deg, #261f1b 0%, #140e0b 100%) !important;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9), 0 0 18px rgba(168, 129, 104, 0.35) !important;
     }
     
     textarea[data-testid="stChatInputTextArea"]::placeholder {
-        color: #544135 !important;
+        color: #69564c !important; /* Gözü yormayan vizon dolgu yazısı */
     }
 
-    /* Gerçekçi Siyah Mikrofon Yuvası */
+    /* Tonlamalı Gerçekçi Mikrofon Yuvası */
     .stAudioInput {
         margin-top: 5px !important;
-        background-color: #0a0503 !important; /* Kahverengi kalktı, mat siyah yapıldı */
+        background: linear-gradient(145deg, #1d1714 0%, #110c0a 100%) !important;
         border-radius: 50% !important;
-        border: 1px solid #24140c !important;
-        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.95) !important;
+        border: 1px solid #42352e !important;
+        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.85) !important;
         padding: 2px !important;
         transition: all 0.2s ease;
     }
     .stAudioInput:hover {
         transform: scale(1.05);
-        border-color: #7a4b2e !important;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 1), 0 0 10px rgba(122, 75, 46, 0.4) !important;
+        border-color: #a88168 !important;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(168, 129, 104, 0.35) !important;
     }
 
     /* 5. Bronz ve Metalik Buton Dokuları */
@@ -193,18 +193,18 @@ st.markdown("""
     
     /* Menü Butonları */
     div[data-testid="stRadio"] label {
-        background-color: rgba(10, 5, 3, 0.7) !important;
+        background-color: rgba(29, 23, 20, 0.7) !important;
         padding: 12px 18px !important;
         border-radius: 10px !important;
-        border: 1px solid #24140c !important;
+        border: 1px solid #42352e !important;
         margin-bottom: 10px !important;
         display: block !important;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
         transition: 0.2s ease;
     }
     div[data-testid="stRadio"] label:hover {
-        border-color: #7a4b2e !important;
-        background-color: rgba(36, 20, 12, 0.4) !important;
+        border-color: #a88168 !important;
+        background-color: rgba(66, 53, 46, 0.4) !important;
     }
     
     div[data-testid="stSpinner"] i {
@@ -218,7 +218,7 @@ st.markdown("""
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("4 Köşeli Sahne Işıkları Salonu")
+    st.markdown("Vizon Tonlamalı & Quad-Light Salon")
     st.write("---")
     
     secilen_mod = st.radio(
@@ -239,10 +239,10 @@ with st.sidebar:
 
 # ==========================================================================================
 # GÖRÜNÜM KONTROLÜ: SOHBET MODU
-# ==========================================================================
+# ==========================================================================================
 if st.session_state.aktif_mod == "Sohbet":
     st.title("🚀 APOLINGO MASTER ARCADE AI")
-    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | 4 Köşe Quad-Light Sistemi 🌌")
+    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | Quad-Light & Premium Vizon Tonlama 🎚️")
     st.write("---")
 
     for mesaj in st.session_state.sohbet_hafizasi:
@@ -262,7 +262,7 @@ if st.session_state.aktif_mod == "Sohbet":
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
         
     with c_text:
-        yazi_soru = st.chat_input("Mat siyah panele yaz be gardaşşşşş, 4 spot üstünde...")
+        yazi_soru = st.chat_input("Lüks vizon tonlamalı panele yaz be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
 
@@ -284,7 +284,7 @@ if st.session_state.aktif_mod == "Sohbet":
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Apolingo 4 Köşeli Işıklarda Derin Düşüncelerde..."):
+        with st.spinner("🎶 Apolingo Tonlamalı Lüks Konsolda Derin Düşüncelerde..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
