@@ -203,10 +203,10 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.rerun()
             except Exception as e: st.session_state.ses_isleme_aktif = True
 
-# BMW M3 10D OYUNU: BASIK OLMAYAN YÜKSEK ŞASİ SİSTEMİ
+# BMW M3 10D OYUNU: ULTRA KALİTELİ, LEKESİZ VE YÜKSEK ŞASİLİ SÜRÜM
 elif st.session_state.aktif_mod == "ErkekOyunu":
-    st.markdown("### 🏎️ Apolingo 10D Hiper Realizm: Yüksek Şasili Sarı Canavar")
-    st.caption("Arabaların basıklığı tamamen kaldırıldı! Süspansiyonlar yükseltildi, alt şasi artık havada be gardaşş!")
+    st.markdown("### 🏎️ Apolingo Ultra Realizm v2: Sıfır Lekeli Yüksek Canavar")
+    st.caption("Arabanın üzerindeki o gri-beyaz tuhaf leke tamamen yok edildi, tavan jilet! Diğer arabalar ultra kaliteli metalik renk kaplamaya geçirildi be gardaşş!")
 
     bmw_10d_html = """
     <div style="text-align:center; background:#000000; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 50px rgba(255,0,0,0.9); user-select:none; position:relative;">
@@ -229,11 +229,11 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(container.clientWidth, 570); 
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 2.0;
+        renderer.toneMappingExposure = 2.2; // Parlaklık artırıldı
         container.appendChild(renderer.domElement);
 
-        const sunLight = new THREE.DirectionalLight(0xffffff, 4.0); sunLight.position.set(10, 60, 15); scene.add(sunLight);
-        const ambient = new THREE.AmbientLight(0x221c1c, 2.5); scene.add(ambient);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 5.0); sunLight.position.set(20, 80, 20); scene.add(sunLight);
+        const ambient = new THREE.AmbientLight(0x252525, 3.0); scene.add(ambient);
 
         const roadGeo = new THREE.BoxGeometry(18, 0.1, 1000);
         const roadMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.01, metalness: 0.99 });
@@ -245,29 +245,36 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
             lMesh.position.set(0, 0.06, -i * 24); scene.add(lMesh); lines.push(lMesh);
         }
 
-        // --- BASIK OLMAYAN YÜKSEK ŞASİLİ OYUN MOTORU ---
+        // --- ULTRA KALİTELİ ARABA MOTORU ---
         function create10DCar(bodyColor, isPlayer) {
             const carGroup = new THREE.Group();
             
-            const paintMat = new THREE.MeshStandardMaterial({ color: bodyColor, metalness: 0.98, roughness: 0.02 });
-            const carbonMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.90, roughness: 0.15 }); 
-            const glassMat = new THREE.MeshStandardMaterial({ color: 0x02050a, roughness: 0, metalness: 1 });
-            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xeeeeee, metalness: 1.0, roughness: 0.01 });
-            const tyreMat = new THREE.MeshStandardMaterial({ color: 0x060606, roughness: 0.8 });
-            const brakeMat = new THREE.MeshStandardMaterial({ color: 0xee0000, metalness: 0.9 });
+            // Üst Düzey Metalik Fiziksel Kaplama
+            const paintMat = new THREE.MeshPhysicalMaterial({ 
+                color: bodyColor, 
+                metalness: 0.95, 
+                roughness: 0.05, 
+                clearcoat: 1.0, 
+                clearcoatRoughness: 0.02 
+            });
+            const carbonMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.85, roughness: 0.2 }); 
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x010205, roughness: 0, metalness: 1 });
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 1.0, roughness: 0.01 });
+            const tyreMat = new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.85 });
+            const brakeMat = new THREE.MeshStandardMaterial({ color: 0xff0000, metalness: 0.9 });
 
-            // Ana Alt Şasi - BASIK DEĞİL, YERDEN YÜKSEKLİK 0.58'E ÇEKİLDİ
+            // Ana Alt Şasi - BASIK DEĞİL, YERDEN YÜKSEK (0.58)
             const base = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.26, 3.75), paintMat);
             base.position.y = 0.58; 
             carGroup.add(base);
 
-            // Ön Kaput (Havada Dengelendi)
+            // Ön Kaput
             const hoodMatSelected = isPlayer ? carbonMat : paintMat;
             const hood = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.18, 1.30), hoodMatSelected);
             hood.position.set(0, 0.70, -1.18);
             carGroup.add(hood);
 
-            // Jilet Gibi Pürüzsüz Kabin (Tavan Çizgisi Tamamen Yok)
+            // Jilet Gibi Pürüzsüz Kabin Tavanı (Gri-beyaz garip lekeler tamamen kaldırıldı, saf tek parça yapıldı)
             const cabinGeo = new THREE.BoxGeometry(1.38, 0.42, 1.70);
             const cabin = new THREE.Mesh(cabinGeo, paintMat);
             cabin.position.set(0, 0.92, 0.05);
@@ -281,7 +288,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
             trunk.position.set(0, 0.72, 1.38);
             carGroup.add(trunk);
 
-            // Tekerlekler ve Büyük Jantlar (Yerden Yüksek Şasi Desteğiyle Merkezleri 0.45 Yapıldı)
+            // Tekerlekler ve Heybetli Büyük Jantlar (Yerden Yüksek Merkez: 0.45)
             const tG = new THREE.CylinderGeometry(0.45, 0.45, 0.28, 32); tG.rotateZ(Math.PI / 2);
             const rG = new THREE.CylinderGeometry(0.32, 0.32, 0.29, 16); rG.rotateZ(Math.PI / 2);
             const wPositions = [[-0.92, 0.45, -1.15], [0.92, 0.45, -1.15], [-0.92, 0.45, 1.30], [0.92, 0.45, 1.30]];
@@ -294,7 +301,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                 carGroup.add(tire, rim, caliper);
             });
 
-            // Lazer Farlar (Yüksekliğe Göre Hizalandı)
+            // Lazer Farlar & Stoplar
             const fGeo = new THREE.BoxGeometry(0.24, 0.07, 0.04);
             const fMat = new THREE.MeshBasicMaterial({ color: isPlayer ? 0x00f3ff : 0xffaa00 });
             const headL = new THREE.Mesh(fGeo, fMat); headL.position.set(-0.62, 0.68, -1.89);
@@ -309,7 +316,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
             return carGroup;
         }
 
-        // Oyuncunun Neon Sarı Yüksek Canavarı
+        // Senin Parlak Saf Neon Limon Sarısı Canavarın (Üstü Tertemiz)
         const playerCar = create10DCar(0xdfff00, true);
         playerCar.position.set(0, 0, -8); scene.add(playerCar);
 
@@ -319,8 +326,9 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
         const rightBeam = leftBeam.clone(); rightBeam.position.x = 0.62;
         playerCar.add(leftBeam, rightBeam);
 
+        // Ultra Kaliteli Canlı Renklere Sahip Trafik
         let traffic = []; 
-        const randomColors = [0xff007f, 0x00ff66, 0xff6600, 0x9900ff, 0x0033ff, 0x00ffff, 0xff00ff];
+        const randomColors = [0xff0055, 0x00ff66, 0xff7700, 0x9900ff, 0x0044ff, 0x00ffff, 0xf500ff];
         
         for(let i=0; i<6; i++){
             let randomColor = randomColors[i % randomColors.length];
@@ -355,7 +363,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                 
                 playerCar.rotation.z = tilt;
                 playerCar.rotation.y = tilt * 0.22;
-                playerCar.position.y = 0.01 * Math.sin(dimensionsClock * 4); // Yüksek şaside tatlı süspansiyon esnemesi
+                playerCar.position.y = 0.01 * Math.sin(dimensionsClock * 4); 
 
                 camera.position.y = 4.2 + (Math.random() - 0.5) * ((score * 0.001) + 0.003);
 
