@@ -111,6 +111,19 @@ st.markdown("""
         margin-top: 6px !important;
     }
     
+    /* Siyah Tabanlı Beyaz Dokulu Gelişmiş Chat Input Alanı */
+    textarea[data-testid="stChatInputTextArea"] {
+        background-color: #0b0b0d !important;
+        color: #ffffff !important;
+        border: 1.5px solid #e2e8f0 !important;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.15) !important;
+    }
+    
+    /* Chat input konteyner ayarları */
+    div[data-testid="stChatInput"] {
+        background-color: transparent !important;
+    }
+
     /* Butonların chat input hizasına getirilmesi ve Karamel/Kahve Dokusu */
     div[data-testid="stButton"] > button {
         margin-top: 6px !important;
@@ -280,7 +293,7 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
         const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x1f120c, roughness: 0.5 })); scene.add(road);
         let lines = [];
         for(let i=0; i<20; i++){
-            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: #d4a373 }));
+            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: '#d4a373' }));
             lMesh.position.set(0, 0.09, -i * 30); scene.add(lMesh); lines.push(lMesh);
         }
         const bmwM3 = new THREE.Group();
