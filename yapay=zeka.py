@@ -20,9 +20,9 @@ if "client" not in st.session_state:
 if "aktif_oyun" not in st.session_state:
     st.session_state.aktif_oyun = None
 
-# Mikrofon durumu hafızası
-if "mic_aktif" not in st.session_state:
-    st.session_state.mic_aktif = False
+# Geçici ses hafızası
+if "ses_girdisi" not in st.session_state:
+    st.session_state.ses_girdisi = ""
 
 # Ses çalma fonksiyonu
 def sesi_cal(metin):
@@ -51,7 +51,7 @@ sistem_talimati = (
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
     "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksin. "
     "\n"
-    "2) HITAP KANUNU: Talk tarzın mahalleden çok yakın bir dost, candan bir sırdaş gibi olacak. "
+    "2) HITAP KANUNU: Konuşma tarzın mahalleden çok yakın bir dost, candan bir sırdaş gibi olacak. "
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
     "\n"
     "3) AHMET ŞAKASI (KIRMIZI ÇİZGİ): Kullanıcı sana 'Ahmet', 'Ahmet kim?', 'Çişli' veya içinde Ahmet geçen herhangi bir şey "
@@ -85,7 +85,7 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# PROFESYONEL VE ULTRA MODERN UI TASARIMI
+# PROFESSIONAL UI / UX DESIGN (MİLİMETRİK HİZALAMA VE BİTİŞİK BUTONLAR)
 st.markdown("""
     <style>
     .stApp {
@@ -94,26 +94,8 @@ st.markdown("""
         justify-content: flex-end !important;
         height: 100vh;
     }
-    .sag-oyun-btn div[data-testid="stButton"] > button {
-        border-radius: 50% !important;
-        width: 44px !important;
-        height: 44px !important;
-        padding: 0 !important;
-        font-size: 20px !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
-        border: none !important;
-    }
-    .sol-normal-mic div[data-testid="stButton"] > button {
-        border-radius: 8px !important;
-        width: 100% !important;
-        height: 42px !important;
-        background-color: #3b82f6 !important;
-        color: white !important;
-        font-size: 15px !important;
-        border: none !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
-    }
-    /* Yukarı Bakan Ok Butonunun CSS Yerleşimi */
+    
+    /* Mesaj Giriş Alanı ve Ok Butonu Kusursuz Entegrasyonu */
     .modern-gonder-btn div[data-testid="stButton"] > button {
         background-color: #1e293b !important;
         color: #3b82f6 !important;
@@ -121,13 +103,32 @@ st.markdown("""
         border-radius: 8px !important;
         height: 42px !important;
         width: 100% !important;
-        font-size: 20px !important;
+        font-size: 18px !important;
         font-weight: bold !important;
-        transition: all 0.2s ease !important;
+        margin-top: 0px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .modern-gonder-btn div[data-testid="stButton"] > button:hover {
         background-color: #3b82f6 !important;
         color: white !important;
+    }
+
+    /* Sağdaki Bitişik Oyun Butonları */
+    .sag-oyun-btn div[data-testid="stButton"] > button {
+        border-radius: 8px !important;
+        width: 44px !important;
+        height: 42px !important;
+        padding: 0 !important;
+        font-size: 20px !important;
+        background-color: #1e293b !important;
+        border: 1px solid #4b5563 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+    }
+    .sag-oyun-btn div[data-testid="stButton"] > button:hover {
+        border-color: #3b82f6 !important;
+        background-color: #1e293b !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -151,112 +152,58 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # ULTRA HIZLI SES MOTORU (MİLİSANİYELİK RESPONSE SÜRESİ)
-    if st.session_state.mic_aktif:
-        JS_RITIM_MIC = """
-        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px;">
-            <div id="kucukBar1" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.04s ease;"></div>
-            <div id="kucukBar2" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.04s ease;"></div>
-            <div id="kucukBar3" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.04s ease;"></div>
-            <div id="kucukBar4" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.04s ease;"></div>
-        </div>
-        
-        <script>
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const audioContext = new AudioContext();
-                const source = audioContext.createMediaStreamSource(stream);
-                const analyser = audioContext.createAnalyser();
-                analyser.fftSize = 32;
-                source.connect(analyser);
-                
-                const bufferLength = analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-
-                function drawRitim() {
-                    requestAnimationFrame(drawRitim);
-                    analyser.getByteFrequencyData(dataArray);
-                    let sum = 0;
-                    for(let i=0; i<bufferLength; i++) { sum += dataArray[i]; }
-                    let average = sum / bufferLength;
-
-                    for(let i=1; i<=4; i++) {
-                        const bar = document.getElementById('kucukBar' + i);
-                        if(bar) {
-                            let height = Math.max(4, (average * 0.45) * (i * 0.2 + 0.6));
-                            bar.style.height = Math.min(30, height) + 'px';
-                        }
-                    }
-                }
-                drawRitim();
-
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                recognition.lang = 'tr-TR';
-                
-                recognition.onresult = (event) => {
-                    const metinSonuc = event.results[0][0].transcript;
-                    if(metinSonuc && metinSonuc.trim() !== "") {
-                        window.parent.postMessage({type: 'sesli_konusma', text: metinSonuc}, '*');
-                    }
-                };
-                recognition.start();
-            }).catch(err => { console.log(err); });
-        }
-        </script>
-        """
-        components.html(JS_RITIM_MIC, height=42)
-
-    # RE-ENJEKSİYON MOTORU
+    # WEB API MİKROFON MOTORU (YAZI KUTUSUNA TARAYICI ENGELSİZ VERİ AKTARIMI)
     st.markdown("""
         <script>
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'sesli_konusma') {
-                const inputElement = window.parent.document.querySelector('input[data-testid="stTextInputRootElement"]');
-                if(inputElement) {
-                    inputElement.value = event.data.text;
-                    inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-                    inputElement.dispatchEvent(new Event('change', { bubbles: true }));
-                    
-                    setTimeout(() => {
-                        const form = inputElement.closest('form');
-                        if(form) {
-                            form.requestSubmit();
-                        }
-                    }, 50);
-                }
-            }
-        });
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            window.recognition = new SpeechRecognition();
+            window.recognition.lang = 'tr-TR';
+            window.recognition.continuous = false;
+            window.recognition.interimResults = false;
+
+            window.recognition.onresult = function(event) {
+                const text = event.results[0][0].transcript;
+                // Streamlit'in saklı query param mekanizması üzerinden senkronizasyon hattı
+                const url = new URL(window.location.href);
+                url.searchParams.set('voice_input', text);
+                window.location.href = url.href;
+            };
+        }
+        function startVoiceRecord() {
+            if(window.recognition) { window.recognition.start(); }
+        }
         </script>
     """, unsafe_allow_html=True)
 
-    # KUSURSUZ YERLEŞİM: Normal butonlar dışarıda, Yazı kutusu ve Ok içeride!
-    c_mic, c_chat_box, c_g1, c_g2 = st.columns([0.15, 0.73, 0.06, 0.06])
-    
-    with c_mic:
-        mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
-        st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
-        if st.button(mic_simge, key="normal_mic_tasarim"):
-            st.session_state.mic_aktif = not st.session_state.mic_aktif
-            st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with c_chat_box:
-        # Form yapısı sadece yazı girdisi ve yukarı ok için izole edildi!
-        with st.form(key="saf_mesaj_formu", clear_on_submit=True):
-            c_input, c_arrow = st.columns([0.90, 0.10])
-            with c_input:
-                yazi_soru = st.text_input("Mesajın:", label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
-            with c_arrow:
-                st.markdown('<div class="modern-gonder-btn">', unsafe_allow_html=True)
-                gonder_btn = st.form_submit_button("▲")
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-            if gonder_btn and yazi_soru:
-                gelen_soru = yazi_soru
-                st.session_state.mic_aktif = False
+    # URL parametresinden ses verisini yakalayıp hafızaya alma
+    params = st.query_params
+    if "voice_input" in params:
+        st.session_state.ses_girdisi = params["voice_input"]
+        # URL'i temizle ki sonsuz döngüye girmesin
+        st.query_params.clear()
 
+    # MASTER LAYOUT: TÜM SİSTEM TEK SATIRDA YAN YANA VE SAĞA YAPIŞIK OYUNLAR
+    # %72 Mesaj alanı, %6 Yukarı bakan ok, %4 ve %4 Bitişik oyun butonları, %4 Mikrofon
+    c_chat, c_arrow, c_g1, c_g2, c_mic = st.columns([0.72, 0.06, 0.04, 0.04, 0.04])
+    
+    with st.form(key="jilet_gibi_form", clear_on_submit=True):
+        with c_chat:
+            # Ses girdisi varsa varsayılan olarak kutuya yazar
+            varsayilan_metin = st.session_state.ses_girdisi if st.session_state.ses_girdisi else ""
+            yazi_soru = st.text_input("Mesajın:", value=varsayilan_metin, label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
+        
+        with c_arrow:
+            # Mesaj kutusunun hemen sağında, tam hizalı yukarı bakan ok
+            st.markdown('<div class="modern-gonder-btn">', unsafe_allow_html=True)
+            gonder_btn = st.form_submit_button("▲")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        if gonder_btn and yazi_soru:
+            gelen_soru = yazi_soru
+            st.session_state.ses_girdisi = "" # Hafızayı temizle
+
+    # Oyun ve Mikrofon butonları formun dışında, hemen sağında bitişik nizamda duruyor
     with c_g1:
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
         if st.button("🏎️", key="rk_game"):
@@ -269,6 +216,13 @@ if st.session_state.aktif_oyun is None:
         if st.button("🌌", key="kz_game"):
             st.session_state.aktif_oyun = "kiz"
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with c_mic:
+        st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
+        # Mikrofon butonu tıklandığında tarayıcının ses motorunu tetikler
+        if st.button("🎙️", key="native_mic_trigger"):
+            st.components.v1.html("<script>window.parent.startVoiceRecord();</script>", height=0)
         st.markdown('</div>', unsafe_allow_html=True)
 
     # Girdi geldiğinde yapay zekayı tetikleme hattı
