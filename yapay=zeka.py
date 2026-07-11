@@ -9,27 +9,26 @@ import os
 import base64
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Tam genişlik düzeni)
+# Sayfa Ayarları
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
     st.session_state.client = Client()
 
-# Oyun panelinin aktiflik durumu ve hangi oyunun seçildiği hafızası
+# Oyun paneli hafızası
 if "aktif_oyun" not in st.session_state:
-    st.session_state.aktif_oyun = None  # None, "erkek" veya "kiz"
+    st.session_state.aktif_oyun = None
 
-# Mikrofonun o an aktif olup olmadığını tutan hafıza
+# Mikrofon durumu hafızası
 if "mic_aktif" not in st.session_state:
     st.session_state.mic_aktif = False
 
-# Ses çalma fonksiyonu (Kız sesi için gTTS)
+# Ses çalma fonksiyonu
 def sesi_cal(metin):
     try:
         tts = gTTS(text=metin, lang='tr', slow=False)
         tts.save("cevap.mp3")
-        
         with open("cevap.mp3", "rb") as f:
             data = f.read()
             b64 = base64.b64encode(data).decode()
@@ -73,9 +72,9 @@ sistem_talimati = (
     "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini ve kablo gizlemeyi anlatacaksın. "
     "\n"
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
-    "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej og vizonla uyumunu uzun uzun öveceksin. "
+    "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -86,7 +85,7 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# CSS DÜZENLEMELERİ: OYUNLAR BİLEŞİK, MİKROFON SOLDA SABİT
+# ARAYÜZ CSS YAPILANDIRMASI
 st.markdown("""
     <style>
     .stApp {
@@ -95,7 +94,6 @@ st.markdown("""
         justify-content: flex-end !important;
         height: 100vh;
     }
-    
     div[data-testid="column"] {
         padding: 0px 0px !important;
         margin: 0px 0px !important;
@@ -104,8 +102,6 @@ st.markdown("""
         align-items: flex-start !important;
         gap: 0px !important;
     }
-    
-    /* Sağdaki oyun butonları yuvarlak ve sıfır boşluklu */
     .sag-oyun-btn div[data-testid="stButton"] > button {
         border-radius: 50% !important;
         width: 44px !important;
@@ -116,8 +112,6 @@ st.markdown("""
         box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
         border: none !important;
     }
-    
-    /* Sol taraftaki normal mikrofon butonu */
     .sol-normal-mic div[data-testid="stButton"] > button {
         border-radius: 8px !important;
         width: 100% !important;
@@ -135,14 +129,14 @@ st.markdown("""
 gelen_soru = None
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - CHAT EKRANI)
+# GÖRÜNÜM KONTROLÜ
 # ==========================================================================================
 if st.session_state.aktif_oyun is None:
     st.title("🚀 APOLINGO MASTER ARCADE AI")
     st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş**")
     st.write("---")
 
-    # Mesaj geçmişini listeleme
+    # Mesaj geçmişi ekrana basılıyor
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
             with st.chat_message("user"):
@@ -151,7 +145,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # AGRESİF VE GÜÇLENDİRİLMİŞ MİKROFON VE RİTİM MOTORU
+    # DOĞRUDAN URL/SORGU PANELİNE METİN GÖNDEREN DEVLESTİRİLMİŞ JAVASCRIPT MOTORU
     JS_RITIM_MIC = """
     <script>
     if (window.parent && !window.parent.ritimSistemKuruldu) {
@@ -183,7 +177,6 @@ if st.session_state.aktif_oyun is None:
                         for(let i=0; i<bufferLength; i++) { sum += window.parent.dataArray[i]; }
                         let average = sum / bufferLength;
 
-                        // Mikrofonun altındaki küçük diktörtgen bar çubuklarını bağırma seviyesine göre oynat
                         for(let i=1; i<=4; i++) {
                             const bar = window.parent.document.getElementById('kucukBar' + i);
                             if(bar) {
@@ -203,15 +196,10 @@ if st.session_state.aktif_oyun is None:
                     window.parent.recognition.onresult = (event) => {
                         const metinSonuc = event.results[0][0].transcript;
                         if(metinSonuc && metinSonuc.trim() !== "") {
-                            const inputs = window.parent.document.querySelectorAll('textarea[data-testid="stChatInputTextArea"]');
-                            inputs.forEach(chatInput => {
-                                chatInput.value = metinSonuc;
-                                chatInput.dispatchEvent(new Event('input', { bubbles: true }));
-                            });
-                            setTimeout(() => {
-                                const buttons = window.parent.document.querySelectorAll('button[data-testid="stChatInputSubmitButton"]');
-                                buttons.forEach(sendBtn => sendBtn.click());
-                            }, 250);
+                            // Chat_input engelini aşmak için URL parametresine basıp sayfayı tetikliyoruz
+                            const anaUrl = new URL(window.parent.location.href);
+                            anaUrl.searchParams.set("sesli_veri", metinSonuc);
+                            window.parent.location.href = anaUrl.toString();
                         }
                     };
                     window.parent.recognition.start();
@@ -231,11 +219,10 @@ if st.session_state.aktif_oyun is None:
     """
     components.html(JS_RITIM_MIC, height=0)
 
-    # TAM İSTEDİĞİN PANEL YERLEŞİMİ
+    # PANEL MATRİSİ
     c_mic, c_chat, c_g1, c_g2 = st.columns([0.12, 0.76, 0.06, 0.06])
     
     with c_mic:
-        # Sol Taraf: Bas/Durdur Mikrofon Butonu
         mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
         
         st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
@@ -250,7 +237,7 @@ if st.session_state.aktif_oyun is None:
                 st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
-        # MİKROFONUN TAM ALTINA KÜÇÜK DİKDÖRTGEN SEVİYE ALGILAMA RİTİM KUTUSU
+        # MİKROFONUN ALTINDAKİ KÜÇÜK DİKDÖRTGEN RİTİM ALANI
         if st.session_state.mic_aktif:
             kucuk_dikdortgen_ritim = """
             <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px; margin-top: 5px;">
@@ -263,13 +250,12 @@ if st.session_state.aktif_oyun is None:
             st.components.v1.html(kucuk_dikdortgen_ritim, height=42)
         
     with c_chat:
-        # Orta Taraf: Yazı kutusu
         yazi_soru = st.chat_input("Mesajını yaz veya konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
-            st.session_state.mic_aktif = False 
+            st.session_state.mic_aktif = False
             st.markdown("""<script>window.parent.document.dispatchEvent(new CustomEvent('DurdurRitimMic'));</script>""", unsafe_allow_html=True)
-            
+
     with c_g1:
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
         if st.button("🏎️", key="rk_game"):
@@ -284,12 +270,14 @@ if st.session_state.aktif_oyun is None:
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Modern Streamlit Parametresi ile Ritim Kapatma
-    if "KapatRitimKlavuz" in st.query_params:
+    # SESLİ VERİ YAKALAYICI VE OTOMATİK TEMİZLEYİCİ
+    if "sesli_veri" in st.query_params:
+        gelen_soru = st.query_params["sesli_veri"]
         st.session_state.mic_aktif = False
-        st.rerun()
+        # URL'yi temizle ki sonsuz döngüye girmesin gardaş!
+        st.query_params.clear()
 
-    # Girdi geldiğinde tetikleme
+    # Girdi geldiğinde yapay zekayı tetikleme hattı
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
@@ -310,14 +298,13 @@ if st.session_state.aktif_oyun is None:
                 with st.chat_message("assistant"):
                     st.write(cevap)
                 st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
-                st.session_state.mic_aktif = False 
                 sesi_cal(cevap)
                 st.rerun()
             except Exception as e:
                 pass
 
 # ==========================================================================================
-# OYUNLAR (DEĞİŞİKLİK YAPILMADI, ESKİ HALİ KORUNDU)
+# OYUNLAR (DOKUNULMADI, STABİL ÇALIŞIYOR)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
@@ -327,13 +314,12 @@ elif st.session_state.aktif_oyun == "erkek":
             st.rerun()
     with sag_ust:
         st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
-    # (BMW ThreeJS Kod Bloğu Eski Kodla Aynı)
     bmw_full_screen_html = """
     <div style="text-align:center; background:#05050a; padding:10px; border-radius:16px; border:3px solid #00ffcc; max-width:100%; touch-action:none;">
         <div id="bmwFullCanvasContainer" style="width:100%; height:420px; border-radius:10px; overflow:hidden;"></div>
         <div style="display:flex; justify-content:center; gap:40px; margin:15px 0;">
-            <button id="mobSolBtn" style="width:75px; height:75px; border-radius:50%; background:#00ffcc; color:black; font-size:30px; font-weight:bold; border:none; box-shadow:0 0 15px #00ffcc;">◀️</button>
-            <button id="mobSagBtn" style="width:75px; height:75px; border-radius:50%; background:#00ffcc; color:black; font-size:30px; font-weight:bold; border:none; box-shadow:0 0 15px #00ffcc;">▶️</button>
+            <button id="mobSolBtn" style="width:75px; height:75px; border-radius:50%; background:#00ffcc; color:black; font-size:30px; font-weight:bold; border:none;">◀️</button>
+            <button id="mobSagBtn" style="width:75px; height:75px; border-radius:50%; background:#00ffcc; color:black; font-size:30px; font-weight:bold; border:none;">▶️</button>
         </div>
         <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:5px 0; font-size:18px;">4D Makas Skoru: 0 🌀</h2>
     </div>
@@ -396,7 +382,6 @@ elif st.session_state.aktif_oyun == "kiz":
             st.rerun()
     with sag_ust:
         st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
-    # (Kız Oyunu ThreeJS Kod Bloğu Eski Kodla Aynı)
     kiz_full_screen_html = """
     <div style="text-align:center; background:#11001c; padding:10px; border-radius:16px; border:3px solid #ff69b4; max-width:100%; touch-action:none;">
         <div id="kizFullCanvasContainer" style="width:100%; height:420px; border-radius:10px; overflow:hidden;"></div>
