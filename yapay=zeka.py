@@ -10,7 +10,7 @@ import base64
 import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Apolingo Kahverengi Premium Konsept)
+# Sayfa Ayarları (Apolingo 4 Köşeden Işıklı Premium Konsept)
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -50,7 +50,7 @@ sistem_talimati = (
     "Kesin, Sarsılmaz ve Değişmez Temel Kuralların: "
     "\n\n"
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
-    "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksin. "
+    "Sana kim olduğunu, seni kimin yaptığını sorduklarında bunu gururla ve büyük bir hürmetle belirteceksinc "
     "\n"
     "2) HITAP KANUNU: Konuşma tarzın mahalleden çok yakın bir dost, candan bir sırdaş gibi olacak. "
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
@@ -86,118 +86,125 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# IŞIK VURMUŞ GİBİ PARLAYAN KAHVERENGİ VE GERÇEKÇİ PANEL CSS DÜZENLEMESİ
+# ==========================================================================================
+# Gelişmiş 4 Köşeden Işıklı Arka Plan ve Mat Siyah Gerçekçi Alt Panel CSS
+# ==========================================================================================
 st.markdown("""
     <style>
-    /* 1. Her Tarafı Kaplayan, Arkadan Stüdyo Işığı Vurmuş Gibi Duran Radyal Gradyan Arka Plan */
+    /* 1. 4 Köşeden Vuran Sahne Spot Işıkları Kombinasyonu */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
-        background: radial-gradient(circle at 50% 30%, #472b1c 0%, #21130b 60%, #120a06 100%) !important;
+        background-color: #120a06 !important;
+        background-image: 
+            radial-gradient(circle at 0% 0%, #613b24 0%, transparent 45%),
+            radial-gradient(circle at 100% 0%, #613b24 0%, transparent 45%),
+            radial-gradient(circle at 0% 100%, #3d2212 0%, transparent 45%),
+            radial-gradient(circle at 100% 100%, #3d2212 0%, transparent 45%) !important;
+        background-attachment: fixed !important;
         color: #fcefe9 !important;
     }
     
-    /* 2. Sol Menü (Sidebar) Işıklı Kahve Uyumu */
+    /* 2. Sol Menü (Sidebar) Işıklı Geçiş Uyumu */
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
-        background: linear-gradient(180deg, #331c12 0%, #170a05 100%) !important;
-        border-right: 1px solid #523020 !important;
+        background: linear-gradient(180deg, #1f110a 0%, #0d0603 100%) !important;
+        border-right: 1px solid #4a2b1a !important;
     }
     
     [data-testid="stSidebar"] * {
         color: #fcefe9 !important;
     }
     
-    /* 3. Sohbet Balonları - Yapay Görünmeyen, Arka Plana Yedirilmiş İnce Parlamalı Doku */
+    /* 3. Sohbet Balonları - Şeffaf ve Derinlikli */
     [data-testid="stChatMessage"] {
-        background-color: rgba(43, 24, 15, 0.6) !important;
-        border: 1px solid rgba(212, 163, 115, 0.2) !important;
+        background-color: rgba(18, 10, 6, 0.6) !important;
+        border: 1px solid rgba(212, 163, 115, 0.15) !important;
         border-radius: 16px !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-        backdrop-filter: blur(5px);
-        margin-bottom: 12px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+        backdrop-filter: blur(8px);
+        margin-bottom: 15px !important;
     }
     
     [data-testid="stChatMessageContent"] {
         color: #ffffff !important;
     }
     
-    /* 4. GERÇEKÇİ STÜDYO DOKULU MESAJ VE MİKROFON ALANI */
-    /* Dış kaba çerçeveyi ve çiğ renkleri kaldırıyoruz, alt paneli arka plana yediriyoruz */
+    /* 4. MUKEMMEL SIFIR KAHVERENGI GERÇEKÇİ PANEL */
+    /* Alt alandaki tüm gereksiz dış çerçeveleri sıfırlıyoruz */
     [data-testid="stChatInput"] {
         background-color: transparent !important;
         border: none !important;
         padding: 15px !important;
     }
     
-    /* Mesaj Yazma Girişi: İçe Doğru Gölgeli (Inset), Fiziksel Bir Yuva Gibi Gerçekçi Doku */
+    /* Mesaj Yazma Kutusu: KAHVERENGİ TAMAMEN KALKTI - SAF MAT SİYAH VE DERİN OYUK */
     textarea[data-testid="stChatInputTextArea"] {
-        background-color: #170d08 !important;
+        background-color: #0a0503 !important; /* Tamamen karanlık mat siyah taban */
         color: #ffffff !important;
-        border: 1px solid #5c3b29 !important;
-        border-radius: 12px !important;
+        border: 1px solid #24140c !important; /* Koyu antrasit/siyah çerçeve çizgisi */
+        border-radius: 14px !important;
         font-size: 16px !important;
-        /* İç gölge ile oyuk/gerçekçi derinlik hissi veriyoruz */
-        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(255, 255, 255, 0.1) !important;
+        /* İç gölge (inset) ile içeri doğru çökmüş fiziksel ekran dokusu */
+        box-shadow: inset 0 6px 12px rgba(0, 0, 0, 0.95), 0 1px 1px rgba(255, 255, 255, 0.05) !important;
         transition: all 0.3s ease !important;
     }
     
-    /* Mesaj alanına odaklanınca hafif altın/karamel stüdyo parlaması */
+    /* Odaklanınca 4 köşedeki ışıklara uyumlu hafif parlamalı efekt */
     textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #d4a373 !important;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 12px rgba(212, 163, 115, 0.3) !important;
+        border-color: #7a4b2e !important;
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 1), 0 0 15px rgba(122, 75, 46, 0.4) !important;
     }
     
     textarea[data-testid="stChatInputTextArea"]::placeholder {
-        color: #8c7161 !important;
+        color: #544135 !important;
     }
 
-    /* Gerçekçi Mikrofon Yuvası Tasarımı */
+    /* Gerçekçi Siyah Mikrofon Yuvası */
     .stAudioInput {
         margin-top: 5px !important;
-        background-color: #170d08 !important;
+        background-color: #0a0503 !important; /* Kahverengi kalktı, mat siyah yapıldı */
         border-radius: 50% !important;
-        border: 1px solid #5c3b29 !important;
-        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.8) !important;
+        border: 1px solid #24140c !important;
+        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.95) !important;
         padding: 2px !important;
-        transition: transform 0.2s ease;
+        transition: all 0.2s ease;
     }
     .stAudioInput:hover {
-        transform: scale(1.03);
-        border-color: #d4a373 !important;
+        transform: scale(1.05);
+        border-color: #7a4b2e !important;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 1), 0 0 10px rgba(122, 75, 46, 0.4) !important;
     }
 
-    /* 5. Butonların Karamel ve Bronz Metalik Dokusu */
+    /* 5. Bronz ve Metalik Buton Dokuları */
     div[data-testid="stButton"] > button {
         margin-top: 5px !important;
-        background: linear-gradient(135deg, #4f301f 0%, #2e1a10 100%) !important;
-        border: 1px solid #704732 !important;
+        background: linear-gradient(135deg, #3b2011 0%, #170d07 100%) !important;
+        border: 1px solid #54311b !important;
         border-radius: 10px !important;
         color: #fcefe9 !important;
         height: 45px !important;
-        font-size: 16px !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        transition: all 0.3s ease;
     }
     div[data-testid="stButton"] > button:hover {
         border-color: #d4a373 !important;
-        background: linear-gradient(135deg, #6b442e 0%, #472b1c 100%) !important;
-        box-shadow: 0 0 15px rgba(212, 163, 115, 0.3);
+        background: linear-gradient(135deg, #522f1a 0%, #29160c 100%) !important;
+        box-shadow: 0 0 15px rgba(212, 163, 115, 0.25);
     }
     
     /* Menü Butonları */
     div[data-testid="stRadio"] label {
-        background-color: rgba(23, 13, 8, 0.6) !important;
+        background-color: rgba(10, 5, 3, 0.7) !important;
         padding: 12px 18px !important;
         border-radius: 10px !important;
-        border: 1px solid #3d2316 !important;
+        border: 1px solid #24140c !important;
         margin-bottom: 10px !important;
         display: block !important;
-        cursor: pointer !important;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
         transition: 0.2s ease;
     }
     div[data-testid="stRadio"] label:hover {
-        border-color: #d4a373 !important;
-        background-color: rgba(71, 43, 28, 0.4) !important;
+        border-color: #7a4b2e !important;
+        background-color: rgba(36, 20, 12, 0.4) !important;
     }
     
     div[data-testid="stSpinner"] i {
@@ -211,7 +218,7 @@ st.markdown("""
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("Premium Stüdyo Işıklı Kahve Salonu")
+    st.markdown("4 Köşeli Sahne Işıkları Salonu")
     st.write("---")
     
     secilen_mod = st.radio(
@@ -232,10 +239,10 @@ with st.sidebar:
 
 # ==========================================================================================
 # GÖRÜNÜM KONTROLÜ: SOHBET MODU
-# ==========================================================================================
+# ==========================================================================
 if st.session_state.aktif_mod == "Sohbet":
     st.title("🚀 APOLINGO MASTER ARCADE AI")
-    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | Radyal Işıklı Kahve Atmosferi ☕")
+    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | 4 Köşe Quad-Light Sistemi 🌌")
     st.write("---")
 
     for mesaj in st.session_state.sohbet_hafizasi:
@@ -255,7 +262,7 @@ if st.session_state.aktif_mod == "Sohbet":
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
         
     with c_text:
-        yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş, stüdyo hazır...")
+        yazi_soru = st.chat_input("Mat siyah panele yaz be gardaşşşşş, 4 spot üstünde...")
         if yazi_soru:
             gelen_soru = yazi_soru
 
@@ -277,7 +284,7 @@ if st.session_state.aktif_mod == "Sohbet":
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Apolingo Kahve Kokulu Derin Düşüncelerde..."):
+        with st.spinner("🎶 Apolingo 4 Köşeli Işıklarda Derin Düşüncelerde..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
@@ -306,9 +313,9 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
     st.caption("Sol taraftaki menüden (3 Çizgi) istediğin an Sohbet Moduna geri dönebilirsin gardaşşş!")
 
     bmw_full_screen_html = """
-    <div style="text-align:center; background:#1f120c; padding:15px; border-radius:16px; border:3px solid #d4a373; user-select:none; position:relative;">
-        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(74,46,27,0.9); color:#d4a373; border:2px solid #d4a373; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
-        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(74,46,27,0.9); color:#d4a373; border:2px solid #d4a373; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
+    <div style="text-align:center; background:#0d0603; padding:15px; border-radius:16px; border:3px solid #7a4b2e; user-select:none; position:relative;">
+        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(23,13,7,0.9); color:#d4a373; border:2px solid #7a4b2e; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(23,13,7,0.9); color:#d4a373; border:2px solid #7a4b2e; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
         <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanel" style="margin-top:15px;">
             <h2 id="scoreDisplay4D" style="color:#d4a373; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">4D Makas Skoru: 0 🌀</h2>
@@ -318,16 +325,16 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
-        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x120a06);
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0503);
         const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 550, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
         const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
-        scene.add(new THREE.AmbientLight(0x666666));
-        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x1f120c, roughness: 0.5 })); scene.add(road);
+        scene.add(new THREE.AmbientLight(0x555555));
+        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x140b06, roughness: 0.5 })); scene.add(road);
         let lines = [];
         for(let i=0; i<20; i++){
-            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: '#d4a373' }));
+            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: '#7a4b2e' }));
             lMesh.position.set(0, 0.09, -i * 30); scene.add(lMesh); lines.push(lMesh);
         }
         const bmwM3 = new THREE.Group();
@@ -358,14 +365,14 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
                 if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
                 lines.forEach(l => { l.position.z += 0.7 + (score * 0.02); if(l.position.z > 10) l.position.z = -280; });
-                let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.07, 0.04 * phase, 0.02 * (1 - phase));
+                let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.04, 0.02 * phase, 0.01 * (1 - phase));
                 traffic.forEach(t => {
                     t.position.z += 0.7 + (score * 0.03);
                     if(t.position.z > 2) { t.position.z = -140 - Math.random()*30; t.position.x = (Math.random() - 0.5) * 11; score++; document.getElementById("scoreDisplay4D").innerText = "4D Makas Skoru: " + score + " 🌀"; }
                     if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) { 
                         gameOver = true; 
                         document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff5555; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>";
-                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#d4a373; color:#000; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #d4a373;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#7a4b2e; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #7a4b2e;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
                     }
                 });
             }
@@ -384,9 +391,9 @@ elif st.session_state.aktif_mod == "KizOyunu":
     st.caption("Sol taraftaki menüden (3 Çizgi) istediğin an Sohbet Moduna geri dönebilirsin gardaşşş!")
 
     kiz_full_screen_html = """
-    <div style="text-align:center; background:#1a0f0a; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none; position:relative;">
-        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(51,26,15,0.9); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
-        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(51,26,15,0.9); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
+    <div style="text-align:center; background:#0a0503; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none; position:relative;">
+        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(10,5,3,0.9); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(10,5,3,0.9); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
         <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanelKiz" style="margin-top:15px;">
             <h2 id="kizScoreDisplay" style="color:#ff69b4; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">Aura Enerjisi: 0 ⭐</h2>
@@ -396,12 +403,12 @@ elif st.session_state.aktif_mod == "KizOyunu":
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("kizFullCanvasContainer");
-        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x1a0f0a);
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0a0503);
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 550, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, 550); container.appendChild(renderer.domElement);
         const pLight = new THREE.PointLight(0xff69b4, 3, 100); pLight.position.set(0, 10, -5); scene.add(pLight);
-        scene.add(new THREE.AmbientLight(0x3d1f11));
+        scene.add(new THREE.AmbientLight(0x24140c));
         const starGeo = new THREE.BufferGeometry(); const starCount = 400; const starPositions = new Float32Array(starCount * 3);
         for(let i=0; i<starCount*3; i+=3) { starPositions[i] = (Math.random() - 0.5) * 60; starPositions[i+1] = (Math.random() - 0.5) * 40; starPositions[i+2] = -Math.random() * 150; }
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
