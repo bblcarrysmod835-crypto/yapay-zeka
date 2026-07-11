@@ -70,7 +70,7 @@ sistem_talimati = (
     "ve işlemci darboğazlarından, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
     "\n"
     "7) ODA TASARIMI, DUVAR RENKLERİ VEYA SETUP REHBERİ: Kullanıcı odasını boyatmak istediğinde, duvar rengi sorduğunda "
-    "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini and kablo gizlemeyi anlatacaksın. "
+    "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini ve kablo gizlemeyi anlatacaksın. "
     "\n"
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
@@ -86,48 +86,26 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# PROFESSIONAL UI / UX STYLE DÜZENLEMESİ (MİLİMETRİK HİZALAMA CSS)
+# PERFECT ALIGNMENT VE CHAT INPUT CSS DÜZENLEMESİ
 st.markdown("""
     <style>
-    /* Form sınırlarını kaldır ve pürüzsüz yap */
-    div[data-testid="stForm"] {
-        border: none !important;
-        padding: 0 !important;
-        background-color: transparent !important;
+    /* Mikrofon dikey hizalama ayarı */
+    .stAudioInput {
+        margin-top: 6px !important;
     }
     
-    /* Input bileşenlerinin dikeyde tam ortalanması */
-    .stAudioInput {
-        margin-top: -4px !important;
-    }
-
-    /* Oyun ve Gönder Butonları Ortak Tasarımı */
-    .gonder-tasarim div[data-testid="stFormSubmitButton"] > button {
-        background-color: #1e293b !important;
-        color: #3b82f6 !important;
-        border: 1px solid #3b82f6 !important;
-        border-radius: 8px !important;
-        height: 42px !important;
-        width: 100% !important;
-        font-size: 18px !important;
-        font-weight: bold;
-    }
-    .gonder-tasarim div[data-testid="stFormSubmitButton"] > button:hover {
-        background-color: #3b82f6 !important;
-        color: white !important;
-    }
-
-    .oyun-tasarim div[data-testid="stFormSubmitButton"] > button {
+    /* Butonların chat input hizasına getirilmesi */
+    div[data-testid="stButton"] > button {
+        margin-top: 6px !important;
         background-color: #1e293b !important;
         border: 1px solid #4b5563 !important;
         border-radius: 8px !important;
-        height: 42px !important;
+        height: 44px !important;
         width: 100% !important;
         font-size: 18px !important;
     }
-    .oyun-tasarim div[data-testid="stFormSubmitButton"] > button:hover {
+    div[data-testid="stButton"] > button:hover {
         border-color: #3b82f6 !important;
-        background-color: #1e293b !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -151,42 +129,29 @@ if st.session_state.aktif_oyun is None:
 
     gelen_soru = None
 
-    # MASTER LAYOUT FORMU: MİKROFON SOLDA, OYUNLAR SAĞDA VE BİTİŞİK!
-    with st.form(key="master_hizali_giris_formu", clear_on_submit=True):
-        # Sütun Dağılımı: Mikrofon (%12), Yazı Alanı (%70), Gönder oku (%6), Oyunlar (%6 ve %6)
-        c_mic, c_text, c_send, c_game1, c_game2 = st.columns([0.12, 0.70, 0.06, 0.06, 0.06])
+    # ELEMAN DİZİLİMİ: MİKROFON SOLDA, CHAT INPUT (OKU İÇİNDE) ORTADA, OYUNLAR SAĞDA BİTİŞİK
+    c_mic, c_text, c_game1, c_game2 = st.columns([0.12, 0.76, 0.06, 0.06])
+    
+    with c_mic:
+        ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed")
         
-        with c_mic:
-            ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed")
-            
-        with c_text:
-            yazi_soru = st.text_input("Mesaj alanı", label_visibility="collapsed", placeholder="Buraya yaz be gardaşşşşş...")
-            
-        with c_send:
-            st.markdown('<div class="gonder-tasarim">', unsafe_allow_html=True)
-            gonder_btn = st.form_submit_button("▲")
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-        with c_game1:
-            st.markdown('<div class="oyun-tasarim">', unsafe_allow_html=True)
-            erkek_btn = st.form_submit_button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!")
-            if erkek_btn:
-                st.session_state.aktif_oyun = "erkek"
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-        with c_game2:
-            st.markdown('<div class="oyun-tasarim">', unsafe_allow_html=True)
-            kiz_btn = st.form_submit_button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!")
-            if kiz_btn:
-                st.session_state.aktif_oyun = "kiz"
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        if gonder_btn and yazi_soru:
+    with c_text:
+        # st.chat_input kullanıldığı için Gönder oku otomatik olarak metin kutusunun İÇİNDE ve SAĞINDA yer alır.
+        yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
+        if yazi_soru:
             gelen_soru = yazi_soru
+            
+    with c_game1:
+        if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!"):
+            st.session_state.aktif_oyun = "erkek"
+            st.rerun()
+            
+    with c_game2:
+        if st.button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!"):
+            st.session_state.aktif_oyun = "kiz"
+            st.rerun()
 
-    # Ses dosyasını arka planda metne dönüştürme mantığı
+    # SES DOSYASI INPUT ALINDIĞI AN ENTER'SIZ OTOMATİK GÖNDERME MEKANİZMASI
     if ses_dosyasi is not None:
         if st.session_state.son_islenen_ses_adi != ses_dosyasi.name:
             r = sr.Recognizer()
@@ -196,11 +161,12 @@ if st.session_state.aktif_oyun is None:
                     soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
                     if soylenen_soz:
                         gelen_soru = soylenen_soz
+                        # Ses takip hafızasını güncelliyoruz ki döngüye girmesin
                         st.session_state.son_islenen_ses_adi = ses_dosyasi.name
             except Exception as e:
                 pass
 
-    # Cevap tetikleyici hat
+    # Yanıt İşleme Hattı
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
