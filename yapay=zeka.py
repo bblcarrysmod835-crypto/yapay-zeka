@@ -16,9 +16,9 @@ st.set_page_config(page_title="Apolingo Ultra Yapay Zeka", page_icon="🚀", lay
 if "client" not in st.session_state:
     st.session_state.client = Client()
 
-# Spam engellemek için ses takip hafızası oluşturuyoruz
-if "son_islenen_ses" not in st.session_state:
-    st.session_state.son_islenen_ses = None
+# Spam engellemek için ses takip hafızasını güvenli bir şekilde başlatıyoruz
+if "son_islenen_ses_adi" not in st.session_state:
+    st.session_state.son_islenen_ses_adi = None
 
 # Ses çalma fonksiyonu (Kız sesi için gTTS)
 def sesi_cal(metin):
@@ -71,7 +71,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -109,10 +109,10 @@ with col1:
 with col2:
     ses_dosyasi = st.audio_input("🎙️ Seslen")
 
-# --- SPAM ENGELLEYİCİ MİKROFON KONTROLÜ ---
+# --- HATAYI ÇÖZEN GÜVENLİ SPAM ENGELLEYİCİ ---
 if ses_dosyasi is not None:
-    # Eğer bu ses dosyası daha önce işlenmediyse içeri gir
-    if st.session_state.son_islenen_ses != ses_dosyasi.id:
+    # .id yerine dosya adını (.name) kontrol ederek kilit oluşturuyoruz
+    if st.session_state.son_islenen_ses_adi != ses_dosyasi.name:
         r = sr.Recognizer()
         try:
             with sr.AudioFile(ses_dosyasi) as source:
@@ -120,8 +120,8 @@ if ses_dosyasi is not None:
                 soylenen_soz = r.recognize_google(audio_data, language="tr-TR")
                 if soylenen_soz:
                     gelen_soru = soylenen_soz
-                    # Bu ses dosyasını işlendi olarak işaretle (Spamı kesen kilit!)
-                    st.session_state.son_islenen_ses = ses_dosyasi.id
+                    # Bu dosya adını işlendi diye kaydediyoruz (Tekrarlamayı keser)
+                    st.session_state.son_islenen_ses_adi = ses_dosyasi.name
         except Exception as e:
             pass
 
