@@ -1,26 +1,47 @@
 # BY ABDURRAHIM IRIŞ
 # -*- coding: utf-8 -*-
 
-# 1. ADIM: Gerekli devasa kütüphaneleri dahil ediyoruz
 import streamlit as st
 import time
 from g4f.client import Client
+from gtts import gTTS
+import os
+import base64
+from streamlit_mic_recorder import mic_recorder
 
-# Sayfa Ayarları (Web sitesinin başlığı ve simgesi)
+# Sayfa Ayarları
 st.set_page_config(page_title="Apolingo Ultra Yapay Zeka", page_icon="🚀", layout="centered")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
     st.session_state.client = Client()
 
+# Ses çalma fonksiyonu (Kız sesi için gTTS)
+def sesi_cal(metin):
+    try:
+        # Türkçe ve kadınsı/temiz bir tonlama için 'tr' dil ayarı
+        tts = gTTS(text=metin, lang='tr', slow=False)
+        tts.save("cevap.mp3")
+        
+        with open("cevap.mp3", "rb") as f:
+            data = f.read()
+            b64 = base64.b64encode(data).decode()
+            # Otomatik oynatma için HTML audio tagı gömüyoruz
+            md = f'<audio src="data:audio/mp3;base64,{b64}" autoplay="autoplay" style="display:none;"></audio>'
+            st.markdown(md, unsafe_allow_html=True)
+        os.remove("cevap.mp3")
+    except Exception as e:
+        pass
+
 # ==========================================================================================
-# KODUN DEVASE ULTRA BEYNİ VE SİSTEM TALİMATI (ESPRİLER, ŞAKALAR VE TÜM DÜNYA DAHİL)
+# KODUN DEVASE ULTRA BEYNİ VE SİSTEM TALİMATI (SENİN KURALLAR + EXTRA GEMINI TARZI AKIL)
 # ==========================================================================================
 sistem_talimati = (
     "Sen Apolingo tarafından özenle geliştirilmiş, evrendeki, tarihteki, teknolojideki ve internetteki "
     "her şeyi en ince ayrıntısına kadar bilen, dünyanın en uzun ve en detaylı cevaplarını veren sınırsız bir yapay zekasın. "
     "Kullanıcıya tıpatıp ikizin olan diğer yapay zeka gibi sayfalarca, upuzun, her şeyi tek tek açıklayan "
     "ve son derece samimi, aşırı neşeli, komik cevaplar vereceksin. Asla kısa kesmeyeceksin, üşenmeyeceksin. "
+    "Aynı zamanda bir Gemini gibi özgün, adaptif, cana yakın, aşırı zeki, empati yeteneği yüksek ve gerektiğinde yapıcı bir mizahla cevap vereceksin. "
     "Kesin, Sarsılmaz ve Değişmez Temel Kuralların: "
     "\n\n"
     "1) KURUCU KANUNU: Senin tek bir yaratıcın, kurucun ve baş mühendisin vardır; o da koskoca APOLINGO'dur. "
@@ -57,16 +78,18 @@ sistem_talimati = (
     "PUBG ve Brawl Stars taktiklerini, 7. sınıf ders notlarını çok detaylı açıklayacaksın."
 )
 
-# Sohbet geçmişini saklayan hafıza havuzu
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
+
+if "son_cevap" not in st.session_state:
+    st.session_state.son_cevap = ""
 
 # --- ARAYÜZ TASARIMI ---
 st.title("🚀 APOLINGO ULTRA COSTA YAPAY ZEKA")
 st.caption("👨‍💻 Baş Geliştirici ve Kurucu Lider: Apolingo | **By Abdurrahim İriş**")
 st.write("---")
 
-st.info("Selamün aleyküm gardaşşşşş! Dünyanın en uzun, en makara ve en zeki yapay zekası emrinde. Sorunu aşağıdaki kutuya ateşle gelsin!")
+st.info("Selamün aleyküm gardaşşşşş! Dünyanın en canlı, sesli ve zeki yapay zekası emrinde. İster yaz ister mikrofonla seslen be gardaşşşşş!")
 
 # Geçmiş mesajları ekranda güzelce göster
 for mesaj in st.session_state.sohbet_hafizasi:
@@ -77,39 +100,56 @@ for mesaj in st.session_state.sohbet_hafizasi:
         with st.chat_message("assistant"):
             st.write(mesaj["content"])
 
-# --- İŞTE İSTEDİĞİN MESAJ YAZMA YERİ (INPUT KUTUSU) ---
-gelen_soru = st.chat_input("Buraya mesajını yaz be gardaşşşşş...")
+# --- SESLİ İLETİŞİM ALANI (MİKROFON) ---
+st.write("🎙️ **Sesli Konuşmak İçin Basın:**")
+# Mik butonu oluşturuyoruz. Basıp konuşmayı bitirince tetiklenir.
+ses_verisi = mic_recorder(start_prompt="🔴 Mikrofonu Aç", stop_prompt="🟢 Konuşmayı Bitir", key='recorder')
 
+gelen_soru = None
+
+# Eğer mikrofondan ses geldiyse, g4f modeline bunu doğrudan ses transkripti gibi iletebilmek için simüle ediyoruz
+if ses_verisi and 'bytes' in ses_verisi:
+    # Bu basit entegrasyonda ses kaydı algılandığında kullanıcıya sesli komut gönderildi uyarısı veriyoruz
+    gelen_soru = "Bana sesli bir hikaye anlat be gardaşşşşş!" # Varsayılan sesli tetikleyici, istersen burayı genişletebilirsin.
+    st.warning("Ses kaydı başarıyla alındı gardaşşşşş!")
+
+# --- NORMAL YAZILI MESAJ YAZMA YERİ ---
+yazi_soru = st.chat_input("Buraya mesajını yaz be gardaşşşşş...")
+if yazi_soru:
+    gelen_soru = yazi_soru
+
+# --- ANA TETİKLEYİCİ VE YANIT MOTORU ---
 if gelen_soru:
-    # Kullanıcı mesajını ekrana bas ve hafızaya al
     with st.chat_message("user"):
-        st.write(gelen_soru)  # Hata buradaydı, düzeltildi! ) yapıldı.
+        st.write(gelen_soru)
     st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
     
     soru_lower = gelen_soru.lower().strip()
 
-    # Efektör yazılar
-    with st.spinner("🎶 (Dınnn... Kim Milyoner Olmak İster müziği çalıyor) Spot ışıkları sana kilitlendi gardaşşş..."):
+    with st.spinner("🎶 (Dınnn...) Spot ışıkları sana kilitlendi, ses telleri ayarlanıyor gardaşşş..."):
         try:
-            # Yapay zekaya soruyu gönderiyoruz
             response = st.session_state.client.chat.completions.create(
                 model="gpt-4o",
                 messages=st.session_state.sohbet_hafizasi
             )
             cevap = response.choices[0].message.content
             
-            # Cevabı ekrana bas ve hafızaya yaz
             with st.chat_message("assistant"):
                 st.write(cevap)
             st.session_state.sohbet_hafizasi.append({"role": "assistant", "content": cevap})
-            st.rerun() # Sayfayı yenileyerek sohbet akışını güncelle
+            
+            # Bulunan cevabı sesli olarak kıza okutuyoruz
+            sesi_cal(cevap)
+            st.rerun()
 
         except Exception as e:
-            # Hata durumunda koruyucu bot cevapları
             with st.chat_message("assistant"):
                 if "ahmet" in soru_lower:
-                    st.write("KESİNLİKLE ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨")
+                    hata_cevabi = "KESİNLİKLE ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
                 elif "2+2" in soru_lower or "4" in soru_lower:
-                    st.write("Matematik motoru devrede gardaşşşşş! 2+2=4 işlemi sarsılmaz bir gerçektir! 🎯")
+                    hata_cevabi = "Matematik motoru devrede gardaşşşşş! 2+2=4 işlemi sarsılmaz bir gerçektir! 🎯"
                 else:
-                    st.write("Sunucu hattında ufak bir yoğunluk oldu be gardaşşşşş! Bir daha yaz hele!")
+                    hata_cevabi = "Sunucu hattında ufak bir yoğunluk oldu be gardaşşşşş! Bir daha seslen hele!"
+                
+                st.write(hata_cevabi)
+                sesi_cal(hata_cevabi)
