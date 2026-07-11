@@ -85,7 +85,7 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# ARAYÜZ CSS YAPILANDIRMASI
+# ŞIK ARAYÜZ TASARIMI VE ESNEK YAPILANDIRMA
 st.markdown("""
     <style>
     .stApp {
@@ -94,21 +94,12 @@ st.markdown("""
         justify-content: flex-end !important;
         height: 100vh;
     }
-    div[data-testid="column"] {
-        padding: 0px 0px !important;
-        margin: 0px 0px !important;
-    }
-    .stHorizontalBlock {
-        align-items: flex-start !important;
-        gap: 0px !important;
-    }
     .sag-oyun-btn div[data-testid="stButton"] > button {
         border-radius: 50% !important;
         width: 44px !important;
         height: 44px !important;
         padding: 0 !important;
         font-size: 20px !important;
-        margin-top: 24px !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
         border: none !important;
     }
@@ -116,7 +107,6 @@ st.markdown("""
         border-radius: 8px !important;
         width: 100% !important;
         height: 42px !important;
-        margin-top: 24px !important;
         background-color: #3b82f6 !important;
         color: white !important;
         font-size: 15px !important;
@@ -145,7 +135,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # IFRAME ENGELLERİNİ AŞAN SES TANIMA VE RİTİM MOTORU
+    # ASLA ENGELLENEMEYEN SES MOTORU (HTML KÖPRÜSÜ)
     if st.session_state.mic_aktif:
         JS_RITIM_MIC = """
         <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px;">
@@ -188,13 +178,11 @@ if st.session_state.aktif_oyun is None:
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 const recognition = new SpeechRecognition();
                 recognition.lang = 'tr-TR';
-                recognition.interimResults = false;
-                recognition.continuous = false;
-
+                
                 recognition.onresult = (event) => {
                     const metinSonuc = event.results[0][0].transcript;
                     if(metinSonuc && metinSonuc.trim() !== "") {
-                        // Sesi ana pencereye fırlatıyoruz gardaşşşşş!
+                        // Sesi direkt olarak üst pencereye gönderiyoruz gardaşşşşş!
                         window.parent.postMessage({type: 'sesli_konusma', text: metinSonuc}, '*');
                     }
                 };
@@ -205,37 +193,35 @@ if st.session_state.aktif_oyun is None:
         """
         components.html(JS_RITIM_MIC, height=42)
 
-    # RE-ENJEKSİYON MOTORU: SESİ BULUP DOĞRUDAN CHAT_INPUT'A BASIP TETİKLEYEN JAVASCRIPT
+    # RE-ENJEKSİYON: GELEN SESİ ANINDA KUTUYA YAZIP ENTERLAYAN JAVASCRIPT
     st.markdown("""
         <script>
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'sesli_konusma') {
-                // 1. Orijinal st.chat_input text-area alanını buluyoruz
-                const chatTextArea = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
-                if(chatTextArea) {
-                    // Kelimeleri kutunun içine doldur
-                    chatTextArea.value = event.data.text;
-                    chatTextArea.dispatchEvent(new Event('input', { bubbles: true }));
+                const inputElement = window.parent.document.querySelector('input[data-testid="stTextInputRootElement"]');
+                if(inputElement) {
+                    inputElement.value = event.data.text;
+                    inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                    inputElement.dispatchEvent(new Event('change', { bubbles: true }));
                     
-                    // 2. Mesajı gönderecek olan o sağdaki minik ok/gönder butonunu bulup tetikliyoruz!
+                    // Formu otomatik olarak gönderiyoruz!
                     setTimeout(() => {
-                        const sendButton = window.parent.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
-                        if(sendButton) {
-                            sendButton.click();
+                        const form = inputElement.closest('form');
+                        if(form) {
+                            form.requestSubmit();
                         }
-                    }, 200); // 200 milisaniye gecikme ile güvenli tetikleme
+                    }, 300);
                 }
             }
         });
         </script>
     """, unsafe_allow_html=True)
 
-    # PANEL MATRİSİ
-    c_mic, c_chat, c_g1, c_g2 = st.columns([0.12, 0.76, 0.06, 0.06])
+    # KONTROL PANELİ MATRİSİ (YENİ SİSTEM FORM YAPISI)
+    c_mic, c_chat, c_g1, c_g2 = st.columns([0.15, 0.73, 0.06, 0.06])
     
     with c_mic:
         mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
-        
         st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
         if st.button(mic_simge, key="normal_mic_tasarim"):
             st.session_state.mic_aktif = not st.session_state.mic_aktif
@@ -243,11 +229,13 @@ if st.session_state.aktif_oyun is None:
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_chat:
-        # İstediğin o orijinal kutu yerinde duruyor, ses burayı tetikliyor!
-        yazi_soru = st.chat_input("Mesajını yaz veya konuş be gardaşşşşş...")
-        if yazi_soru:
-            gelen_soru = yazi_soru
-            st.session_state.mic_aktif = False
+        # Chat_input yerine %100 kontrol edilebilir Form yapısı kullanıyoruz, böylece ses otomatik olarak Gönderiliyor!
+        with st.form(key="mesaj_formu", clear_on_submit=True):
+            yazi_soru = st.text_input("Mesajın:", label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
+            gonder_btn = st.form_submit_button("Gönder", scope="fragment")
+            if gonder_btn and yazi_soru:
+                gelen_soru = yazi_soru
+                st.session_state.mic_aktif = False
 
     with c_g1:
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
@@ -270,7 +258,7 @@ if st.session_state.aktif_oyun is None:
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Apolingo Düşünüyor ve Seslendiriyor..."):
+        with st.spinner("🎶 Apolingo Düşünüyor..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
