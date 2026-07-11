@@ -20,10 +20,6 @@ if "client" not in st.session_state:
 if "aktif_oyun" not in st.session_state:
     st.session_state.aktif_oyun = None  # None, "erkek" veya "kiz"
 
-# Ses algılama için session state hafızası
-if "ses_girdisi" not in st.session_state:
-    st.session_state.ses_girdisi = None
-
 # Ses çalma fonksiyonu (Kız sesi için gTTS)
 def sesi_cal(metin):
     try:
@@ -75,7 +71,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -116,12 +112,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Arka planda gizli ses yakalama ve otomatik gönderme scripti
-if st.session_state.ses_girdisi:
-    gelen_soru = st.session_state.ses_girdisi
-    st.session_state.ses_girdisi = None  # Hafızayı temizle
-else:
-    gelen_soru = None
+gelen_soru = None
 
 # ==========================================================================================
 # GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - FULL CHAT EKRANI)
@@ -140,7 +131,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # JavaScript destekli ses tanıma bileşeni (Ekranda görünmez, tetiklendiğinde dinler)
+    # Yeni Gelişmiş JavaScript Ses Yakalayıcı (Sesi sadece yazar, enter yapmaz, sen basınca gider)
     JS_SES_YAKALAYICI = """
     <script>
     window.parent.document.addEventListener('TetikleSes', function (e) {
@@ -150,21 +141,14 @@ if st.session_state.aktif_oyun is None:
             recognition.lang = 'tr-TR';
             recognition.interimResults = false;
             
-            recognition.onstart = () => {
-                window.parent.postMessage({type: 'DURUM', veri: '📢 Dinleniyor be gardaşşş...'}, '*');
-            };
-            
             recognition.onresult = (event) => {
                 const metin = event.results[0][0].transcript;
                 if(metin) {
+                    // Mesaj kutusunu bulup sadece içine yazıyoruz (Enter'a basmayı tamamen kullanıcıya bırakıyoruz)
                     const chatInput = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
                     if(chatInput) {
                         chatInput.value = metin;
                         chatInput.dispatchEvent(new Event('input', { bubbles: true }));
-                        setTimeout(() => {
-                            const sendBtn = window.parent.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
-                            if(sendBtn) sendBtn.click();
-                        }, 300);
                     }
                 }
             };
@@ -180,14 +164,14 @@ if st.session_state.aktif_oyun is None:
     # Chat Giriş Satırı ve Hemen Yanına Yakınlaştırılmış Orijinal Yuvarlak Butonlar
     c1, c2, c3, c4 = st.columns([0.85, 0.05, 0.05, 0.05])
     with c1:
-        yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
+        yazi_soru = st.chat_input("Buraya yaz veya mikrofona konuşup Enter'a bas be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
     with c2:
-        # Mikrofon Butonu (JS'yi tetikler)
-        if st.button("🎙️", help="Konuş be Gardaşşş!"):
+        # Mikrofon Butonu (JS'yi tetikler, sesi kutuya yazar)
+        if st.button("🎙️", help="Konuş be Gardaşşş! (Kutuya yazar, Enter ile gönderirsin)"):
             st.markdown("""<script>const evt = new CustomEvent('TetikleSes'); window.parent.document.dispatchEvent(evt);</script>""", unsafe_allow_html=True)
-            st.toast("📢 Mikrofon Aktif! Konuş be gardaşşş, dinliyorum...")
+            st.toast("📢 Dinliyorum... Konuşman bitince kutuya yazılacak, sonra Enter'a bas be gardaş!")
     with c3:
         # Erkek Oyunu Butonu
         if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!"):
