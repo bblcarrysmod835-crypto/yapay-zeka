@@ -24,10 +24,6 @@ if "aktif_oyun" not in st.session_state:
 if "mic_aktif" not in st.session_state:
     st.session_state.mic_aktif = False
 
-# Sesli girdinin chat kutusuna doldurulması için ara hafıza
-if "chat_kutu_degeri" not in st.session_state:
-    st.session_state.chat_kutu_degeri = ""
-
 # Ses çalma fonksiyonu
 def sesi_cal(metin):
     try:
@@ -198,7 +194,7 @@ if st.session_state.aktif_oyun is None:
                 recognition.onresult = (event) => {
                     const metinSonuc = event.results[0][0].transcript;
                     if(metinSonuc && metinSonuc.trim() !== "") {
-                        // Sesi hem gizli köprüye hem de chat alanına postMessage ile fırlatıyoruz!
+                        // Sesi ana pencereye fırlatıyoruz gardaşşşşş!
                         window.parent.postMessage({type: 'sesli_konusma', text: metinSonuc}, '*');
                     }
                 };
@@ -209,34 +205,30 @@ if st.session_state.aktif_oyun is None:
         """
         components.html(JS_RITIM_MIC, height=42)
 
-    # SESİ AYNI ANDA HEM SİSTEME HEM DE CHAT INPUT ALANINA DOLDURAN JAVASCRIPT ENJEKSİYONU
-    gizemli_veri = st.text_input("Ses Köprüsü", key="gizemli_ses_koprusu", label_visibility="collapsed")
-    
+    # RE-ENJEKSİYON MOTORU: SESİ BULUP DOĞRUDAN CHAT_INPUT'A BASIP TETİKLEYEN JAVASCRIPT
     st.markdown("""
         <script>
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'sesli_konusma') {
-                // 1. Gizli ses köprüsünü doldur ve tetikle
-                const gizliInputs = window.parent.document.querySelectorAll('input[aria-label="Ses Köprüsü"]');
-                if(gizliInputs.length > 0) {
-                    gizliInputs[0].value = event.data.text;
-                    gizliInputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-                    gizliInputs[0].dispatchEvent(new Event('change', { bubbles: true }));
-                }
-                // 2. Mesaj yazma yerine (st.chat_input) sesi anlık olarak yazdır!
+                // 1. Orijinal st.chat_input text-area alanını buluyoruz
                 const chatTextArea = window.parent.document.querySelector('textarea[data-testid="stChatInputTextArea"]');
                 if(chatTextArea) {
+                    // Kelimeleri kutunun içine doldur
                     chatTextArea.value = event.data.text;
                     chatTextArea.dispatchEvent(new Event('input', { bubbles: true }));
+                    
+                    // 2. Mesajı gönderecek olan o sağdaki minik ok/gönder butonunu bulup tetikliyoruz!
+                    setTimeout(() => {
+                        const sendButton = window.parent.document.querySelector('button[data-testid="stChatInputSubmitButton"]');
+                        if(sendButton) {
+                            sendButton.click();
+                        }
+                    }, 200); // 200 milisaniye gecikme ile güvenli tetikleme
                 }
             }
         });
         </script>
     """, unsafe_allow_html=True)
-
-    if gizemli_veri and gizemli_veri != "":
-        gelen_soru = gizemli_veri
-        st.session_state.mic_aktif = False
 
     # PANEL MATRİSİ
     c_mic, c_chat, c_g1, c_g2 = st.columns([0.12, 0.76, 0.06, 0.06])
@@ -246,16 +238,12 @@ if st.session_state.aktif_oyun is None:
         
         st.markdown('<div class="sol-normal-mic">', unsafe_allow_html=True)
         if st.button(mic_simge, key="normal_mic_tasarim"):
-            if st.session_state.mic_aktif:
-                st.session_state.mic_aktif = False
-                st.rerun()
-            else:
-                st.session_state.mic_aktif = True
-                st.rerun()
+            st.session_state.mic_aktif = not st.session_state.mic_aktif
+            st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_chat:
-        # Konuştuğunda bu kutu da otomatik dolacak şekilde senkronize edildi be gardaşşşşş!
+        # İstediğin o orijinal kutu yerinde duruyor, ses burayı tetikliyor!
         yazi_soru = st.chat_input("Mesajını yaz veya konuş be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
