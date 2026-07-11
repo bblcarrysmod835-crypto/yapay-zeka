@@ -11,7 +11,7 @@ import speech_recognition as sr
 import streamlit.components.v1 as components
 
 # Sayfa Ayarları (Geniş ekran düzeni)
-st.set_page_config(page_title="Apolingo 4D Quantum AI & Game Suit", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
@@ -41,7 +41,7 @@ def sesi_cal(metin):
         pass
 
 # ==========================================================================================
-# KODUN DEVASE ULTRA BEYNİ VE SİSTEM TALİMATI (SENİN TÜM MADDELERİN AYNEN İÇİNDE!)
+# SİSTEM TALİMATI (10 ÖZEL KANUN VE TEMEL KURALLAR EKSİKSİZ KORUNDU)
 # ==========================================================================================
 sistem_talimati = (
     "Sen Apolingo tarafından özenle geliştirilmiş, evrendeki, tarihteki, teknolojideki ve internetteki "
@@ -87,14 +87,15 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# --- SOL VE SAĞ PANEL DÜZENİ ---
+# --- SOL VE SAĞ PANEL YERLEŞİMİ ---
 sol_taraf, sag_taraf = st.columns([0.50, 0.50])
 
 with sol_taraf:
-    st.title("🚀 APOLINGO ULTRA COSTA AI")
-    st.caption("👨‍💻 Baş Geliştirici ve Kurucu Lider: Apolingo | **By Abdurrahim İriş**")
+    st.title("🚀 APOLINGO MASTER ARCADE")
+    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş**")
     st.write("---")
 
+    # Mesaj geçmişini yazdırma
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
             with st.chat_message("user"):
@@ -105,23 +106,25 @@ with sol_taraf:
 
     gelen_soru = None
 
-    c1, c2, c3 = st.columns([0.63, 0.13, 0.24])
+    # MİKROFONUN YANINA YUVARLAK VE GÖRSEL BUTON YERLEŞİMİ (EKRANI KAPLAMAZ)
+    c1, c2, c3 = st.columns([0.76, 0.12, 0.12])
     with c1:
-        yazi_soru = st.chat_input("Buraya mesajını yaz be gardaşşşşş...")
+        yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
     with c2:
         ses_dosyasi = st.audio_input("🎙️")
     with c3:
+        # Yuvarlak, şık, ikonik buton tasarımı (CSS ile özelleştirilmiş buton taklidi)
         if not st.session_state.oyun_panel_acik:
-            if st.button("🎮 Oyun Modu", use_container_width=True):
+            if st.button("🎮", help="Oyun Modunu Başlat be Gardaşşş!", use_container_width=True):
                 st.session_state.oyun_panel_acik = True
                 st.rerun()
         else:
-            if st.button("🛑 Kapat", use_container_width=True):
-                st.session_state.oyun_panel_acik = False
-                st.rerun()
+            if st.button("🟢", help="Oyun Modu Açık", use_container_width=True):
+                pass
 
+    # Sesli girdi işleme
     if ses_dosyasi is not None:
         if st.session_state.son_islenen_ses_adi != ses_dosyasi.name:
             r = sr.Recognizer()
@@ -141,7 +144,7 @@ with sol_taraf:
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Kız sesiyle okunuyor..."):
+        with st.spinner("🎶 Seslendiriliyor..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
@@ -161,210 +164,189 @@ with sol_taraf:
                 pass
 
 # ==========================================================================================
-# SAĞ PANEL - FULLEDEN GÖRÜNEN 4D BMW M3 VE SİHİRLİ 4D ASTRO-AURA KIZ ODASI
+# SAĞ PANEL - FULL SCREEN ARCADE LOBİSİ (SOL ÜSTTEKİ ÇARPI İŞARETİYLE YAPAY ZEKAYA DÖNÜŞ)
 # ==========================================================================================
 with sag_taraf:
-    st.subheader("🎮 APOLINGO QUANTUM REALM OYUN ALANI")
-    st.write("---")
-    
     if st.session_state.oyun_panel_acik:
-        oyun_secimi = st.radio(
-            "Gardaşşşşş boyutlar arası kodlama şovuna hoş geldin! Birini seç:",
-            ["Henüz Seçmedim ⏳", "🏎️ FULLEDEN GÖRÜNEN 3D/4D BMW M3", "🌌 4D Sihirli Astro-Aura Kız Tasarım Odası"],
-            index=0
-        )
+        # SOL ÜST KÖŞEYE GERİ DÖNÜŞ SAĞLAYAN ÇARPI BUTONU VE SEÇİM MENÜSÜ
+        üst_kutu1, üst_kutu2 = st.columns([0.15, 0.85])
+        with üst_kutu1:
+            if st.button("❌", help="Yapay Zekaya Geri Dön"):
+                st.session_state.oyun_panel_acik = False
+                st.rerun()
+        with üst_kutu2:
+            oyun_secimi = st.radio(
+                "Apolingo Oyun Merkezindesin Gardaşşşşş! Seçimini Yap:",
+                ["🏎️ Erkek Oyunu: Küçültülmüş Tam Gövde BMW M3", "🌌 Kız Oyunu: 4D Astro-Aura Tasarım Odası"],
+                label_visibility="collapsed"
+            )
         st.write("---")
 
-        if oyun_secimi == "🏎️ FULLEDEN GÖRÜNEN 3D/4D BMW M3":
-            st.markdown("**🕹️ ULTRA KONTROL:** **A/D** veya **Yön Tuşları**. Kamera mükemmel açıda, gümüş canavar BMW M3 tüm ihtişamıyla tam gövde gözünün önünde!")
+        if oyun_secimi == "🏎️ Erkek Oyunu: Küçültülmüş Tam Gövde BMW M3":
+            st.markdown("**🕹️ OYNANIŞ:** **A / D** veya **Yön Tuşları**. Araba biraz küçültüldü ve tam kadraj full gövde görünüyor!")
             
-            bmw_full_3d_html = """
-            <div style="text-align:center; background:#0d0d0d; padding:10px; border-radius:12px; border:2px solid #00ffff;">
-                <div id="fullBmwContainer" style="width:100%; height:420px; border-radius:8px; overflow:hidden;"></div>
-                <h3 id="scoreText4D" style="color:#00ffff; font-family:sans-serif; margin:10px 0;">4D Makas Skoru: 0</h3>
-                <button onclick="location.reload()" style="padding:10px 20px; font-weight:bold; background:#00ffff; color:#000; border:none; border-radius:6px; cursor:pointer;">4. Boyuttan Yeniden Başla 🏎️</button>
+            bmw_kucuk_full_html = """
+            <div style="text-align:center; background:#0a0a0a; padding:10px; border-radius:12px; border:2px solid #00ffcc;">
+                <div id="bmwArcadeContainer" style="width:100%; height:410px; border-radius:8px; overflow:hidden;"></div>
+                <h4 id="score4D" style="color:#00ffcc; font-family:sans-serif; margin:10px 0;">4D Makas Skoru: 0</h4>
+                <button onclick="location.reload()" style="padding:8px 16px; font-weight:bold; background:#00ffcc; color:#000; border:none; border-radius:4px; cursor:pointer;">Pisti Yenile 🏎️</button>
             </div>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
             <script>
-                const container = document.getElementById("fullBmwContainer");
+                const container = document.getElementById("bmwArcadeContainer");
                 const scene = new THREE.Scene();
-                scene.background = new THREE.Color(0x0a0a16);
+                scene.background = new THREE.Color(0x05050f);
 
-                // Kamerayı geriye ve hafif yukarı çekerek arabayı FULLEDEN gösteriyoruz
-                const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 420, 0.1, 1000);
+                const camera = new THREE.PerspectiveCamera(50, container.clientWidth / 410, 0.1, 1000);
                 const renderer = new THREE.WebGLRenderer({ antialias: true });
-                renderer.setSize(container.clientWidth, 420);
+                renderer.setSize(container.clientWidth, 410);
                 container.appendChild(renderer.domElement);
 
-                // Işıklar
-                const light1 = new THREE.DirectionalLight(0xffffff, 1.8); light1.position.set(0, 30, 10); scene.add(light1);
-                const light2 = new THREE.AmbientLight(0x444444); scene.add(light2);
+                const light1 = new THREE.DirectionalLight(0xffffff, 1.8); light1.position.set(0, 25, 10); scene.add(light1);
+                const light2 = new THREE.AmbientLight(0x555555); scene.add(light2);
 
-                // Otoyol Pisti
-                const roadGeo = new THREE.BoxGeometry(16, 0.1, 1000);
-                const roadMat = new THREE.MeshStandardMaterial({ color: 0x1f1f1f, roughness: 0.5 });
+                // Pist Genişliği Ayarı
+                const roadGeo = new THREE.BoxGeometry(14, 0.1, 1000);
+                const roadMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.6 });
                 const road = new THREE.Mesh(roadGeo, roadMat); scene.add(road);
 
-                // Yol şeritleri
                 let lines = [];
-                for(let i=0; i<20; i++){
-                    let lGeo = new THREE.BoxGeometry(0.3, 0.15, 10);
+                for(let i=0; i<15; i++){
+                    let lGeo = new THREE.BoxGeometry(0.2, 0.12, 8);
                     let lMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
                     let lMesh = new THREE.Mesh(lGeo, lMat);
-                    lMesh.position.set(0, 0.1, -i * 40);
+                    lMesh.position.set(0, 0.08, -i * 35);
                     scene.add(lMesh); lines.push(lMesh);
                 }
 
-                # FULLEDEN GÖZÜKEN GERÇEKÇİ 3D BMW M3 GÖVDESİ
+                // ARABA BİRAZ KÜÇÜLTÜLDÜ VE FULL GÖRÜNECEK ŞEKİLDE TASARLANDI
                 const bmwM3 = new THREE.Group();
                 
-                // Alt Kasa ve Tekerlek Boşlukları
-                const baseGeo = new THREE.BoxGeometry(1.8, 0.4, 4);
-                const baseMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.9, roughness: 0.1 });
+                // Küçültülmüş Alt Gövde (Ölçek düşürüldü)
+                const baseGeo = new THREE.BoxGeometry(1.3, 0.35, 2.9);
+                const baseMat = new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 0.85, roughness: 0.15 });
                 const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-                baseMesh.position.y = 0.3;
+                baseMesh.position.y = 0.25;
                 bmwM3.add(baseMesh);
 
-                // Üst Tavan ve Cam Alanı
-                const cabinGeo = new THREE.BoxGeometry(1.5, 0.5, 1.8);
-                const cabinMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.0 });
+                // Küçültülmüş Kabin/Tavan
+                const cabinGeo = new THREE.BoxGeometry(1.1, 0.4, 1.4);
+                const cabinMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1 });
                 const cabinMesh = new THREE.Mesh(cabinGeo, cabinMat);
-                cabinMesh.position.set(0, 0.75, -0.2);
+                cabinMesh.position.set(0, 0.6, -0.1);
                 bmwM3.add(cabinMesh);
 
-                // Arka Spoiler (Kanat)
-                const spGeo = new THREE.BoxGeometry(1.7, 0.1, 0.3);
+                // Spoiler
+                const spGeo = new THREE.BoxGeometry(1.2, 0.08, 0.2);
                 const spMesh = new THREE.Mesh(spGeo, cabinMat);
-                spMesh.position.set(0, 0.6, -1.8);
+                spMesh.position.set(0, 0.5, -1.3);
                 bmwM3.add(spMesh);
 
                 bmwM3.position.set(0, 0, -8);
                 scene.add(bmwM3);
 
-                // Trafikteki Diğer Araçlar
+                // Küçük Trafik Araçları
                 let traffic = [];
-                const colors = [0xffaa00, 0xff3333, 0x00aaff];
+                const colors = [0xffbb00, 0xff2255, 0x00bfff];
                 for(let i=0; i<3; i++){
-                    let tGeo = new THREE.BoxGeometry(1.8, 0.8, 3.8);
+                    let tGeo = new THREE.BoxGeometry(1.3, 0.6, 2.7);
                     let tMat = new THREE.MeshLambertMaterial({ color: colors[i] });
                     let tMesh = new THREE.Mesh(tGeo, tMat);
-                    tMesh.position.set((Math.random() - 0.5) * 11, 0.4, -70 - (i*40));
+                    tMesh.position.set((Math.random() - 0.5) * 10, 0.3, -60 - (i * 35));
                     scene.add(tMesh); traffic.push(tMesh);
                 }
 
-                // Kamera Tam Arkada ve Muazzam Perspektifte (Arabayı Fullden Gösteriyor)
-                camera.position.set(0, 4.2, -2);
-                camera.lookAt(new THREE.Vector3(0, 0.5, -25));
+                // Kameranın Kusursuz Full Görüş Konumu (Gövdeyi Net Gösterir)
+                camera.position.set(0, 3.8, -1.5);
+                camera.lookAt(new THREE.Vector3(0, 0.4, -20));
 
                 let score = 0; let gameOver = false; let keys = {};
                 window.addEventListener("keydown", e => keys[e.key] = true);
                 window.addEventListener("keyup", e => keys[e.key] = false);
 
-                function loop() {
+                function animate() {
                     if(!gameOver) {
-                        if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(bmwM3.position.x > -6) bmwM3.position.x -= 0.18; }
-                        if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(bmwM3.position.x < 6) bmwM3.position.x += 0.18; }
+                        if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(bmwM3.position.x > -5) bmwM3.position.x -= 0.15; }
+                        if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(bmwM3.position.x < 5) bmwM3.position.x += 0.15; }
 
-                        // Sonsuz Yol Akış Efekti
                         lines.forEach(l => {
-                            l.position.z += 0.6 + (score * 0.02);
-                            if(l.position.z > 10) l.position.z = -300;
+                            l.position.z += 0.55 + (score * 0.02);
+                            if(l.position.z > 8) l.position.z = -250;
                         });
 
-                        // 4D Uzay Zaman Döngüsü (Skor arttıkça atmosfer pavyon gibi bükülür)
-                        let pulse = Math.abs(Math.sin(score * 0.15));
-                        scene.background.setRGB(0.02, 0.02 * pulse, 0.1 * (1 - pulse));
+                        // 4D Atmosfer Döngüsü
+                        let phase = Math.abs(Math.sin(score * 0.2));
+                        scene.background.setRGB(0.01, 0.03 * phase, 0.08 * (1 - phase));
 
                         traffic.forEach(t => {
-                            t.position.z += 0.6 + (score * 0.03);
-                            if(t.position.z > -1) {
-                                t.position.z = -140 - Math.random()*20;
-                                t.position.x = (Math.random() - 0.5) * 11;
+                            t.position.z += 0.55 + (score * 0.03);
+                            if(t.position.z > 0) {
+                                t.position.z = -120 - Math.random()*25;
+                                t.position.x = (Math.random() - 0.5) * 10;
                                 score++;
-                                document.getElementById("scoreText4D").innerText = "4D Makas Skoru: " + score + " 🌀";
+                                document.getElementById("score4D").innerText = "4D Makas Skoru: " + score + " 🌀";
                             }
-                            // Gelişmiş 3D Kutu Çarpışma Algoritması
-                            if(Math.abs(bmwM3.position.x - t.position.x) < 1.6 && Math.abs(bmwM3.position.z - t.position.z) < 3.8) {
+                            // Optimize Çarpışma Kutusu
+                            if(Math.abs(bmwM3.position.x - t.position.x) < 1.2 && Math.abs(bmwM3.position.z - t.position.z) < 2.8) {
                                 gameOver = true;
-                                document.getElementById("scoreText4D").innerHTML = "<span style='color:red;'>💥 4D BOYUT YIRTILDI! BMW M3 PERT OLMUŞTUR! 💥</span>";
+                                document.getElementById("score4D").innerHTML = "<span style='color:red;'>💥 4D MATRIX DAĞILDI: M3 PERT! 💥</span>";
                             }
                         });
                     }
                     renderer.render(scene, camera);
-                    requestAnimationFrame(loop);
+                    requestAnimationFrame(animate);
                 }
-                loop();
+                animate();
             </script>
             """
-            components.html(bmw_full_3d_html, height=540)
+            components.html(bmw_kucuk_full_html, height=520)
 
-        elif oyun_secimi == "██ 4D Sihirli Astro-Aura Kız Tasarım Odası":
-            st.markdown("**🌌 4D KOZMİK SİMÜLATÖR:** Kızlar için özel astrolojik aura odası! Alt taraftaki Zaman Akış butonuyla odayı **4. Boyutta (Gündüz, Gün Batımı, Gece, Siber Kuantum)** canlandır!")
+        elif oyun_secimi == "🌌 Kız Oyunu: 4D Astro-Aura Tasarım Odası":
+            st.markdown("**🌌 4D AURA SEÇİMİ:** Kızlar için özel tasarlanmış kuantum oda! Zaman Akış butonlarıyla evrenin aurasını değiştir!")
             
-            # Kızlar İçin 4D Zaman Akışlı Astro-Aura Tasarım Odası
-            astro_4d_html = """
-            <div style="text-align:center; background:#fff2fa; padding:15px; border-radius:15px; border:4px solid #da70d6; font-family:sans-serif; max-width:550px; margin:0 auto;">
-                
-                <div id="roomBox" style="width:100%; height:260px; background:linear-gradient(135deg, #ffedfa, #ffd3f0); border-radius:20px; position:relative; border:3px solid #ee82ee; transition:1s ease; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.1);">
-                    
-                    <div id="roomWindow" style="position:absolute; top:20px; right:30px; width:90px; height:80px; background:#87ceeb; border:4px solid #fff; border-radius:10px; transition:1s; text-align:center; font-size:24px; line-height:70px;">☀️</div>
-                    
-                    <div style="position:absolute; bottom:20px; left:40px; width:120px; height:15px; background:#8b4513; border-radius:3px; z-index:2;"></div>
-                    <div id="rgbMonitor" style="position:absolute; bottom:35px; left:65px; width:70px; height:45px; background:#111; border:3px solid #ff69b4; border-radius:5px; box-shadow: 0 0 15px #ff69b4; transition:0.5s; z-index:2; text-align:center; color:#fff; font-size:10px; line-height:40px; font-weight:bold;">Aura Active</div>
-                    
-                    <div style="position:absolute; top:0; left:50%; width:4px; height:30px; background:#333;"></div>
-                    <div id="roomChandelier" style="position:absolute; top:30px; left:calc(50% - 15px); width:30px; height:30px; background:#ffff00; border-radius:50%; box-shadow: 0 0 20px #ffff00; transition:1s;"></div>
-                    
-                    <div style="position:absolute; bottom:20px; right:50px; font-size:32px; z-index:2;">🐱</div>
+            kiz_odasi_html = """
+            <div style="text-align:center; background:#fff5fa; padding:15px; border-radius:15px; border:3px solid #ff69b4; font-family:sans-serif; max-width:520px; margin:0 auto;">
+                <div id="astroRoom" style="width:100%; height:250px; background:linear-gradient(135deg, #ffeef8, #ffcceb); border-radius:15px; position:relative; border:2px solid #ff69b4; transition:1s ease; overflow:hidden;">
+                    <div id="astroWin" style="position:absolute; top:20px; right:30px; width:80px; height:70px; background:#87ceeb; border:3px solid #fff; border-radius:8px; transition:1s; text-align:center; font-size:22px; line-height:60px;">☀️</div>
+                    <div style="position:absolute; bottom:20px; left:40px; width:110px; height:12px; background:#8b4513; border-radius:2px;"></div>
+                    <div id="neonMon" style="position:absolute; bottom:32px; left:60px; width:65px; height:40px; background:#222; border:2px solid #ff007f; border-radius:4px; box-shadow: 0 0 12px #ff007f; text-align:center; color:#fff; font-size:9px; line-height:36px; font-weight:bold;">Apolingo</div>
+                    <div style="position:absolute; bottom:20px; right:40px; font-size:28px;">🐱</div>
                 </div>
-
-                <div style="margin-top:15px; text-align:left; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div style="margin-top:15px; display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:left;">
                     <div>
-                        <h5 style="color:#ba55d3; margin:0 0 5px 0; border-bottom:2px solid #da70d6;">🔮 Neon Işık Rengi</h5>
-                        <button onclick="changeNeon('#ff007f', 'Sıcak Pembe')" style="width:100%; padding:8px; background:#ff007f; color:white; border:none; margin-bottom:5px; border-radius:5px; cursor:pointer; font-weight:bold;">Sıcak Pembe Neon</button>
-                        <button onclick="changeNeon('#00ffff', 'Galaksi Mavisi')" style="width:100%; padding:8px; background:#00ffff; color:black; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">Galaksi Mavisi Neon</button>
+                        <h5 style="color:#ff69b4; margin:0 0 5px 0;">🌸 Neon Rengi</h5>
+                        <button onclick="setNeon('#ff007f')" style="width:100%; padding:6px; background:#ff007f; color:white; border:none; margin-bottom:4px; border-radius:4px; cursor:pointer;">Pembe Neon</button>
+                        <button onclick="setNeon('#00ffff')" style="width:100%; padding:6px; background:#00ffff; color:black; border:none; border-radius:4px; cursor:pointer;">Turkuaz Neon</button>
                     </div>
                     <div>
-                        <h5 style="color:#ba55d3; margin:0 0 5px 0; border-bottom:2px solid #da70d6;">🌀 4. BOYUT (ZAMAN AKIŞI)</h5>
-                        <button onclick="shiftDimension('sunset')" style="width:100%; padding:8px; background:#ff8c00; color:white; border:none; margin-bottom:5px; border-radius:5px; cursor:pointer; font-weight:bold;">🌅 Gün Batımı Boyutu</button>
-                        <button onclick="shiftDimension('cyber')" style="width:100%; padding:8px; background:#4b0082; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">🌌 Siber Kuantum Gece</button>
+                        <h5 style="color:#ff69b4; margin:0 0 5px 0;">⏳ 4D Zaman Akışı</h5>
+                        <button onclick="setDim('sunset')" style="width:100%; padding:6px; background:#ff8c00; color:white; border:none; margin-bottom:4px; border-radius:4px; cursor:pointer;">🌅 Gün Batımı</button>
+                        <button onclick="setDim('cyber')" style="width:100%; padding:6px; background:#4b0082; color:white; border:none; border-radius:4px; cursor:pointer;">🌌 Siber Gece</button>
                     </div>
                 </div>
-                
-                <p id="auraStatus" style="background:#fff; color:#da70d6; font-weight:bold; padding:8px; margin-top:15px; border-radius:8px; border:1px solid #da70d6;">4D Oda Enerjisi: Dengeli Standart Zaman Modu ☀️</p>
+                <p id="auraState" style="background:#fff; color:#ff69b4; font-weight:bold; padding:6px; margin-top:12px; border-radius:6px; font-size:12px; border:1px solid #ff69b4;">Sistem Aktif: 4D Standart Gün Işığı ☀️</p>
             </div>
-
             <script>
-                function changeNeon(hex, name) {
-                    document.getElementById("rgbMonitor").style.borderColor = hex;
-                    document.getElementById("rgbMonitor").style.boxShadow = "0 0 20px " + hex;
-                    document.getElementById("auraStatus").innerText = "Neon Işık Değişti: " + name + " Aura Aktif! ⚡";
+                function setNeon(h) {
+                    document.getElementById("neonMon").style.borderColor = h;
+                    document.getElementById("neonMon").style.boxShadow = "0 0 15px " + h;
                 }
-
-                // 4D Zaman Mekan Bükülme Fonksiyonu
-                function shiftDimension(mode) {
-                    const room = document.getElementById("roomBox");
-                    const win = document.getElementById("roomWindow");
-                    const chan = document.getElementById("roomChandelier");
-                    const status = document.getElementById("auraStatus");
-
-                    if(mode === 'sunset') {
-                        room.style.background = "linear-gradient(135deg, #ff7f50, #ff4500)";
-                        win.style.background = "#ffaa00"; win.innerText = "🌇";
-                        chan.style.background = "#ffda89"; chan.style.boxShadow = "0 0 25px #ffaa00";
-                        status.innerText = "4D Zaman Büküldü: Büyülü Gün Batımı Modu! 🌅";
-                    } else if(mode === 'cyber') {
-                        room.style.background = "linear-gradient(135deg, #0f051d, #290b54)";
-                        win.style.background = "#050014"; win.innerText = "🔮";
-                        chan.style.background = "#00ffff"; chan.style.boxShadow = "0 0 30px #00ffff";
-                        status.innerText = "4D Boyut Yırtılması: Siber Kuantum Gece Boyutu! 🌌🛸";
+                function setDim(m) {
+                    const r = document.getElementById("astroRoom");
+                    const w = document.getElementById("astroWin");
+                    const s = document.getElementById("auraState");
+                    if(m === 'sunset') {
+                        r.style.background = "linear-gradient(135deg, #ff7f50, #ff4500)"; w.background = "#ffaa00"; w.innerText = "🌇";
+                        s.innerText = "4D Zaman Modu: Romantik Gün Batımı 🌅";
+                    } else if(m === 'cyber') {
+                        r.style.background = "linear-gradient(135deg, #11052c, #3d0c5a)"; w.background = "#0f001a"; w.innerText = "🔮";
+                        s.innerText = "4D Zaman Modu: Kuantum Siber Gece 🌌";
                     }
                 }
             </script>
             """
-            components.html(astro_4d_html, height=440)
+            components.html(kiz_odasi_html, height=420)
             
-        else:
-            st.info("🎯 Panel açıldı be gardaşşşşş! Şimdi üstteki menüden 4D Full BMW veya 4D Astro-Aura Kız odasını seç!")
     else:
-        st.warning("🕹️ Oyun alanı kilitli. Sol tarafta mikrofonun yanındaki '🎮 Oyun Modu' butonuna basarak eğlenceyi başlatabilirsin!")
+        # Oyun kapalıyken lobi alanında duracak tatlı bir bilgilendirme ekranı
+        st.info("🎯 Lobi Modu Beklemede be Gardaşşşşş! Sol tarafta, chat girişinin en sağındaki yuvarlak `🎮` butonuna bastığın an oyun odası buraya full kadraj açılacak!")
