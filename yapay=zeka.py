@@ -11,7 +11,7 @@ import speech_recognition as sr
 import streamlit.components.v1 as components
 
 # Sayfa Ayarları
-st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
+st.set_page_config(page_title="Apolingo 10D Master Full Arcade", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
 if "client" not in st.session_state:
@@ -21,7 +21,7 @@ if "client" not in st.session_state:
 if "ses_isleme_aktif" not in st.session_state:
     st.session_state.ses_isleme_aktif = True
 
-# Menü ve Oyun Seçim Durumu (Sidebar entegrasyonu için)
+# Menü ve Oyun Seçim Durumu
 if "aktif_mod" not in st.session_state:
     st.session_state.aktif_mod = "Sohbet"
 
@@ -87,7 +87,7 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ
+# CSS STİLLERİ
 # ==========================================================================================
 st.markdown("""
     <style>
@@ -126,95 +126,32 @@ st.markdown("""
         font-weight: 500;
     }
     
-    button[data-testid="stSidebarCollapseButton"] {
-        background-color: #1a1a1a !important;
-        border-radius: 50% !important;
-        border: 2px solid #ffffff !important;
-        padding: 5px !important;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.6) !important;   
-        transition: all 0.3s ease-in-out !important;
-    }
-    
-    button[data-testid="stSidebarCollapseButton"]:hover {
-        transform: rotate(90deg) scale(1.15) !important;
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.9) !important;
-    }
-    
-    button[data-testid="stSidebarCollapseButton"] svg {
-        fill: #ffffff !important;
-        color: #ffffff !important;
-    }
-    
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
         background: linear-gradient(180deg, #4a0000 0%, #220000 50%, #050000 100%) !important;
         border-right: 2px solid #8b0000 !important;
-        box-shadow: 5px 0 25px rgba(139, 0, 0, 0.3) !important;
     }
     
     [data-testid="stSidebar"] * {
         color: #ffffff !important;
     }
 
-    div[data-testid="stRadio"] label div[data-slide="true"] {
-        background-color: #ff3333 !important;
-    }
-    
     [data-testid="stChatMessage"] {
         background-color: rgba(20, 10, 5, 0.7) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 16px !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
-        backdrop-filter: blur(8px);
-        margin-bottom: 15px !important;
-    }
-
-    [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] span {
-        color: #ffffff !important;
-    }
-    
-    textarea[data-testid="stChatInputTextArea"] {
-        color: #111111 !important;
-        border-radius: 14px !important;
-        font-size: 16px !important;
-        background-color: #ffffff !important;
-        border: 2px solid #cccccc !important;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
-    }
-    
-    textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #999999 !important;
-        background-color: #ffffff !important;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    textarea[data-testid="stChatInputTextArea"]::placeholder {
-        color: #666666 !important;
-        opacity: 0.8 !important;
-    }
-
-    .stAudioInput {
-        background-color: #ffffff !important;
-        border-radius: 50% !important;
-        border: 2px solid #cccccc !important;
-    }
-
-    div[data-testid="stSpinner"] i {
-        border-top-color: #ff3333 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# ==========================================================================================
-# SOL TARAFTAKİ MENÜ (SIDEBAR) ALANI VE OYUNLARIN BURAYA BAĞLANMASI
-# ==========================================================================================
+# SIDEBAR MENÜSÜ
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("Kırmızı Tonlamalı Özel Sürüm")
+    st.markdown("10D Boyutlu Özel Mod")
     st.write("---")
     
     secilen_mod = st.radio(
         "Aparatı Seç Be Gardaşş:",
-        ["💬 Sohbet Modu", "🏎️ BMW M3 Makas Oyunu", "🌌 Astro-Aura Kuantum Oyunu"],
+        ["💬 Sohbet Modu", "🏎️ BMW M3 10D Makas Oyunu", "🌌 Astro-Aura Kuantum Oyunu"],
         index=0
     )
     
@@ -233,7 +170,7 @@ with st.sidebar:
 # ==========================================================================================
 if st.session_state.aktif_mod == "Sohbet":
     st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER ARCADE AI</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş | Net Beyaz Görünüm</p>', unsafe_allow_html=True)
+    st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş</p>', unsafe_allow_html=True)
     st.write("---")
 
     for mesaj in st.session_state.sohbet_hafizasi:
@@ -247,10 +184,8 @@ if st.session_state.aktif_mod == "Sohbet":
     gelen_soru = None
 
     c_mic, c_text = st.columns([0.10, 0.90])
-    
     with c_mic:
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
-        
     with c_text:
         yazi_soru = st.chat_input("Mesajını buraya yaz be gardaşşşş...")
         if yazi_soru:
@@ -296,49 +231,43 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# BMW M3 ARCADE: TAVANI DÜMDÜZ JİLET GİBİ VE FULL SEVİYE GÖVDE TASARIMI
+# BMW M3 10D HİPER OYUNU: SIFIR ÇIKINTILI TAVAN, ÖZEL KAPUT VE RENKLİ TRAFİK
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
-    st.markdown("### 🏎️ Apolingo Next-Gen Assetto Sürüm: Full Donanım Pürüzsüz BMW M3")
-    st.caption("Arabanın üzerindeki tüm spoyler ve çıkıntılar sıfırlandı, tavan jilet gibi pürüzsüz yapıldı ve araba fulllendi be gardaşş!")
+    st.markdown("### 🏎️ Apolingo 10D Hiper Realizm: Özel Kaputlu Sarı Canavar")
+    st.caption("Senin araban efsanevi Neon Sarısı ve Karbon Kaputlu yapıldı! Diğer arabalar rengarenk, tavan ise jilet gibi pürüzsüz be gardaşş!")
 
-    bmw_ultra_real_html = """
+    bmw_10d_html = """
     <div style="text-align:center; background:#000000; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 50px rgba(255,0,0,0.9); user-select:none; position:relative;">
         <button id="btnLeft" style="position:absolute; left:25px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">◀</button>
         <button id="btnRight" style="position:absolute; right:25px; top:45%; transform:translateY(-50%); padding: 25px 22px; font-size: 32px; font-weight:bold; background:rgba(0,0,0,0.9); color:#ffffff; border:2px solid #ff0000; border-radius:15px; cursor:pointer; z-index:100; box-shadow:0 0 20px #ff0000;">▶</button>
-        <div id="bmwFullCanvasContainer" style="width:100%; height:570px; border-radius:10px; overflow:hidden;"></div>
+        <div id="bmw10DContainer" style="width:100%; height:570px; border-radius:10px; overflow:hidden;"></div>
         <div id="uiPanel" style="margin-top:15px;">
-            <h2 id="scoreDisplay4D" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:34px; letter-spacing:1px; text-shadow:0 0 15px #ff0000;">Otoban Makas Skoru: 0 🌀</h2>
+            <h2 id="scoreDisplay10D" style="color:#ffffff; font-family:'Segoe UI',sans-serif; margin:10px 0; font-weight:900; font-size:34px; letter-spacing:1px; text-shadow:0 0 15px #ff0000;">10D Otoban Skoru: 0 🌀</h2>
             <div id="restartButtonContainer"></div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const container = document.getElementById("bmwFullCanvasContainer");
+        const container = document.getElementById("bmw10DContainer");
         const scene = new THREE.Scene(); 
-        scene.background = new THREE.Color(0x010102);
-        scene.fog = new THREE.FogExp2(0x010102, 0.001); 
+        scene.background = new THREE.Color(0x010103);
+        scene.fog = new THREE.FogExp2(0x010103, 0.0012); 
 
         const camera = new THREE.PerspectiveCamera(46, container.clientWidth / 570, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(container.clientWidth, 570); 
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.9;
+        renderer.toneMappingExposure = 2.0;
         container.appendChild(renderer.domElement);
 
-        // Canlı Stüdyo Işıkları
-        const sunLight = new THREE.DirectionalLight(0xffffff, 3.8); sunLight.position.set(10, 60, 15); scene.add(sunLight);
-        const ambient = new THREE.AmbientLight(0x221c1c, 2.0); scene.add(ambient);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 4.0); sunLight.position.set(10, 60, 15); scene.add(sunLight);
+        const ambient = new THREE.AmbientLight(0x221c1c, 2.5); scene.add(ambient);
 
         // Parlak Islak Otoban
         const roadGeo = new THREE.BoxGeometry(18, 0.1, 1000);
-        const roadMat = new THREE.MeshStandardMaterial({ color: 0x070707, roughness: 0.02, metalness: 0.99 });
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.01, metalness: 0.99 });
         const road = new THREE.Mesh(roadGeo, roadMat); scene.add(road);
-
-        const leftNeon = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.3, 1000), new THREE.MeshBasicMaterial({ color: 0xff0033 }));
-        leftNeon.position.set(-9, 0.15, 0);
-        const rightNeon = leftNeon.clone(); rightNeon.position.x = 9;
-        scene.add(leftNeon, rightNeon);
 
         let lines = [];
         for(let i=0; i<35; i++){
@@ -346,147 +275,98 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
             lMesh.position.set(0, 0.06, -i * 24); scene.add(lMesh); lines.push(lMesh);
         }
 
-        // --- EN FULL VE ÜSTÜ %100 PÜRÜZSÜZ TAVANLI M3 YAPIM MOTORU ---
-        function createFullyLoadedM3(bodyColor, isPlayer) {
-            const m3Group = new THREE.Group();
+        // --- 10D ÖZEL JİLET TAVANLI ARABA ÜRETİM MOTORU ---
+        function create10DCar(bodyColor, isPlayer) {
+            const carGroup = new THREE.Group();
             
-            // Üst Düzey Kaplamalar
-            const paintMat = new THREE.MeshStandardMaterial({ color: bodyColor, metalness: 0.99, roughness: 0.01 });
-            const smoothRoofMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.95, roughness: 0.05 }); 
-            const glassMat = new THREE.MeshStandardMaterial({ color: 0x05080c, roughness: 0, metalness: 1, transparent: true, opacity: 0.88 });
-            const tyreMat = new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.7 });
-            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, metalness: 1.0, roughness: 0.01 });
-            const brakeMat = new THREE.MeshStandardMaterial({ color: 0xdd0000, metalness: 0.9 }); 
-            const diskMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.95, roughness: 0.15 }); 
+            const paintMat = new THREE.MeshStandardMaterial({ color: bodyColor, metalness: 0.98, roughness: 0.02 });
+            const carbonMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.90, roughness: 0.15 }); 
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x02050a, roughness: 0, metalness: 1 });
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xeeeeee, metalness: 1.0, roughness: 0.01 });
+            const tyreMat = new THREE.MeshStandardMaterial({ color: 0x060606, roughness: 0.8 });
+            const brakeMat = new THREE.MeshStandardMaterial({ color: 0xee0000, metalness: 0.9 });
 
-            // 1. Ana Alt Alt Şasi (Dolu Duruş)
+            // Ana Alt Şasi
             const base = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.26, 3.75), paintMat);
             base.position.y = 0.28;
-            m3Group.add(base);
+            carGroup.add(base);
 
-            // 2. Ön Spor M Tampon Splitter
-            const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.20, 0.12), new THREE.MeshStandardMaterial({ color: 0x020202, roughness: 0.5 }));
-            frontBumper.position.set(0, 0.20, -1.9);
-            m3Group.add(frontBumper);
-
-            // 3. Ön Kaput ve Aerodinamik Çizgiler
-            const hood = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.18, 1.30), paintMat);
+            // ÖN KAPUT (Oyuncuya Özel Agresif Karbon Kaput, Diğerlerine Normal Gövde Rengi Kaput)
+            const hoodMatSelected = isPlayer ? carbonMat : paintMat;
+            const hood = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.18, 1.30), hoodMatSelected);
             hood.position.set(0, 0.40, -1.18);
-            m3Group.add(hood);
+            carGroup.add(hood);
 
-            // 4. Arka Düz Bagaj Kapağı (Tepesinde veya arkasında hiçbir ekstra çıkıntı/spoyler yok, JİLET gibi!)
+            // JİLET GİBİ %100 PÜRÜZSÜZ TEK PARÇA ÜST KABİN (Çıkıntılar, Çizgiler Tamamen Sıfırlandı!)
+            const cabinGeo = new THREE.BoxGeometry(1.38, 0.42, 1.70);
+            const cabin = new THREE.Mesh(cabinGeo, paintMat);
+            cabin.position.set(0, 0.62, 0.05);
+            carGroup.add(cabin);
+
+            // Cam Alanı (Kabin İçine Gömülü Kusursuz İllüzyon)
+            const glassInsert = new THREE.Mesh(new THREE.BoxGeometry(1.34, 0.36, 1.66), glassMat);
+            glassInsert.position.set(0, 0.63, 0.05);
+            carGroup.add(glassInsert);
+
+            // Arka Bagaj Kapağı (Sıfır Spoyler, Dümdüz)
             const trunk = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.24, 0.75), paintMat);
             trunk.position.set(0, 0.42, 1.38);
-            m3Group.add(trunk);
+            carGroup.add(trunk);
 
-            // 5. Tamamen Akıcı Coupe Kabin Tasarımı
-            const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.40, 0.42, 1.72), glassMat);
-            cabin.position.set(0, 0.65, 0.05);
-            m3Group.add(cabin);
-
-            // Jilet gibi Dümdüz Karbon Pürüzsüz Tavan (Üstünde hiçbir anten, çıkıntı veya fazlalık asla yok!)
-            const flatRoof = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.03, 1.48), smoothRoofMat);
-            flatRoof.position.set(0, 0.86, 0.05);
-            m3Group.add(flatRoof);
-
-            // İç Dikiz Aynası
-            const mirrorInside = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.03), chromeMat);
-            mirrorInside.position.set(0, 0.78, -0.65);
-            m3Group.add(mirrorInside);
-
-            // 6. Krom Böbrek Izgaraları ve Aynalar
-            const kL = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.16, 0.03), chromeMat);
-            kL.position.set(-0.14, 0.36, -1.91);
-            const kR = kL.clone(); kR.position.x = 0.14;
-            m3Group.add(kL, kR);
-
-            const mirrorL = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.10), paintMat);
-            mirrorL.position.set(-0.96, 0.60, -0.30);
-            const mirrorR = mirrorL.clone(); mirrorR.position.x = 0.96;
-            m3Group.add(mirrorL, mirrorR);
-
-            // 7. Full Performans Tekerlek Sistemi (Dönen Jantlar + Diskler + Kırmızı Brembolar)
-            const tG = new THREE.CylinderGeometry(0.35, 0.35, 0.28, 36);
-            const rG = new THREE.CylinderGeometry(0.26, 0.26, 0.29, 20);
-            const dG = new THREE.CylinderGeometry(0.21, 0.21, 0.04, 16);
-            const cG = new THREE.BoxGeometry(0.05, 0.14, 0.08);
-            
-            tG.rotateZ(Math.PI / 2); rG.rotateZ(Math.PI / 2); dG.rotateZ(Math.PI / 2);
-
-            const wPositions = [
-                [-0.92, 0.35, -1.15], [0.92, 0.35, -1.15],
-                [-0.92, 0.35, 1.30],  [0.92, 0.35, 1.30]
-            ];
+            // Tekerlekler & Kaliperler
+            const tG = new THREE.CylinderGeometry(0.35, 0.35, 0.28, 32); tG.rotateZ(Math.PI / 2);
+            const rG = new THREE.CylinderGeometry(0.25, 0.25, 0.29, 16); rG.rotateZ(Math.PI / 2);
+            const wPositions = [[-0.92, 0.35, -1.15], [0.92, 0.35, -1.15], [-0.92, 0.35, 1.30], [0.92, 0.35, 1.30]];
 
             wPositions.forEach(pos => {
-                const tire = new THREE.Mesh(tG, tyreMat);
-                const rim = new THREE.Mesh(rG, chromeMat);
-                const disk = new THREE.Mesh(dG, diskMat);
-                const caliper = new THREE.Mesh(cG, brakeMat);
-                
-                tire.position.set(pos[0], pos[1], pos[2]);
-                rim.position.set(pos[0], pos[1], pos[2]);
-                disk.position.set(pos[0] + (pos[0] > 0 ? -0.03 : 0.03), pos[1], pos[2]);
-                caliper.position.set(pos[0] + (pos[0] > 0 ? -0.05 : 0.05), pos[1] + 0.10, pos[2] - 0.04);
-                
-                m3Group.add(tire, rim, disk, caliper);
+                const tire = new THREE.Mesh(tG, tyreMat); tire.position.set(pos[0], pos[1], pos[2]);
+                const rim = new THREE.Mesh(rG, chromeMat); rim.position.set(pos[0], pos[1], pos[2]);
+                const caliper = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.12, 0.08), brakeMat);
+                caliper.position.set(pos[0] + (pos[0] > 0 ? -0.04 : 0.04), pos[1] + 0.08, pos[2]);
+                carGroup.add(tire, rim, caliper);
             });
 
-            // 8. Lazer Xenon Farlar & Çift Yuvarlak Egzozlar
-            const fGeo = new THREE.BoxGeometry(0.22, 0.06, 0.03);
-            const fMat = new THREE.MeshBasicMaterial({ color: isPlayer ? 0xffffff : 0xffbb00 });
-            const headL = new THREE.Mesh(fGeo, fMat); headL.position.set(-0.65, 0.40, -1.89);
-            const headR = headL.clone(); headR.position.x = 0.65;
-            m3Group.add(headL, headR);
+            // LAZER FARLAR VE STOPLAR
+            const fGeo = new THREE.BoxGeometry(0.24, 0.07, 0.04);
+            const fMat = new THREE.MeshBasicMaterial({ color: isPlayer ? 0x00f3ff : 0xffaa00 }); // Oyuncuya Buz Mavisi Far
+            const headL = new THREE.Mesh(fGeo, fMat); headL.position.set(-0.62, 0.38, -1.89);
+            const headR = headL.clone(); headR.position.x = 0.62;
+            carGroup.add(headL, headR);
 
-            const sMat = new THREE.MeshBasicMaterial({ color: 0xff0011 });
-            const stopL = new THREE.Mesh(fGeo, sMat); stopL.position.set(-0.65, 0.44, 1.76);
-            const stopR = stopL.clone(); stopR.position.x = 0.65;
-            m3Group.add(stopL, stopR);
+            const stopMat = new THREE.MeshBasicMaterial({ color: 0xff0505 });
+            const stopL = new THREE.Mesh(fGeo, stopMat); stopL.position.set(-0.62, 0.42, 1.76);
+            const stopR = stopL.clone(); stopR.position.x = 0.62;
+            carGroup.add(stopL, stopR);
 
-            // Arka Çift Çıkış Krom Egzozlar
-            const exGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.2, 12); exGeo.rotateX(Math.PI/2);
-            const exL = new THREE.Mesh(exGeo, chromeMat); exL.position.set(-0.4, 0.15, 1.76);
-            const exR = exL.clone(); exR.position.x = 0.4;
-            m3Group.add(exL, exR);
-
-            return m3Group;
+            return carGroup;
         }
 
-        // Sürdüğün Oyuncu Arabası (Efsanevi Estoril Metalik M Mavi - Full Modifiyeli, Kusursuz Üst Yüzey)
-        const bmwM3 = createFullyLoadedM3(0x0a2244, true);
+        // SENİN ARABAN: Göz Alıcı Neon Limon Sarısı (0xdfff00) ve Karbon Kaputlu
+        const playerCar = create10DCar(0xdfff00, true);
+        playerCar.position.set(0, 0, -8); scene.add(playerCar);
 
-        // Lazer Xenon Far Aydınlatması
-        const beamCone = new THREE.CylinderGeometry(0.05, 3.8, 42, 16, 1, true);
-        beamCone.translate(0, 21, 0);
-        const beamMat = new THREE.MeshBasicMaterial({ color: 0x00faff, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
-        const leftBeam = new THREE.Mesh(beamCone, beamMat); leftBeam.position.set(-0.65, 0.40, -1.9); leftBeam.rotation.x = -Math.PI / 2;
-        const rightBeam = leftBeam.clone(); rightBeam.position.x = 0.65;
-        bmwM3.add(leftBeam, rightBeam);
+        // Buz Mavisi Far Işıkları Konisi
+        const beamCone = new THREE.CylinderGeometry(0.05, 4.0, 45, 16, 1, true); beamCone.translate(0, 22.5, 0);
+        const beamMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.14, side: THREE.DoubleSide });
+        const leftBeam = new THREE.Mesh(beamCone, beamMat); leftBeam.position.set(-0.62, 0.38, -1.9); leftBeam.rotation.x = -Math.PI / 2;
+        const rightBeam = leftBeam.clone(); rightBeam.position.x = 0.62;
+        playerCar.add(leftBeam, rightBeam);
 
-        // Egzoz Patlama Kıvılcımları
-        const sparkCount = 40;
-        const sparkGeo = new THREE.BufferGeometry();
-        const sparkPos = new Float32Array(sparkCount * 3);
-        for(let i=0; i<sparkCount*3; i+=3) { sparkPos[i]=(Math.random()-0.5)*0.5; sparkPos[i+1]=0.15; sparkPos[i+2]=1.78+Math.random()*2; }
-        sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3));
-        const sparks = new THREE.Points(sparkGeo, new THREE.PointsMaterial({ color: 0xff5500, size: 0.16, transparent: true, opacity: 0.85 }));
-        bmwM3.add(sparks);
-
-        bmwM3.position.set(0, 0, -8); scene.add(bmwM3);
-
-        // Trafik Araçları Havuzu
-        let traffic = []; const colors = [0xaa0011, 0x11aa22, 0x222222, 0xccaa00, 0x5511aa];
-        for(let i=0; i<5; i++){
-            let tCar = createFullyLoadedM3(colors[i % colors.length], false);
-            tCar.position.set((Math.random() - 0.5) * 12, 0, -75 - (i * 45)); 
+        // RENKLİ TRAFİK HAVUZU (Sürekli Farklı Canlı Renkler Alan Akıllı Sistem)
+        let traffic = []; 
+        const randomColors = [0xff007f, 0x00ff66, 0xff6600, 0x9900ff, 0x0033ff, 0x00ffff, 0xff00ff];
+        
+        for(let i=0; i<6; i++){
+            let randomColor = randomColors[i % randomColors.length];
+            let tCar = create10DCar(randomColor, false);
+            tCar.position.set((Math.random() - 0.5) * 12, 0, -80 - (i * 40)); 
             scene.add(tCar); 
             traffic.push(tCar);
         }
 
-        camera.position.set(0, 3.5, -0.2); camera.lookAt(new THREE.Vector3(0, 0.3, -35));
+        camera.position.set(0, 3.6, -0.1); camera.lookAt(new THREE.Vector3(0, 0.3, -40));
         
-        let score = 0; let gameOver = false; let keys = {}; let tilt = 0;
+        let score = 0; let gameOver = false; let keys = {}; let tilt = 0; let dimensionsClock = 0;
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
         
         let touchLeft = false, touchRight = false;
@@ -498,40 +378,52 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 
         function animate() {
             if(!gameOver) {
-                let currentSpeed = 1.15 + (score * 0.045);
+                dimensionsClock += 0.05; // 10D Zaman ve Titreşim Matrisi
+                let currentSpeed = 1.25 + (score * 0.05);
                 
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
-                    if(bmwM3.position.x > -7.4) { bmwM3.position.x -= 0.28; if(tilt < 0.12) tilt += 0.022; }
+                    if(playerCar.position.x > -7.4) { playerCar.position.x -= 0.30; if(tilt < 0.14) tilt += 0.025; }
                 } else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { 
-                    if(bmwM3.position.x < 7.4) { bmwM3.position.x += 0.28; if(tilt > -0.12) tilt -= 0.022; }
-                } else { tilt *= 0.75; }
+                    if(playerCar.position.x < 7.4) { playerCar.position.x += 0.30; if(tilt > -0.14) tilt -= 0.025; }
+                } else { tilt *= 0.72; }
                 
-                bmwM3.rotation.z = tilt;
-                bmwM3.rotation.y = tilt * 0.25;
+                // 10D Süpriz Fizik Esnemesi: Şasi makas yönüne ve motor devrine göre hafifçe yaylanır
+                playerCar.rotation.z = tilt;
+                playerCar.rotation.y = tilt * 0.22;
+                playerCar.position.y = 0.01 * Math.sin(dimensionsClock * 4); // Motor Sarsıntısı Boyutu
 
-                // Dinamik Hız Sarsıntısı
-                let shakeFactor = (score * 0.001) + 0.002;
-                camera.position.y = 3.5 + (Math.random() - 0.5) * shakeFactor;
-
-                // Kıvılcım Devirdaimi
-                const sArray = sparks.geometry.attributes.position.array;
-                for(let i=2; i<sArray.length; i+=3) { sArray[i] += 0.22; if(sArray[i] > 4) sArray[i] = 1.78; }
-                sparks.geometry.attributes.position.needsUpdate = true;
+                // Dinamik Yol Kamerası Titreşimi
+                camera.position.y = 3.6 + (Math.random() - 0.5) * ((score * 0.001) + 0.003);
 
                 lines.forEach(l => { l.position.z += currentSpeed; if(l.position.z > 15) l.position.z = -250; });
                 
-                traffic.forEach(t => {
-                    t.position.z += currentSpeed * 0.50;
+                traffic.forEach((t, index) => {
+                    t.position.z += currentSpeed * 0.52;
+                    
+                    // Diğer arabalara 10D dalgalanma efekti
+                    t.position.y = 0.015 * Math.cos(dimensionsClock * 3 + index);
+
                     if(t.position.z > 4) { 
-                        t.position.z = -180 - Math.random()*60; 
+                        t.position.z = -180 - Math.random()*50; 
                         t.position.x = (Math.random() - 0.5) * 12; 
+                        
+                        // Her canlandığında yeni bomba gibi rastgele bir renk ata!
+                        let nextColor = randomColors[Math.floor(Math.random() * randomColors.length)];
+                        t.children.forEach(child => {
+                            if(child.material && child.material.color && child.geometry.type === "BoxGeometry" && child.position.y === 0.28) {
+                                child.material.color.setHex(nextColor);
+                            }
+                        });
+
                         score++; 
-                        document.getElementById("scoreDisplay4D").innerText = "Otoban Makas Skoru: " + score + " 🌀"; 
+                        document.getElementById("scoreDisplay10D").innerText = "10D Otoban Skoru: " + score + " 🌀"; 
                     }
-                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.62 && Math.abs(bmwM3.position.z - t.position.z) < 3.6) { 
+
+                    // Hassas Çarpışma Kutusu
+                    if(Math.abs(playerCar.position.x - t.position.x) < 1.62 && Math.abs(playerCar.position.z - t.position.z) < 3.6) { 
                         gameOver = true; 
-                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff0000; font-size:32px; font-weight:900; text-shadow:0 0 20px #ff0000;'>💥 AMBANS FIRLADI! M3 PERT! 💥</span>";
-                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #220000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">SANAYİYE ÇEK (YENIDEN BAŞLA) 🔄</button>';
+                        document.getElementById("scoreDisplay10D").innerHTML = "<span style='color:#ff0000; font-size:32px; font-weight:900; text-shadow:0 0 20px #ff0000;'>💥 10. BOYUTTA PERT OLDUK! 💥</span>";
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #220000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">YENİ BOYUTTA DOĞ 🔄</button>';
                     }
                 });
             }
@@ -540,10 +432,10 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
         animate();
     </script>
     """
-    components.html(bmw_ultra_real_html, height=800)
+    components.html(bmw_10d_html, height=800)
 
 # ==========================================================================================
-# ASTRO-AURA SPACE ESCAPE: ULTRA KALİTELİ VE AKICI HD SÜRÜMÜ
+# ASTRO-AURA SPACE ESCAPE: EKSİKSİZ KORUNDU
 # ==========================================================================================
 elif st.session_state.aktif_mod == "KizOyunu":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kozmik Kuantum Simülatörü HD Pro")
@@ -568,11 +460,9 @@ elif st.session_state.aktif_mod == "KizOyunu":
         const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 570, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(container.clientWidth, 570);
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
         container.appendChild(renderer.domElement);
 
         const neonLight = new THREE.PointLight(0xff00bb, 8, 250); neonLight.position.set(0, 15, -20); scene.add(neonLight);
-        const blueLight = new THREE.PointLight(0x00f0ff, 6, 200); blueLight.position.set(0, -10, -10); scene.add(blueLight);
         scene.add(new THREE.AmbientLight(0x130624, 1.4));
 
         const nebulaGeo = new THREE.SphereGeometry(95, 32, 32);
@@ -586,87 +476,51 @@ elif st.session_state.aktif_mod == "KizOyunu":
             geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
             return new THREE.Points(geo, new THREE.PointsMaterial({ color: color, size: size, transparent: true, opacity: 0.95 }));
         }
-        const layer1 = createStars(800, 0xffffff, 0.18);
-        const layer2 = createStars(500, 0xff00bb, 0.32);
-        scene.add(layer1, layer2);
+        scene.add(createStars(800, 0xffffff, 0.18), createStars(500, 0xff00bb, 0.32));
 
         const playerJet = new THREE.Group();
-        const chromePink = new THREE.MeshStandardMaterial({ color: 0xff0066, metalness: 0.95, roughness: 0.02, emissive: 0x44001c });
-        
+        const chromePink = new THREE.MeshStandardMaterial({ color: 0xff0066, metalness: 0.95, roughness: 0.02 });
         const core = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.48, 2.8, 12), chromePink); core.rotation.x = Math.PI / 2;
-        const cockpit = new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 24), new THREE.MeshStandardMaterial({ color: 0x00faff, roughness: 0, metalness: 1 }));
+        const cockpit = new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 24), new THREE.MeshStandardMaterial({ color: 0x00faff }));
         cockpit.position.set(0, 0.22, -0.5); cockpit.scale.set(1, 1, 2.0);
-        
-        const leftWing = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.05, 0.9), chromePink); leftWing.position.set(-1.1, -0.05, 0.4); leftWing.rotation.y = 0.25;
-        const rightWing = leftWing.clone(); rightWing.position.x = 1.1; rightWing.rotation.y = -0.25;
-        
-        const lLight = new THREE.Mesh(new THREE.SphereGeometry(0.08), new THREE.MeshBasicMaterial({ color: 0x00ffff })); lLight.position.set(-2.1, 0, 0.4);
-        const rLight = lLight.clone(); rLight.position.x = 2.1;
-        playerJet.add(core, cockpit, leftWing, rightWing, lLight, rLight);
-
-        const trailCount = 40;
-        const trailGeo = new THREE.BufferGeometry();
-        const trailPos = new Float32Array(trailCount * 3);
-        for(let i=0; i<trailCount*3; i+=3) { trailPos[i]=0; trailPos[i+1]=-0.1; trailPos[i+2]=1.4+Math.random(); }
-        trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
-        const trailSparks = new THREE.Points(trailGeo, new THREE.PointsMaterial({ color: 0x00ffcc, size: 0.28, transparent: true, opacity: 0.85 }));
-        playerJet.add(trailSparks);
+        const leftWing = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.05, 0.9), chromePink); leftWing.position.set(-1.1, -0.05, 0.4);
+        const rightWing = leftWing.clone(); rightWing.position.x = 1.1;
+        playerJet.add(core, cockpit, leftWing, rightWing);
 
         playerJet.position.set(0, 0, -6); scene.add(playerJet);
 
         let obstacles = []; const oColors = [0xff0066, 0xb300ff, 0xff4400];
         for(let i=0; i<5; i++){
-            let oMesh = new THREE.Mesh(
-                new THREE.IcosahedronGeometry(1.4, 1), 
-                new THREE.MeshStandardMaterial({ color: oColors[i % 3], roughness: 0.3, metalness: 0.85, flatShading: true, emissive: 0x33001a })
-            );
+            let oMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.4, 1), new THREE.MeshStandardMaterial({ color: oColors[i % 3], roughness: 0.3, flatShading: true }));
             oMesh.position.set((Math.random() - 0.5) * 14, (Math.random() - 0.5) * 4, -60 - (i * 35)); 
             scene.add(oMesh); obstacles.push(oMesh);
         }
 
         camera.position.set(0, 4.2, 4.5); camera.lookAt(new THREE.Vector3(0, -0.2, -25));
-        
         let score = 0; let gameOver = false; let keys = {}; let jetRot = 0;
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
-        
+
         let touchLeft = false, touchRight = false;
         const bLeft = document.getElementById("btnLeftKiz"); const bRight = document.getElementById("btnRightKiz");
         bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
-        bLeft.addEventListener("touchstart", (e) => { e.preventDefault(); touchLeft = true; }); bLeft.addEventListener("touchend", () => touchLeft = false);
         bRight.addEventListener("mousedown", () => touchRight = true); bRight.addEventListener("mouseup", () => touchRight = false);
-        bRight.addEventListener("touchstart", (e) => { e.preventDefault(); touchRight = true; }); bRight.addEventListener("touchend", () => touchRight = false);
 
         function animate() {
             if(!gameOver) {
                 let speed = 1.1 + (score * 0.04);
-
-                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
-                    if(playerJet.position.x > -7.5) playerJet.position.x -= 0.24; jetRot = 0.42; 
-                } else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { 
-                    if(playerJet.position.x < 7.5) playerJet.position.x += 0.24; jetRot = -0.42; 
-                } else { jetRot *= 0.80; }
-                
+                if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { if(playerJet.position.x > -7.5) playerJet.position.x -= 0.24; jetRot = 0.42; }
+                else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { if(playerJet.position.x < 7.5) playerJet.position.x += 0.24; jetRot = -0.42; }
+                else { jetRot *= 0.80; }
                 playerJet.rotation.z = jetRot;
                 nebula.rotation.y += 0.0015;
 
-                const tArr = trailSparks.geometry.attributes.position.array;
-                for(let i=2; i<tArr.length; i+=3) { tArr[i] += 0.15; if(tArr[i] > 3.8) tArr[i] = 1.4; }
-                trailSparks.geometry.attributes.position.needsUpdate = true;
-
                 obstacles.forEach(o => {
-                    o.position.z += speed;
-                    o.rotation.x += 0.025; o.rotation.y += 0.025;
-                    if(o.position.z > 5) {
-                        o.position.z = -160 - Math.random()*50;
-                        o.position.x = (Math.random() - 0.5) * 14;
-                        o.position.y = (Math.random() - 0.5) * 4;
-                        score++;
-                        document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐";
-                    }
+                    o.position.z += speed; o.rotation.x += 0.02;
+                    if(o.position.z > 5) { o.position.z = -160 - Math.random()*50; o.position.x = (Math.random() - 0.5) * 14; score++; document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐"; }
                     if(Math.abs(playerJet.position.x - o.position.x) < 1.45 && Math.abs(playerJet.position.z - o.position.z) < 2.2) {
                         gameOver = true;
-                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff00bb; font-size:30px; font-weight:900; text-shadow:0 0 25px #ff00bb;'>🔮 AURANIZ SIFIRLANDI! 🔮</span>";
-                        document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff00bb, #330022); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff00bb;">KOZMİK BAĞLANTIYI YENİLE 🔄</button>';
+                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff00bb; font-size:30px; font-weight:900;'>🔮 AURANIZ SIFIRLANDI! 🔮</span>";
+                        document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; background:linear-gradient(90deg, #ff00bb, #330022); color:#fff; border:none; border-radius:12px; cursor:pointer;">KOZMİK BAĞLANTIYI YENİLE 🔄</button>';
                     }
                 });
             }
