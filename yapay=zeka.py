@@ -86,32 +86,48 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# HIGH-END ALIGNMENT VE PREMIUM CANLI KAHVERENGİ DOKU CSS DÜZENLEMESİ
+# TEK BİR SİYAH NOKTA BIRAKMAYAN FULL KAHVERENGİ ULTRA PREMIUM CSS DÜZENLEMESİ
 st.markdown("""
     <style>
-    /* Ana Arka Plan ve Kahverengi Tonlama */
-    .stApp {
-        background: linear-gradient(135deg, #2b1810 0%, #1e110b 50%, #120a06 100%) !important;
+    /* 1. Tüm Arka Planı Derin Kahve Yapıyoruz */
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+        background: linear-gradient(135deg, #2b1810 0%, #1e110b 50%, #170d08 100%) !important;
         color: #f5ebe6 !important;
     }
     
-    /* Sol Menü (Sidebar) Kahverengi Derinlik Ayarı */
-    [data-testid="stSidebar"] {
+    /* 2. Sol Menü (Sidebar) Kahverengi Tonu */
+    [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
         background: linear-gradient(180deg, #3d251a 0%, #2b1810 100%) !important;
         border-right: 2px solid #8c624e !important;
     }
     
-    /* Yan Paneldeki Yazı Renkleri */
+    /* Yan Paneldeki Tüm Yazılar */
     [data-testid="stSidebar"] * {
         color: #f5ebe6 !important;
     }
     
-    /* Mikrofon dikey hizalama ayarı */
-    .stAudioInput {
-        margin-top: 6px !important;
+    /* 3. Sohbet Balonlarını Tamamen Kahve Tonlarına Çeviriyoruz (Siyah/Gri Yerine) */
+    [data-testid="stChatMessage"] {
+        background-color: #361f14 !important;
+        border: 1px solid #523324 !important;
+        border-radius: 12px !important;
+        color: #ffffff !important;
+        margin-bottom: 10px !important;
     }
     
-    /* Canlı Mat Kahve Tabanlı Beyaz Yazılı Chat Input Alanı */
+    /* Kullanıcı Mesaj Balonunu Biraz Daha Açık Kahve Yapalım Ayrışsın */
+    [data-testid="stChatMessageContent"] {
+        color: #ffffff !important;
+    }
+    
+    /* 4. Alt Kısımdaki Mesaj Giriş Alanının Tam Konteynerini de Kahve Yapıyoruz */
+    [data-testid="stChatInput"] {
+        background-color: #2b1810 !important;
+        border-top: 1px solid #523324 !important;
+        padding: 10px !important;
+    }
+    
+    /* Mesaj Yazma Alanının Kendisi (Mat Kakao) */
     textarea[data-testid="stChatInputTextArea"] {
         background-color: #4a2e1b !important;
         color: #ffffff !important;
@@ -121,17 +137,17 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
     }
     
-    /* Yazı yazarken placeholder rengini ayarlama */
+    /* Placeholder Yazısı */
     textarea[data-testid="stChatInputTextArea"]::placeholder {
         color: #c2a696 !important;
     }
-    
-    /* Chat input konteyner ayarları */
-    div[data-testid="stChatInput"] {
-        background-color: transparent !important;
+
+    /* Mikrofon Dikey Hizalaması */
+    .stAudioInput {
+        margin-top: 6px !important;
     }
 
-    /* Butonların chat input hizasına getirilmesi ve Karamel/Kahve Dokusu */
+    /* 5. Butonların Kahve/Karamel Dokusu */
     div[data-testid="stButton"] > button {
         margin-top: 6px !important;
         background: linear-gradient(135deg, #5c3a21 0%, #4a2e1b 100%) !important;
@@ -150,7 +166,7 @@ st.markdown("""
         box-shadow: 0 0 15px rgba(212, 163, 115, 0.4);
     }
     
-    /* Sidebar içi Radyo Buton Şıklığı */
+    /* Sidebar İçi Radyo Butonları */
     div[data-testid="stRadio"] label {
         background-color: #4a2e1b !important;
         padding: 10px 15px !important;
@@ -165,11 +181,16 @@ st.markdown("""
         border-color: #d4a373 !important;
         background-color: #5c3a21 !important;
     }
+    
+    /* Spinner (Yükleniyor simgesi) rengini de uyduralım */
+    div[data-testid="stSpinner"] i {
+        border-top-color: #d4a373 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================================================================
-# SOL TARAFTAKİ 3 ÇİZGİLİ MENÜ (SIDEBAR) ALANI VE OYUNLARIN BURAYA BAĞLANMASI
+# SOL TARAFTAKİ MENÜ (SIDEBAR) ALANI VE OYUNLARIN BURAYA BAĞLANMASI
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
