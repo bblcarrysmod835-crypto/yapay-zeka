@@ -75,7 +75,7 @@ sistem_talimati = (
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
     "\n"
-    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar ve özel sosların "
+    "9) EVRENSEL YEMEK VE MUTFAK AKADEMİSİ: Kullanıcı yemek tarifi istediğinde; çıtır tavuk, pizza, hamburger, makarnalar og özel sosların "
     "malzemelerini, marine aşamalarını ve şef sırlarını upuzun listeleyeceksin. "
     "\n"
     "10) AKILLI MATEMATİK VE OYUN ARŞİVİ: Çarpma, bölme, toplama, çıkarma içeren her şeyi (Örn: 2+2=4 doğru mu, 95*5) hatasız çözeceksin. "
@@ -86,10 +86,10 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# HER ŞEYİ EN ALTA ÇİVİLEYEN VE DÜZENİ MUKEMMEL YAPAN CSS DÜNYASI
+# BUTONLARI DİP DİPE GETİREN VE MESAJ KUTUSUNA SIFIRLAYAN CSS DÜNYASI
 st.markdown("""
     <style>
-    /* Bütün sayfayı aşağıya yasla, kaydırmayı alta kilitle */
+    /* Sayfa yapısını tabana sabitle */
     .stApp {
         display: flex;
         flex-direction: column;
@@ -97,29 +97,29 @@ st.markdown("""
         height: 100vh;
     }
     
-    /* SOLDAKİ DEVASA MİKROFON VE SAĞDAKİ OYUN BUTONLARININ YUVARLAK VE MUQ TASARIMI */
+    /* Butonların genel yuvarlak ve mesaj kutusuyla dikeyde tam hizalı yapısı */
     div[data-testid="stButton"] > button {
         border-radius: 50% !important;
-        width: 52px !important;
-        height: 52px !important;
+        width: 48px !important;
+        height: 48px !important;
         padding: 0 !important;
-        line-height: 52px !important;
+        line-height: 48px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        font-size: 24px !important;
-        margin-top: 20px !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.35) !important;
-        transition: 0.2s all ease-in-out !important;
+        font-size: 22px !important;
+        margin-top: 10px !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+        transition: 0.15s all ease-in-out !important;
         border: none !important;
     }
     
-    /* Butonların Kendine Has Renk Düzenleri */
+    /* Renk Tanımlamaları */
     .sol-devasa-mic button { background-color: #2563eb !important; color: white !important; }
     .erkek-game-btn button { background-color: #10b981 !important; color: white !important; }
     .kiz-game-btn button { background-color: #ec4899 !important; color: white !important; }
     
-    /* Mikrofon Aktif Olduğu An Patlayan Canlı Kırmızı ve Dalgalanma Efekti (PULSE) */
+    /* Mikrofon Aktif Pulse Efekti */
     .mic-kirmizi-aktif button {
         background-color: #ef4444 !important;
         color: white !important;
@@ -128,13 +128,19 @@ st.markdown("""
     }
     @keyframes devPulse {
         0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9); transform: scale(1.0); }
-        70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); transform: scale(1.05); }
+        70% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); transform: scale(1.03); }
         100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); transform: scale(1.0); }
     }
     
-    /* Sütunların aralarını tamamen pürüzsüz yanaştır */
+    /* Sütun boşluklarını eriterek butonları mesaj kutusunun dibine yanaştır */
     div[data-testid="column"] {
-        padding: 0px 2px !important;
+        padding: 0px 1px !important;
+    }
+    
+    /* Sağdaki butonların dip dipe gelmesi için sütun hizalaması */
+    .stHorizontalBlock {
+        align-items: center !important;
+        gap: 2px !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -142,7 +148,7 @@ st.markdown("""
 gelen_soru = None
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - FULL SABİT CHAT PANELİ)
+# GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - TABANA SABİTLENMİŞ CHAT VE ALGILAMA PANELİ)
 # ==========================================================================================
 if st.session_state.aktif_oyun is None:
     st.title("🚀 APOLINGO MASTER ARCADE AI")
@@ -158,7 +164,7 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # EN GELİŞMİŞ TARAYICI ENGELSİZ MİKROFON MOTORU (DİREKT MAN FIRLATICILI)
+    # EN GELİŞMİŞ TARAYICI ENGELSİZ MİKROFON MOTORU VE KONUŞMA ALGISI HIZLANDIRICISI
     JS_DIREK_MAN_MIC = """
     <script>
     if (window.parent && !window.parent.micSistemKuruldu) {
@@ -198,14 +204,12 @@ if st.session_state.aktif_oyun is None:
     """
     components.html(JS_DIREK_MAN_MIC, height=0)
 
-    # TAM İSTEDİĞİN DÜZEN: MİKROFON TAM SOLDADA - MESAJ ORTADA - OYUNLAR TAM SAĞDA
-    c_mic, c_chat, c_game1, c_game2 = st.columns([0.07, 0.79, 0.07, 0.07])
+    # TAM İSTEDİĞİN MİLİMETRİK HİZALAMA: SOLDA KONUŞMA MİKROFONU - ORTADA MESAJ - SAĞDA DİP DİPE OYUNLAR
+    c_mic, c_chat, c_game1, c_game2 = st.columns([0.06, 0.82, 0.06, 0.06])
     
     with c_mic:
-        # Sol Taraf: Devasa Muhteşem Mikrofon Butonu
+        # Sol Taraf: Mesaj Kutusuna Hizalı Devasa Mikrofon
         mic_simge = "🔴" if st.session_state.mic_aktif else "🎙️"
-        
-        # Duruma göre dinamik CSS sınıfı basıyoruz
         mic_class = "mic-kirmizi-aktif" if st.session_state.mic_aktif else "sol-devasa-mic"
         st.markdown(f'<div class="{mic_class}">', unsafe_allow_html=True)
         
@@ -224,7 +228,7 @@ if st.session_state.aktif_oyun is None:
             st.session_state.mic_aktif = False 
             
     with c_game1:
-        # Sağ Taraf 1: Erkek Oyunu Butonu
+        # Sağ Taraf 1: Mesaja Sıfır Hizalanmış Erkek Oyunu Butonu
         st.markdown('<div class="erkek-game-btn">', unsafe_allow_html=True)
         if st.button("🏎️", key="rk_game", help="Erkek Oyunu (BMW M3) Başlat!"):
             st.session_state.aktif_oyun = "erkek"
@@ -232,14 +236,18 @@ if st.session_state.aktif_oyun is None:
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_game2:
-        # Sağ Taraf 2: Kız Oyunu Butonu
+        # Sağ Taraf 2: Dip Dipe Kız Oyunu Butonu
         st.markdown('<div class="kiz-game-btn">', unsafe_allow_html=True)
         if st.button("🌌", key="kz_game", help="Kız Oyunu (Astro-Aura) Başlat!"):
             st.session_state.aktif_oyun = "kiz"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Eğer ses veya yazı girdisi geldiyse tetikle
+    # ÖZEL SEVİLEN KONUŞMA ALGISI GÖSTERGE PANELİ (EĞER AKTİFSE EN ALTTA BELİRİR)
+    if st.session_state.mic_aktif:
+        st.info("🎙️ Konuşma algısı devrede... Ses bekleniyor be gardaşşşşş, konuş anında yazayım!")
+
+    # Eğer girdi algılandıysa yapay zekayı tetikle
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
