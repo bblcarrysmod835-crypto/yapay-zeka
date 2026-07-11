@@ -192,29 +192,30 @@ if st.session_state.aktif_oyun is None:
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE (YÖN BUTONLARI EKLENDİ)
+# FULL KADRAJ ERKEK OYUNU: BMW M3 ARCADE (SOL-SAĞ BUTONLAR VE DİNAMİK YENİDEN BAŞLAMA)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
     if st.button("❌ Yapay Zekaya Geri Dön be Gardaşşş!", help="Oyundan Çık"):
         st.session_state.aktif_oyun = None
         st.rerun()
-        
-    st.markdown("**🕹️ KONTROLLER:** Ekrandaki **YÖN BUTONLARI**, Klavyede **A / D** veya **Yön Tuşları**.")
 
     bmw_full_screen_html = """
-    <div style="text-align:center; background:#05050a; padding:15px; border-radius:16px; border:3px solid #00ffcc; user-select:none;">
-        <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
-        <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:10px 0; font-weight:bold;">4D Makas Skoru: 0 🌀</h2>
+    <div style="text-align:center; background:#05050a; padding:15px; border-radius:16px; border:3px solid #00ffcc; user-select:none; position:relative;">
         
-        <!-- DOKUNMATİK / TIKLAMALI YÖN TUŞLARI PANELİ -->
-        <div style="margin: 15px 0;">
-            <button id="btnLeft" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#1e293b; color:#00ffcc; border:2px solid #00ffcc; border-radius:12px; cursor:pointer; margin-right:20px;">◀ SOL</button>
-            <button id="btnRight" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#1e293b; color:#00ffcc; border:2px solid #00ffcc; border-radius:12px; cursor:pointer;">SAĞ ▶</button>
-        </div>
+        <!-- SOL VE SAĞ KONTROL BUTONLARI (DIŞ KENARLARA SABİTLENDİ) -->
+        <button id="btnLeft" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(30,41,59,0.85); color:#00ffcc; border:2px solid #00ffcc; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRight" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(30,41,59,0.85); color:#00ffcc; border:2px solid #00ffcc; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
 
-        <button onclick="location.reload()" style="padding:10px 25px; font-size:14px; font-weight:bold; background:#00ffcc; color:#000; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #00ffcc;">Pisti Yeniden Yükle 🏎️</button>
+        <div id="bmwFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
+        
+        <div id="uiPanel" style="margin-top:15px;">
+            <h2 id="scoreDisplay4D" style="color:#00ffcc; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">4D Makas Skoru: 0 🌀</h2>
+            <!-- YENİLİNCE BURAYA DİNAMİK OLARAK BUTON GELECEK -->
+            <div id="restartButtonContainer"></div>
+        </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
@@ -246,10 +247,8 @@ elif st.session_state.aktif_oyun == "erkek":
         camera.position.set(0, 4.2, -1.0); camera.lookAt(new THREE.Vector3(0, 0.5, -25));
         let score = 0; let gameOver = false; let keys = {};
         
-        // Klavye Kontrolleri
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
         
-        // Buton Kontrolleri (Dokunmatik ve Mouse)
         let touchLeft = false, touchRight = false;
         const bLeft = document.getElementById("btnLeft"); const bRight = document.getElementById("btnRight");
         bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
@@ -266,7 +265,12 @@ elif st.session_state.aktif_oyun == "erkek":
                 traffic.forEach(t => {
                     t.position.z += 0.7 + (score * 0.03);
                     if(t.position.z > 2) { t.position.z = -140 - Math.random()*30; t.position.x = (Math.random() - 0.5) * 11; score++; document.getElementById("scoreDisplay4D").innerText = "4D Makas Skoru: " + score + " 🌀"; }
-                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) { gameOver = true; document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>"; }
+                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) { 
+                        gameOver = true; 
+                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>";
+                        // YENİLİNCE EN ALTTA TEKRAR BAŞLA BUTONU OLUŞTURULUYOR
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#00ffcc; color:#000; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #00ffcc;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
+                    }
                 });
             }
             renderer.render(scene, camera); requestAnimationFrame(animate);
@@ -274,32 +278,33 @@ elif st.session_state.aktif_oyun == "erkek":
         animate();
     </script>
     """
-    components.html(bmw_full_screen_html, height=760)
+    components.html(bmw_full_screen_html, height=780)
 
 # ==========================================================================================
-# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE (YÖN BUTONLARI EKLENDİ)
+# FULL KADRAJ KIZ OYUNU: 4D ASTRO-AURA SPACE ESCAPE (SOL-SAĞ BUTONLAR VE DİNAMİK YENİDEN BAŞLAMA)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "kiz":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
     if st.button("❌ Yapay Zekaya Geri Dön be Gardaşşş!", help="Oyundan Çık"):
         st.session_state.aktif_oyun = None
         st.rerun()
-        
-    st.markdown("**🕹️ KONTROLLER:** Ekrandaki **YÖN BUTONLARI**, Klavyede **A / D** veya **Yön Tuşları**.")
 
     kiz_full_screen_html = """
-    <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none;">
-        <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
-        <h2 id="kizScoreDisplay" style="color:#ff69b4; font-family:sans-serif; margin:10px 0; font-weight:bold;">Aura Enerjisi: 0 ⭐</h2>
+    <div style="text-align:center; background:#11001c; padding:15px; border-radius:16px; border:3px solid #ff69b4; user-select:none; position:relative;">
         
-        <!-- DOKUNMATİK / TIKLAMALI YÖN TUŞLARI PANELİ -->
-        <div style="margin: 15px 0;">
-            <button id="btnLeftKiz" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#2d004d; color:#ff69b4; border:2px solid #ff69b4; border-radius:12px; cursor:pointer; margin-right:20px;">◀ SOL</button>
-            <button id="btnRightKiz" style="padding: 15px 40px; font-size: 24px; font-weight:bold; background:#2d004d; color:#ff69b4; border:2px solid #ff69b4; border-radius:12px; cursor:pointer;">SAĞ ▶</button>
-        </div>
+        <!-- SOL VE SAĞ KONTROL BUTONLARI (DIŞ KENARLARA SABİTLENDİ) -->
+        <button id="btnLeftKiz" style="position:absolute; left:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(45,0,77,0.85); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">◀</button>
+        <button id="btnRightKiz" style="position:absolute; right:20px; top:45%; transform:translateY(-50%); padding: 25px 20px; font-size: 30px; font-weight:bold; background:rgba(45,0,77,0.85); color:#ff69b4; border:2px solid #ff69b4; border-radius:15px; cursor:pointer; z-index:10;">▶</button>
 
-        <button onclick="location.reload()" style="padding:10px 25px; font-size:14px; font-weight:bold; background:#ff69b4; color:#fff; border:none; border-radius:6px; cursor:pointer; box-shadow: 0 0 15px #ff69b4;">Evreni Yenile ✨</button>
+        <div id="kizFullCanvasContainer" style="width:100%; height:550px; border-radius:10px; overflow:hidden;"></div>
+        
+        <div id="uiPanelKiz" style="margin-top:15px;">
+            <h2 id="kizScoreDisplay" style="color:#ff69b4; font-family:sans-serif; margin:10px 0; font-weight:bold; font-size:28px;">Aura Enerjisi: 0 ⭐</h2>
+            <!-- YENİLİNCE BURAYA DİNAMİK OLARAK BUTON GELECEK -->
+            <div id="restartButtonContainerKiz"></div>
+        </div>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("kizFullCanvasContainer");
@@ -323,10 +328,8 @@ elif st.session_state.aktif_oyun == "kiz":
         camera.position.set(0, 5, 2); camera.lookAt(new THREE.Vector3(0, -0.5, -20));
         let score = 0; let gameOver = false; let keys = {};
         
-        // Klavye Kontrolleri
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
         
-        // Buton Kontrolleri (Dokunmatik ve Mouse)
         let touchLeft = false, touchRight = false;
         const bLeft = document.getElementById("btnLeftKiz"); const bRight = document.getElementById("btnRightKiz");
         bLeft.addEventListener("mousedown", () => touchLeft = true); bLeft.addEventListener("mouseup", () => touchLeft = false);
@@ -345,7 +348,12 @@ elif st.session_state.aktif_oyun == "kiz":
                 obstacles.forEach(o => {
                     o.position.z += 0.55 + (score * 0.02); o.rotation.x += 0.02; o.rotation.y += 0.02;
                     if(o.position.z > 5) { o.position.z = -120 - Math.random()*20; o.position.x = (Math.random() - 0.5) * 12; score++; document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐ ✨"; }
-                    if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) { gameOver = true; document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:24px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>"; }
+                    if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) { 
+                        gameOver = true; 
+                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:24px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>";
+                        // YENİLİNCE EN ALTTA TEKRAR BAŞLA BUTONU OLUŞTURULUYOR
+                        document.getElementById("restartButtonContainerKiz").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:15px 40px; font-size:20px; font-weight:bold; background:#ff69b4; color:#fff; border:none; border-radius:10px; cursor:pointer; box-shadow: 0 0 20px #ff69b4;">TEKRAR BAŞLA BE GARDAŞŞŞ! 🔄</button>';
+                    }
                 });
             }
             renderer.render(scene, camera); requestAnimationFrame(animate);
@@ -353,4 +361,4 @@ elif st.session_state.aktif_oyun == "kiz":
         animate();
     </script>
     """
-    components.html(kiz_full_screen_html, height=760)
+    components.html(kiz_full_screen_html, height=780)
