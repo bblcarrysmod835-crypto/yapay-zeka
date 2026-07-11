@@ -87,11 +87,11 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# SİBER DETAYLARLA GÜÇLENDİRİLMİŞ, 4 YANDAN BEYAZ IŞIKLI MENÜ VE UZAY MEKİĞİ PLACplaceholder CSS
+# CSS DÜZENLEMELERİ: ORTALANMIŞ HAVALI BAŞLIK VE TÜM IŞIK EFEKTLERİ
 # ==========================================================================================
 st.markdown("""
     <style>
-    /* 1. Genel Arka Plan - Orijinal 4 Köşeli Süzülen Sıcak Işıklar */
+    /* 1. Genel Arka Plan - Orijinal Sıcak Tonlar */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #120a06 !important;
         background-image: 
@@ -103,25 +103,54 @@ st.markdown("""
         color: #fcefe9 !important;
     }
     
-    /* 2. O ÜÇ ÇİZGİYE (SIDEBAR TETİKLEME BUTONUNA) 4 BİR YANDAN BEYAZ IŞIK VURMA EFEKTİ */
+    /* 2. TAM ORTALANMIŞ VE SİBER IŞIKLI BAŞLIK STİLİ */
+    .havali-ana-baslik {
+        text-align: center !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        font-size: 42px !important;
+        font-weight: 900 !important;
+        letter-spacing: 2px !important;
+        color: #ffffff !important;
+        margin-top: 10px !important;
+        margin-bottom: 5px !important;
+        
+        /* Beyaz ve Mavi neon tonlama efekti */
+        text-shadow: 
+            0 0 10px rgba(255, 255, 255, 0.8),
+            0 0 20px rgba(0, 191, 255, 0.6),
+            0 0 30px rgba(0, 119, 255, 0.4) !important;
+        animation: baslikParla 3s ease-in-out infinite alternate;
+    }
+    
+    .havali-alt-yazi {
+        text-align: center !important;
+        color: #d4a373 !important;
+        font-size: 15px !important;
+        margin-bottom: 25px !important;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+    
+    @keyframes baslikParla {
+        0% { text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(0,191,255,0.5); }
+        100% { text-shadow: 0 0 15px rgba(255,255,255,1), 0 0 35px rgba(0,191,255,0.9), 0 0 50px rgba(0,119,255,0.7); }
+    }
+    
+    /* 3. SOL ÜÇ ÇİZGİYE 4 BİR YANDAN BEYAZ IŞIK VURMA EFEKTİ */
     button[data-testid="stSidebarCollapseButton"] {
         background-color: #1a1a1a !important;
         border-radius: 50% !important;
         border: 2px solid #ffffff !important;
         padding: 5px !important;
-        
-        /* 4 bir köşeden içeri ve dışarı doğru vuran beyaz projektör ışık aurası */
         box-shadow: 
-            inset 8px 8px 15px rgba(255, 255, 255, 0.4),    /* İç sol üstten beyaz ışık */
-            inset -8px 8px 15px rgba(255, 255, 255, 0.4),   /* İç sağ üstten beyaz ışık */
-            inset 8px -8px 15px rgba(255, 255, 255, 0.4),   /* İç sol alttan beyaz ışık */
-            inset -8px -8px 15px rgba(255, 255, 255, 0.4),  /* İç sağ alttan beyaz ışık */
-            0 0 20px rgba(255, 255, 255, 0.6) !important;   /* Dışarıya fırlayan saf beyaz parlama */
-            
+            inset 8px 8px 15px rgba(255, 255, 255, 0.4),    
+            inset -8px 8px 15px rgba(255, 255, 255, 0.4),   
+            inset 8px -8px 15px rgba(255, 255, 255, 0.4),   
+            inset -8px -8px 15px rgba(255, 255, 255, 0.4),  
+            0 0 20px rgba(255, 255, 255, 0.6) !important;   
         transition: all 0.3s ease-in-out !important;
     }
     
-    /* Üç çizginin üzerine gelince beyaz ışık patlaması artar */
     button[data-testid="stSidebarCollapseButton"]:hover {
         transform: rotate(90deg) scale(1.15) !important;
         box-shadow: 
@@ -130,13 +159,12 @@ st.markdown("""
             0 0 35px rgba(255, 255, 255, 0.9) !important;
     }
     
-    /* Üç çizginin kendi rengini de net beyaz yapalım */
     button[data-testid="stSidebarCollapseButton"] svg {
         fill: #ffffff !important;
         color: #ffffff !important;
     }
     
-    /* 3. Sidebar İç Gövdesi */
+    /* 4. Sidebar İç Gövdesi */
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
         background: linear-gradient(180deg, #1f110a 0%, #0d0603 100%) !important;
         border-right: 1px solid #4a2b1a !important;
@@ -146,7 +174,7 @@ st.markdown("""
         color: #fcefe9 !important;
     }
     
-    /* 4. Sohbet Balonları */
+    /* 5. Sohbet Balonları */
     [data-testid="stChatMessage"] {
         background-color: rgba(18, 10, 6, 0.6) !important;
         border: 1px solid rgba(212, 163, 115, 0.15) !important;
@@ -157,7 +185,7 @@ st.markdown("""
         margin-bottom: 15px !important;
     }
     
-    /* 5. MESAJ KUTUSU: 4 YANDAN MAVİ IŞIK VE HAVALI UZAY MEKİĞİ KONSEPTİ */
+    /* 6. MESAJ KUTUSU: 4 YANDAN İÇERİ SÜZÜLEN MAVİ IŞIK */
     [data-testid="stChatInput"] {
         background-color: transparent !important;
         border: none !important;
@@ -169,8 +197,6 @@ st.markdown("""
         border-radius: 14px !important;
         font-size: 16px !important;
         background-color: #0b0f14 !important; 
-        
-        /* 4 Köşeden vuran siber mavi ışık tonlaması */
         border: 2px solid #1e3a5f !important;
         box-shadow: 
             inset 25px 25px 40px rgba(0, 191, 255, 0.18),   
@@ -178,11 +204,9 @@ st.markdown("""
             inset 25px -25px 40px rgba(0, 191, 255, 0.15),  
             inset -25px -25px 40px rgba(0, 119, 255, 0.15), 
             0 4px 15px rgba(0, 191, 255, 0.15) !important;
-            
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     }
     
-    /* Yazma yerine odaklanınca siber efektin coşması */
     textarea[data-testid="stChatInputTextArea"]:focus {
         border-color: #00bfff !important;
         background-color: #0d1520 !important;
@@ -192,16 +216,6 @@ st.markdown("""
             inset 35px -35px 50px rgba(0, 191, 255, 0.3),  
             inset -35px -35px 50px rgba(0, 119, 255, 0.3), 
             0 0 25px rgba(0, 191, 255, 0.45) !important;
-    }
-    
-    /* HAVALI UZAY MEKİĞİ/SİBER TERMINAL METİN TARZI (PLACEHOLDER) */
-    textarea[data-testid="stChatInputTextArea"]::placeholder {
-        color: #00bfff !important;
-        font-family: 'Courier New', Courier, monospace !important;
-        font-weight: bold !important;
-        text-shadow: 0 0 8px rgba(0, 191, 255, 0.6) !important;
-        letter-spacing: 1px !important;
-        opacity: 0.85 !important;
     }
 
     /* Mikrofon Yuvası */
@@ -217,16 +231,8 @@ st.markdown("""
         padding: 2px !important;
         transition: all 0.2s ease;
     }
-    .stAudioInput:hover {
-        transform: scale(1.05);
-        border-color: #00bfff !important;
-        box-shadow: 
-            inset 8px 8px 12px rgba(0, 191, 255, 0.35),
-            inset -8px -8px 12px rgba(0, 119, 255, 0.35),
-            0 0 15px rgba(0, 191, 255, 0.4) !important;
-    }
 
-    /* Buton Dokuları */
+    /* Butonlar */
     div[data-testid="stButton"] > button {
         margin-top: 5px !important;
         background: linear-gradient(135deg, #3b2011 0%, #170d07 100%) !important;
@@ -237,27 +243,6 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         transition: all 0.3s ease;
     }
-    div[data-testid="stButton"] > button:hover {
-        border-color: #d4a373 !important;
-        background: linear-gradient(135deg, #522f1a 0%, #29160c 100%) !important;
-        box-shadow: 0 0 15px rgba(212, 163, 115, 0.25);
-    }
-    
-    div[data-testid="stRadio"] label {
-        background-color: rgba(18, 10, 6, 0.7) !important;
-        padding: 12px 18px !important;
-        border-radius: 10px !important;
-        border: 1px solid #4a2b1a !important;
-        margin-bottom: 10px !important;
-        display: block !important;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-        transition: 0.2s ease;
-    }
-    div[data-testid="stRadio"] label:hover {
-        border-color: #d4a373 !important;
-        background-color: rgba(61, 34, 18, 0.4) !important;
-    }
-    
     div[data-testid="stSpinner"] i {
         border-top-color: #00bfff !important;
     }
@@ -269,7 +254,7 @@ st.markdown("""
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("Kuantum Kokpit Güncellemesi")
+    st.markdown("Merkezi Neon Güncellemesi")
     st.write("---")
     
     secilen_mod = st.radio(
@@ -289,13 +274,15 @@ with st.sidebar:
     st.caption("👨‍💻 Kurucu: Apolingo\n\n**By Abdurrahim İriş © 2026**")
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ: SOHBET MODU
+# GÖRÜNÜM KONTROLÜ: SOHBET MODU (BURADA BAŞLIK HER DAİM EN ÜSTTE KALIR!)
 # ==========================================================================
 if st.session_state.aktif_mod == "Sohbet":
-    st.title("🚀 APOLINGO MASTER ARCADE AI")
-    st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş** | Üç Çizgi Beyaz Aura ⚡ Mesaj Kutusu Kuantum Terminali 🛸")
+    # İŞTE TAM İSTEDİĞİN ORTALANMIŞ VE KOD GİRİLSE BİLE EN ÜSTTE SABİT KALAN HAVALI BAŞLIK ALANI
+    st.markdown('<h1 class="havali-ana-baslik">🚀 APOLINGO MASTER ARCADE AI</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş | Kuantum Panel</p>', unsafe_allow_html=True)
     st.write("---")
 
+    # Sohbet hafızasını ekrana basıyoruz (Başlık her zaman bunun üstünde kalır)
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
             with st.chat_message("user"):
@@ -306,15 +293,14 @@ if st.session_state.aktif_mod == "Sohbet":
 
     gelen_soru = None
 
-    # DİZİLİM: MİKROFON VE METİN GİRİŞİ DİNAMİK YAN YANA
+    # MİKROFON VE METİN GİRİŞİ YAN YANA
     c_mic, c_text = st.columns([0.10, 0.90])
     
     with c_mic:
         ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed", key=f"mic_{len(st.session_state.sohbet_hafizasi)}")
         
     with c_text:
-        # BURASI: Yenilenmiş Efsanevi Havalı Uzay Mekiği Terminal Yazısı!
-        yazi_soru = st.chat_input("🛸 [APOLINGO CORE] CODES ENTERED HERE... ⚡")
+        yazi_soru = st.chat_input("Mesajını buraya yaz be gardaşşşş...")
         if yazi_soru:
             gelen_soru = yazi_soru
 
