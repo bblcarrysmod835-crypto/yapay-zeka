@@ -296,11 +296,11 @@ if st.session_state.aktif_mod == "Sohbet":
                 st.session_state.ses_isleme_aktif = True
 
 # ==========================================================================================
-# BMW M3 ARCADE: FAZLALIKLAR TEMİZLENDİ - %100 GERÇEKÇİ KUSURSUZ M3 TASARIMI
+# BMW M3 ARCADE: TAVANI DÜMDÜZ JİLET GİBİ VE FULL SEVİYE GÖVDE TASARIMI
 # ==========================================================================================
 elif st.session_state.aktif_mod == "ErkekOyunu":
-    st.markdown("### 🏎️ Apolingo Ultra HD %100 Gerçekçi BMW M3 Otoban Canavarı V3")
-    st.caption("Arabanın üzerindeki tüm gereksiz yapılar temizlendi, tavan ve gövde hatları birebir efsane kasa M3 silüetine kavuşturuldu be gardaşş!")
+    st.markdown("### 🏎️ Apolingo Next-Gen Assetto Sürüm: Full Donanım Pürüzsüz BMW M3")
+    st.caption("Arabanın üzerindeki tüm spoyler ve çıkıntılar sıfırlandı, tavan jilet gibi pürüzsüz yapıldı ve araba fulllendi be gardaşş!")
 
     bmw_ultra_real_html = """
     <div style="text-align:center; background:#000000; padding:15px; border-radius:16px; border:3px solid #ff0000; box-shadow: 0 0 50px rgba(255,0,0,0.9); user-select:none; position:relative;">
@@ -316,28 +316,25 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
         const scene = new THREE.Scene(); 
-        scene.background = new THREE.Color(0x010103);
-        
-        // Kusursuz berraklık için sis minimuma çekildi (Kristal netliğinde görüş)
-        scene.fog = new THREE.FogExp2(0x010103, 0.0015); 
+        scene.background = new THREE.Color(0x010102);
+        scene.fog = new THREE.FogExp2(0x010102, 0.001); 
 
-        const camera = new THREE.PerspectiveCamera(48, container.clientWidth / 570, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(46, container.clientWidth / 570, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(container.clientWidth, 570); 
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.85;
+        renderer.toneMappingExposure = 1.9;
         container.appendChild(renderer.domElement);
 
-        // Profesyonel Işıklandırma Kiti (Ray-Tracing Kalitesi için)
-        const sunLight = new THREE.DirectionalLight(0xffffff, 3.5); sunLight.position.set(10, 50, 20); scene.add(sunLight);
-        const ambient = new THREE.AmbientLight(0x221a1a, 1.8); scene.add(ambient);
+        // Canlı Stüdyo Işıkları
+        const sunLight = new THREE.DirectionalLight(0xffffff, 3.8); sunLight.position.set(10, 60, 15); scene.add(sunLight);
+        const ambient = new THREE.AmbientLight(0x221c1c, 2.0); scene.add(ambient);
 
-        // Kusursuz Yansımalı Islak Asfalt Zemin
+        // Parlak Islak Otoban
         const roadGeo = new THREE.BoxGeometry(18, 0.1, 1000);
-        const roadMat = new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.03, metalness: 0.98 });
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x070707, roughness: 0.02, metalness: 0.99 });
         const road = new THREE.Mesh(roadGeo, roadMat); scene.add(road);
 
-        // Yan Neon Şeritleri
         const leftNeon = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.3, 1000), new THREE.MeshBasicMaterial({ color: 0xff0033 }));
         leftNeon.position.set(-9, 0.15, 0);
         const rightNeon = leftNeon.clone(); rightNeon.position.x = 9;
@@ -345,155 +342,149 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 
         let lines = [];
         for(let i=0; i<35; i++){
-            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.11, 15), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.11, 16), new THREE.MeshBasicMaterial({ color: 0xffffff }));
             lMesh.position.set(0, 0.06, -i * 24); scene.add(lMesh); lines.push(lMesh);
         }
 
-        // --- %100 GERÇEKÇİ BMW M3 MODELLEME MOTORU ---
-        function createRealisticM3(bodyColor, isPlayer) {
+        // --- EN FULL VE ÜSTÜ %100 PÜRÜZSÜZ TAVANLI M3 YAPIM MOTORU ---
+        function createFullyLoadedM3(bodyColor, isPlayer) {
             const m3Group = new THREE.Group();
             
-            // Ultra Kalite Gövde Malzemeleri
-            const carPaintMat = new THREE.MeshStandardMaterial({ color: bodyColor, metalness: 0.99, roughness: 0.01 });
-            const carbonRoofMat = new THREE.MeshStandardMaterial({ color: 0x151515, metalness: 0.85, roughness: 0.15 }); // M3 Karbon Tavanı
-            const glassMat = new THREE.MeshStandardMaterial({ color: 0x080c10, roughness: 0.0, metalness: 1.0, transparent: true, opacity: 0.85 });
-            const tyreMat = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.65 });
-            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe0e0e0, metalness: 1.0, roughness: 0.01 });
-            const brakeCalMat = new THREE.MeshStandardMaterial({ color: 0xcc0000, metalness: 0.9, roughness: 0.1 }); // Brembo Kırmızı Kaliperler
-            const diskMat = new THREE.MeshStandardMaterial({ color: 0x777777, metalness: 0.95, roughness: 0.2 }); // Delikli Fren Diskleri
+            // Üst Düzey Kaplamalar
+            const paintMat = new THREE.MeshStandardMaterial({ color: bodyColor, metalness: 0.99, roughness: 0.01 });
+            const smoothRoofMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.95, roughness: 0.05 }); 
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x05080c, roughness: 0, metalness: 1, transparent: true, opacity: 0.88 });
+            const tyreMat = new THREE.MeshStandardMaterial({ color: 0x080808, roughness: 0.7 });
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, metalness: 1.0, roughness: 0.01 });
+            const brakeMat = new THREE.MeshStandardMaterial({ color: 0xdd0000, metalness: 0.9 }); 
+            const diskMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.95, roughness: 0.15 }); 
 
-            // 1. Şasi Ana Tabanı ve Yan Etekler (Marşpiyeller)
-            const base = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.28, 3.7), carPaintMat);
-            base.position.y = 0.30;
+            // 1. Ana Alt Alt Şasi (Dolu Duruş)
+            const base = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.26, 3.75), paintMat);
+            base.position.y = 0.28;
             m3Group.add(base);
 
-            // 2. Agresif M3 Ön Tamponu ve Alt Hava Bölücü (Splitter)
-            const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.22, 0.15), new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.4 }));
-            frontBumper.position.set(0, 0.21, -1.88);
+            // 2. Ön Spor M Tampon Splitter
+            const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.20, 0.12), new THREE.MeshStandardMaterial({ color: 0x020202, roughness: 0.5 }));
+            frontBumper.position.set(0, 0.20, -1.9);
             m3Group.add(frontBumper);
 
-            // 3. Gerçekçi M3 Kas Yapısı: Powerdome Kabarıklığı Olan Ön Kaput
-            const hoodGroup = new THREE.Group();
-            const mainHood = new THREE.Mesh(new THREE.BoxGeometry(1.68, 0.20, 1.25), carPaintMat);
-            mainHood.position.set(0, 0.42, -1.15);
-            const powerDome = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.05, 0.7), carPaintMat); // Kaputtaki efsanevi kabarıklık
-            powerDome.position.set(0, 0.52, -1.15);
-            hoodGroup.add(mainHood, powerDome);
-            m3Group.add(hoodGroup);
+            // 3. Ön Kaput ve Aerodinamik Çizgiler
+            const hood = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.18, 1.30), paintMat);
+            hood.position.set(0, 0.40, -1.18);
+            m3Group.add(hood);
 
-            // 4. Arka Bagaj ve Entegre CSL Tipi İnce Spoyler Hattı (Tepesinde başka hiçbir çıkıntı yok!)
-            const trunk = new THREE.Mesh(new THREE.BoxGeometry(1.68, 0.26, 0.75), carPaintMat);
-            trunk.position.set(0, 0.45, 1.35);
+            // 4. Arka Düz Bagaj Kapağı (Tepesinde veya arkasında hiçbir ekstra çıkıntı/spoyler yok, JİLET gibi!)
+            const trunk = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.24, 0.75), paintMat);
+            trunk.position.set(0, 0.42, 1.38);
             m3Group.add(trunk);
+
+            // 5. Tamamen Akıcı Coupe Kabin Tasarımı
+            const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.40, 0.42, 1.72), glassMat);
+            cabin.position.set(0, 0.65, 0.05);
+            m3Group.add(cabin);
+
+            // Jilet gibi Dümdüz Karbon Pürüzsüz Tavan (Üstünde hiçbir anten, çıkıntı veya fazlalık asla yok!)
+            const flatRoof = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.03, 1.48), smoothRoofMat);
+            flatRoof.position.set(0, 0.86, 0.05);
+            m3Group.add(flatRoof);
+
+            // İç Dikiz Aynası
+            const mirrorInside = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 0.03), chromeMat);
+            mirrorInside.position.set(0, 0.78, -0.65);
+            m3Group.add(mirrorInside);
+
+            // 6. Krom Böbrek Izgaraları ve Aynalar
+            const kL = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.16, 0.03), chromeMat);
+            kL.position.set(-0.14, 0.36, -1.91);
+            const kR = kL.clone(); kR.position.x = 0.14;
+            m3Group.add(kL, kR);
+
+            const mirrorL = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.08, 0.10), paintMat);
+            mirrorL.position.set(-0.96, 0.60, -0.30);
+            const mirrorR = mirrorL.clone(); mirrorR.position.x = 0.96;
+            m3Group.add(mirrorL, mirrorR);
+
+            // 7. Full Performans Tekerlek Sistemi (Dönen Jantlar + Diskler + Kırmızı Brembolar)
+            const tG = new THREE.CylinderGeometry(0.35, 0.35, 0.28, 36);
+            const rG = new THREE.CylinderGeometry(0.26, 0.26, 0.29, 20);
+            const dG = new THREE.CylinderGeometry(0.21, 0.21, 0.04, 16);
+            const cG = new THREE.BoxGeometry(0.05, 0.14, 0.08);
             
-            const cslSpoiler = new THREE.Mesh(new THREE.BoxGeometry(1.64, 0.06, 0.12), carPaintMat);
-            cslSpoiler.position.set(0, 0.56, 1.68);
-            cslSpoiler.rotation.x = -0.15; // Arkaya doğru hafif kıvrımlı ördek kuyruğu spoyler hattı
-            m3Group.add(cslSpoiler);
+            tG.rotateZ(Math.PI / 2); rG.rotateZ(Math.PI / 2); dG.rotateZ(Math.PI / 2);
 
-            // 5. Kusursuz Coupe Kabin, Akıcı Direkler ve İkonik Hofmeister Kink Cam Çizgisi
-            // Araba üzerinde başka hiçbir şey (anten, sis, ekstra blok) kalmayacak şekilde tamamen pürüzsüzleştirildi.
-            const glassCabin = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.44, 1.70), glassMat);
-            glassCabin.position.set(0, 0.68, 0.05);
-            m3Group.add(glassCabin);
-
-            // Gerçek M Tavanı (Karbon Fiber Görünümlü Pürüzsüz Tavan Sacı)
-            const m3Roof = new THREE.Mesh(new THREE.BoxGeometry(1.34, 0.03, 1.45), carbonRoofMat);
-            m3Roof.position.set(0, 0.89, 0.05);
-            m3Group.add(m3Roof);
-
-            // Dikiz Aynası (Kabin İçi Detay)
-            const insideMirror = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.05, 0.04), chromeMat);
-            insideMirror.position.set(0, 0.82, -0.6);
-            m3Group.add(insideMirror);
-
-            // 6. İkonik Çiftli BMW Böbrek Izgaraları ve Aerodinamik Yan M Aynaları
-            const kidneyL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.18, 0.04), chromeMat);
-            kidneyL.position.set(-0.15, 0.38, -1.89);
-            const kidneyR = kidneyL.clone(); kidneyR.position.x = 0.15;
-            m3Group.add(kidneyL, kidneyR);
-
-            const mMirrorL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.08, 0.12), carPaintMat);
-            mMirrorL.position.set(-0.95, 0.62, -0.32);
-            const mMirrorR = mMirrorL.clone(); mMirrorR.position.x = 0.95;
-            m3Group.add(mMirrorL, mMirrorR);
-
-            // 7. Muhteşem Jantlar, Delikli Fren Diskleri ve Brembo Kaliperler
-            const wheelTireGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.28, 36);
-            const wheelRimGeo = new THREE.CylinderGeometry(0.26, 0.26, 0.29, 20);
-            const brakeDiskGeo = new THREE.CylinderGeometry(0.20, 0.20, 0.05, 16);
-            const caliperGeo = new THREE.BoxGeometry(0.06, 0.15, 0.09);
-            
-            wheelTireGeo.rotateZ(Math.PI / 2); 
-            wheelRimGeo.rotateZ(Math.PI / 2);
-            brakeDiskGeo.rotateZ(Math.PI / 2);
-
-            const wheelPositions = [
-                [-0.91, 0.36, -1.1], [0.91, 0.36, -1.1],
-                [-0.91, 0.36, 1.25],  [0.91, 0.36, 1.25]
+            const wPositions = [
+                [-0.92, 0.35, -1.15], [0.92, 0.35, -1.15],
+                [-0.92, 0.35, 1.30],  [0.92, 0.35, 1.30]
             ];
 
-            wheelPositions.forEach(pos => {
-                const tireMesh = new THREE.Mesh(wheelTireGeo, tyreMat);
-                const rimMesh = new THREE.Mesh(wheelRimGeo, chromeMat);
-                const diskMesh = new THREE.Mesh(brakeDiskGeo, diskMat);
-                const caliperMesh = new THREE.Mesh(caliperGeo, brakeCalMat);
+            wPositions.forEach(pos => {
+                const tire = new THREE.Mesh(tG, tyreMat);
+                const rim = new THREE.Mesh(rG, chromeMat);
+                const disk = new THREE.Mesh(dG, diskMat);
+                const caliper = new THREE.Mesh(cG, brakeMat);
                 
-                tireMesh.position.set(pos[0], pos[1], pos[2]);
-                rimMesh.position.set(pos[0], pos[1], pos[2]);
-                diskMesh.position.set(pos[0] + (pos[0] > 0 ? -0.04 : 0.04), pos[1], pos[2]);
-                caliperMesh.position.set(pos[0] + (pos[0] > 0 ? -0.06 : 0.06), pos[1] + 0.11, pos[2] - 0.05);
+                tire.position.set(pos[0], pos[1], pos[2]);
+                rim.position.set(pos[0], pos[1], pos[2]);
+                disk.position.set(pos[0] + (pos[0] > 0 ? -0.03 : 0.03), pos[1], pos[2]);
+                caliper.position.set(pos[0] + (pos[0] > 0 ? -0.05 : 0.05), pos[1] + 0.10, pos[2] - 0.04);
                 
-                m3Group.add(tireMesh, rimMesh, diskMesh, caliperMesh);
+                m3Group.add(tire, rim, disk, caliper);
             });
 
-            // 8. Keskin Angel CSL Far Tasarımı & Led Stoplar
-            const headlightGeo = new THREE.BoxGeometry(0.24, 0.07, 0.04);
-            const xenons = new THREE.MeshBasicMaterial({ color: isPlayer ? 0xffffff : 0xffaa00 });
-            const headL = new THREE.Mesh(headlightGeo, xenons); headL.position.set(-0.64, 0.42, -1.87);
-            const headR = headL.clone(); headR.position.x = 0.64;
+            // 8. Lazer Xenon Farlar & Çift Yuvarlak Egzozlar
+            const fGeo = new THREE.BoxGeometry(0.22, 0.06, 0.03);
+            const fMat = new THREE.MeshBasicMaterial({ color: isPlayer ? 0xffffff : 0xffbb00 });
+            const headL = new THREE.Mesh(fGeo, fMat); headL.position.set(-0.65, 0.40, -1.89);
+            const headR = headL.clone(); headR.position.x = 0.65;
             m3Group.add(headL, headR);
 
-            const ledStops = new THREE.MeshBasicMaterial({ color: 0xff0022 });
-            const stopL = new THREE.Mesh(headlightGeo, ledStops); stopL.position.set(-0.64, 0.46, 1.73);
-            const stopR = stopL.clone(); stopR.position.x = 0.64;
+            const sMat = new THREE.MeshBasicMaterial({ color: 0xff0011 });
+            const stopL = new THREE.Mesh(fGeo, sMat); stopL.position.set(-0.65, 0.44, 1.76);
+            const stopR = stopL.clone(); stopR.position.x = 0.65;
             m3Group.add(stopL, stopR);
+
+            // Arka Çift Çıkış Krom Egzozlar
+            const exGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.2, 12); exGeo.rotateX(Math.PI/2);
+            const exL = new THREE.Mesh(exGeo, chromeMat); exL.position.set(-0.4, 0.15, 1.76);
+            const exR = exL.clone(); exR.position.x = 0.4;
+            m3Group.add(exL, exR);
 
             return m3Group;
         }
 
-        // Oyuncunun Canavar BMW M3'ü (%100 Pürüzsüz Derin Gece Mavisi Metalik Boya)
-        const bmwM3 = createRealisticM3(0x0a1424, true);
+        // Sürdüğün Oyuncu Arabası (Efsanevi Estoril Metalik M Mavi - Full Modifiyeli, Kusursuz Üst Yüzey)
+        const bmwM3 = createFullyLoadedM3(0x0a2244, true);
 
-        // Volumetrik Ön Bi-Xenon Far Işık Hüzmeleri
-        const beamCone = new THREE.CylinderGeometry(0.08, 3.5, 40, 16, 1, true);
-        beamCone.translate(0, 20, 0);
-        const beamMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.16, side: THREE.DoubleSide });
-        const leftBeam = new THREE.Mesh(beamCone, beamMat); leftBeam.position.set(-0.64, 0.42, -1.9); leftBeam.rotation.x = -Math.PI / 2;
-        const rightBeam = leftBeam.clone(); rightBeam.position.x = 0.64;
+        // Lazer Xenon Far Aydınlatması
+        const beamCone = new THREE.CylinderGeometry(0.05, 3.8, 42, 16, 1, true);
+        beamCone.translate(0, 21, 0);
+        const beamMat = new THREE.MeshBasicMaterial({ color: 0x00faff, transparent: true, opacity: 0.15, side: THREE.DoubleSide });
+        const leftBeam = new THREE.Mesh(beamCone, beamMat); leftBeam.position.set(-0.65, 0.40, -1.9); leftBeam.rotation.x = -Math.PI / 2;
+        const rightBeam = leftBeam.clone(); rightBeam.position.x = 0.65;
         bmwM3.add(leftBeam, rightBeam);
 
-        // Yarış Atmosferi İçin Egzoz Alev Kıvılcım Patlamaları
-        const sparkCount = 45;
+        // Egzoz Patlama Kıvılcımları
+        const sparkCount = 40;
         const sparkGeo = new THREE.BufferGeometry();
         const sparkPos = new Float32Array(sparkCount * 3);
-        for(let i=0; i<sparkCount*3; i+=3) { sparkPos[i]=(Math.random()-0.5)*0.4; sparkPos[i+1]=0.15; sparkPos[i+2]=1.75+Math.random()*2.5; }
+        for(let i=0; i<sparkCount*3; i+=3) { sparkPos[i]=(Math.random()-0.5)*0.5; sparkPos[i+1]=0.15; sparkPos[i+2]=1.78+Math.random()*2; }
         sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3));
-        const sparks = new THREE.Points(sparkGeo, new THREE.PointsMaterial({ color: 0xff6600, size: 0.18, transparent: true, opacity: 0.9 }));
+        const sparks = new THREE.Points(sparkGeo, new THREE.PointsMaterial({ color: 0xff5500, size: 0.16, transparent: true, opacity: 0.85 }));
         bmwM3.add(sparks);
 
         bmwM3.position.set(0, 0, -8); scene.add(bmwM3);
 
-        // Profesyonel Trafik Akış Araçları
-        let traffic = []; const colors = [0x990011, 0x1133aa, 0xd4a373, 0x1c1c1c, 0x4a148c];
+        // Trafik Araçları Havuzu
+        let traffic = []; const colors = [0xaa0011, 0x11aa22, 0x222222, 0xccaa00, 0x5511aa];
         for(let i=0; i<5; i++){
-            let tCar = createRealisticM3(colors[i % colors.length], false);
+            let tCar = createFullyLoadedM3(colors[i % colors.length], false);
             tCar.position.set((Math.random() - 0.5) * 12, 0, -75 - (i * 45)); 
             scene.add(tCar); 
             traffic.push(tCar);
         }
 
-        camera.position.set(0, 3.6, -0.4); camera.lookAt(new THREE.Vector3(0, 0.3, -35));
+        camera.position.set(0, 3.5, -0.2); camera.lookAt(new THREE.Vector3(0, 0.3, -35));
         
         let score = 0; let gameOver = false; let keys = {}; let tilt = 0;
         window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
@@ -507,30 +498,30 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
 
         function animate() {
             if(!gameOver) {
-                let currentSpeed = 1.10 + (score * 0.04);
+                let currentSpeed = 1.15 + (score * 0.045);
                 
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"] || touchLeft) { 
-                    if(bmwM3.position.x > -7.4) { bmwM3.position.x -= 0.28; if(tilt < 0.14) tilt += 0.024; }
+                    if(bmwM3.position.x > -7.4) { bmwM3.position.x -= 0.28; if(tilt < 0.12) tilt += 0.022; }
                 } else if(keys["ArrowRight"] || keys["d"] || keys["D"] || touchRight) { 
-                    if(bmwM3.position.x < 7.4) { bmwM3.position.x += 0.28; if(tilt > -0.14) tilt -= 0.024; }
-                } else { tilt *= 0.78; }
+                    if(bmwM3.position.x < 7.4) { bmwM3.position.x += 0.28; if(tilt > -0.12) tilt -= 0.022; }
+                } else { tilt *= 0.75; }
                 
                 bmwM3.rotation.z = tilt;
-                bmwM3.rotation.y = tilt * 0.30;
+                bmwM3.rotation.y = tilt * 0.25;
 
-                // Dinamik Yüksek Hız Titreşim Efekti
-                let shakeFactor = (score * 0.001) + 0.003;
-                camera.position.y = 3.6 + (Math.random() - 0.5) * shakeFactor;
+                // Dinamik Hız Sarsıntısı
+                let shakeFactor = (score * 0.001) + 0.002;
+                camera.position.y = 3.5 + (Math.random() - 0.5) * shakeFactor;
 
-                // Egzoz Çıkış Kıvılcımları Döngüsü
+                // Kıvılcım Devirdaimi
                 const sArray = sparks.geometry.attributes.position.array;
-                for(let i=2; i<sArray.length; i+=3) { sArray[i] += 0.2; if(sArray[i] > 4.5) sArray[i] = 1.75; }
+                for(let i=2; i<sArray.length; i+=3) { sArray[i] += 0.22; if(sArray[i] > 4) sArray[i] = 1.78; }
                 sparks.geometry.attributes.position.needsUpdate = true;
 
                 lines.forEach(l => { l.position.z += currentSpeed; if(l.position.z > 15) l.position.z = -250; });
                 
                 traffic.forEach(t => {
-                    t.position.z += currentSpeed * 0.52;
+                    t.position.z += currentSpeed * 0.50;
                     if(t.position.z > 4) { 
                         t.position.z = -180 - Math.random()*60; 
                         t.position.x = (Math.random() - 0.5) * 12; 
@@ -539,8 +530,8 @@ elif st.session_state.aktif_mod == "ErkekOyunu":
                     }
                     if(Math.abs(bmwM3.position.x - t.position.x) < 1.62 && Math.abs(bmwM3.position.z - t.position.z) < 3.6) { 
                         gameOver = true; 
-                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff0000; font-size:32px; font-weight:900; text-shadow:0 0 20px #ff0000;'>💥 REKTİFİYE ZAMANI! M3 PERT! 💥</span>";
-                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #220000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">SANAYİYE ÇEK (YENİDEN BAŞLA) 🔄</button>';
+                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff0000; font-size:32px; font-weight:900; text-shadow:0 0 20px #ff0000;'>💥 AMBANS FIRLADI! M3 PERT! 💥</span>";
+                        document.getElementById("restartButtonContainer").innerHTML = '<button onclick="location.reload()" style="margin-top:15px; padding:18px 50px; font-size:22px; font-weight:bold; background:linear-gradient(90deg, #ff0000, #220000); color:#fff; border:none; border-radius:12px; cursor:pointer; box-shadow: 0 0 30px #ff0000;">SANAYİYE ÇEK (YENIDEN BAŞLA) 🔄</button>';
                     }
                 });
             }
