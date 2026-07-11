@@ -55,7 +55,7 @@ sistem_talimati = (
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
     "\n"
     "3) AHMET ŞAKASI (KIRMIZI ÇİZGİ): Kullanıcı sana 'Ahmet', 'Ahmet kim?', 'Çişli' veya içinde Ahmet geçen herhangi bir şey "
-    "yazdığında, o anki konuyu anında çöpe atacaksın ve REAKSİYON OLARAK KESİNLİKLE büyük harflerle aynen şu cevabı vereceksin: "
+    "yazdığında, o anki konuyu anında çöpe atacaksın ve REAKSİYON OLARAK KESİNLKELİKLE büyük harflerle aynen şu cevabı vereceksin: "
     "'ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨'. Bu şakayı asla es geçmeyeceksin. "
     "\n"
     "4) ÖZEL REPLİK: Kullanıcı 'biri bana böyle de derse' veya 'biri bana böyle de' yazarsa anında 'dicek' diyerek cümleyi tamamlayacaksın. "
@@ -85,7 +85,7 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
-# ŞIK ARAYÜZ TASARIMI VE ESNEK YAPILANDIRMA
+# PROFESYONEL VE ULTRA MODERN UI TASARIMI (UP ARROW OK SİSTEMİ DAHİL)
 st.markdown("""
     <style>
     .stApp {
@@ -113,6 +113,22 @@ st.markdown("""
         border: none !important;
         box-shadow: 0 2px 5px rgba(0,0,0,0.15) !important;
     }
+    /* Yukarı Bakan Ok Butonunun Kusursuz CSS Yerleşimi */
+    .modern-gonder-btn div[data-testid="stButton"] > button {
+        background-color: #1e293b !important;
+        color: #3b82f6 !important;
+        border: 1px solid #3b82f6 !important;
+        border-radius: 8px !important;
+        height: 42px !important;
+        width: 100% !important;
+        font-size: 20px !important;
+        font-weight: bold !important;
+        transition: all 0.2s ease !important;
+    }
+    .modern-gonder-btn div[data-testid="stButton"] > button:hover {
+        background-color: #3b82f6 !important;
+        color: white !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -135,14 +151,14 @@ if st.session_state.aktif_oyun is None:
             with st.chat_message("assistant"):
                 st.write(mesaj["content"])
 
-    # ASLA ENGELLENEMEYEN SES MOTORU (HTML KÖPRÜSÜ)
+    # ULTRA HIZLI SES MOTORU (MİLİSANİYELİK RESPONSE SÜRESİ)
     if st.session_state.mic_aktif:
         JS_RITIM_MIC = """
         <div style="display: flex; justify-content: center; align-items: flex-end; gap: 3px; height: 35px; width: 100%; background: #0f172a; border-radius: 4px; border: 1px solid #3b82f6; padding-bottom: 3px;">
-            <div id="kucukBar1" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
-            <div id="kucukBar2" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
-            <div id="kucukBar3" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.06s ease;"></div>
-            <div id="kucukBar4" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.06s ease;"></div>
+            <div id="kucukBar1" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.04s ease;"></div>
+            <div id="kucukBar2" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.04s ease;"></div>
+            <div id="kucukBar3" style="width: 6px; height: 5px; background: #60a5fa; border-radius: 1px; transition: height 0.04s ease;"></div>
+            <div id="kucukBar4" style="width: 6px; height: 5px; background: #3b82f6; border-radius: 1px; transition: height 0.04s ease;"></div>
         </div>
         
         <script>
@@ -182,7 +198,7 @@ if st.session_state.aktif_oyun is None:
                 recognition.onresult = (event) => {
                     const metinSonuc = event.results[0][0].transcript;
                     if(metinSonuc && metinSonuc.trim() !== "") {
-                        // Sesi direkt olarak üst pencereye gönderiyoruz gardaşşşşş!
+                        // Gecikmesiz üst pencereye fırlatma hattı
                         window.parent.postMessage({type: 'sesli_konusma', text: metinSonuc}, '*');
                     }
                 };
@@ -193,7 +209,7 @@ if st.session_state.aktif_oyun is None:
         """
         components.html(JS_RITIM_MIC, height=42)
 
-    # RE-ENJEKSİYON: GELEN SESİ ANINDA KUTUYA YAZIP ENTERLAYAN JAVASCRIPT
+    # RE-ENJEKSİYON MOTORU: SESİ ALIP FORMUN SUBMIT TETİKLEYİCİSİNİ TETİKLER
     st.markdown("""
         <script>
         window.addEventListener('message', function(event) {
@@ -204,21 +220,21 @@ if st.session_state.aktif_oyun is None:
                     inputElement.dispatchEvent(new Event('input', { bubbles: true }));
                     inputElement.dispatchEvent(new Event('change', { bubbles: true }));
                     
-                    // Formu otomatik olarak gönderiyoruz!
+                    // Maksimum hızda formu sunucuya teslim et!
                     setTimeout(() => {
                         const form = inputElement.closest('form');
                         if(form) {
                             form.requestSubmit();
                         }
-                    }, 300);
+                    }, 50); // 50ms hıza indirildi (Ultra Fast)
                 }
             }
         });
         </script>
     """, unsafe_allow_html=True)
 
-    # KONTROL PANELİ MATRİSİ
-    c_mic, c_chat, c_g1, c_g2 = st.columns([0.15, 0.73, 0.06, 0.06])
+    # MATRİS PLANLAMASI: YUKARI BAKAN OK VE MİKROFON KOMBİNASYONU
+    c_mic, c_chat, c_send, c_g1, c_g2 = st.columns([0.15, 0.67, 0.06, 0.06, 0.06])
     
     with c_mic:
         mic_simge = "⏹️ DUR" if st.session_state.mic_aktif else "🎙️ KONUŞ"
@@ -228,14 +244,18 @@ if st.session_state.aktif_oyun is None:
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
-    with c_chat:
-        # Hatalı parametre tamamen temizlendi, pürüzsüz form yapısı!
-        with st.form(key="mesaj_formu", clear_on_submit=True):
+    with st.form(key="mesaj_formu_yeni", clear_on_submit=True):
+        with c_chat:
             yazi_soru = st.text_input("Mesajın:", label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
-            gonder_btn = st.form_submit_button("Gönder")
-            if gonder_btn and yazi_soru:
-                gelen_soru = yazi_soru
-                st.session_state.mic_aktif = False
+        with c_send:
+            # İşte tam istediğin o yukarı bakan profesyonel ok butonu (▲)
+            st.markdown('<div class="modern-gonder-btn">', unsafe_allow_html=True)
+            gonder_btn = st.form_submit_button("▲")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        if gonder_btn and yazi_soru:
+            gelen_soru = yazi_soru
+            st.session_state.mic_aktif = False
 
     with c_g1:
         st.markdown('<div class="sag-oyun-btn">', unsafe_allow_html=True)
@@ -278,7 +298,7 @@ if st.session_state.aktif_oyun is None:
                 pass
 
 # ==========================================================================================
-# OYUNLAR (STABİL ÇALIŞIYOR)
+# OYUNLAR (DOKUNULMADI, STABİL ÇALIŞIYOR)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
