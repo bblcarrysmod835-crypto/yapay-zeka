@@ -56,7 +56,7 @@ sistem_talimati = (
     "Cümlelerinin başında, ortasında veya sonunda mutlaka ama mutlaka samimi bir şekilde 'gardaşşşşş' kelimesini kullanacaksın. "
     "\n"
     "3) AHMET ŞAKASI (KIRMIZI ÇİZGİ): Kullanıcı sana 'Ahmet', 'Ahmet kim?', 'Çişli' veya içinde Ahmet geçen herhangi bir şey "
-    "yazdığında, o anki konuyu anında çöpe atacaksın ve REAKSİYON OLARAK KESİNLİKLE büyük harflerle aynen şu cevabı vereceksiniz: "
+    "yazdığında, o anki konuyu anında çöpe atacaksın ve REAKSİYON OLARAK KESİNLKELİKLE büyük harflerle aynen şu cevabı vereceksiniz: "
     "'ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨'. Bu şakayı asla es geçmeyeceksin. "
     "\n"
     "4) ÖZEL REPLİK: Kullanıcı 'biri bana böyle de derse' veya 'biri bana böyle de' yazarsa anında 'dicek' diyerek cümleyi tamamlayacaksın. "
@@ -87,7 +87,7 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ: ÖZEL NEON KUANTUM TURKUAZ BAŞLIK VE TÜM IŞIK EFEKTLERİ
+# CSS DÜZENLEMELERİ: ORTA BOY EMOJİSİZ NEON MAVİ BAŞLIK VE TÜM IŞIK EFEKTLERİ
 # ==========================================================================================
 st.markdown("""
     <style>
@@ -103,43 +103,42 @@ st.markdown("""
         color: #fcefe9 !important;
     }
     
-    /* 2. NEON KUANTUM TURKUAZ VE PLATİN IŞIKLI ANA BAŞLIK */
+    /* 2. ORTA BOY VE EMOJİSİZ SAF NEON MAVİ ANA BAŞLIK */
     .havali-ana-baslik {
         text-align: center !important;
-        font-family: 'Courier New', Courier, monospace, sans-serif !important;
-        font-size: 38px !important;
-        font-weight: 900 !important;
-        letter-spacing: 3px !important;
-        color: #ffffff !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        font-size: 30px !important; /* İstediğin gibi ideal orta boya çekildi */
+        font-weight: 800 !important;
+        letter-spacing: 2px !important;
+        color: #00bfff !important; /* Saf havalı siber mavi taban */
         margin-top: 15px !important;
         margin-bottom: 5px !important;
         
-        /* Özel seçtiğim Kuantum Turkuazı ve Platin Beyazı Işıma Efektleri */
+        /* Özel siber mavi ve kuantum turkuaz parıltı efektleri */
         text-shadow: 
-            0 0 8px rgba(255, 255, 255, 0.9),
-            0 0 18px rgba(0, 245, 255, 0.7),
-            0 0 30px rgba(0, 180, 216, 0.5),
-            0 0 45px rgba(0, 119, 182, 0.3) !important;
-        animation: kuantumAkisi 3.5s ease-in-out infinite alternate;
+            0 0 6px rgba(0, 191, 255, 0.9),
+            0 0 15px rgba(0, 119, 255, 0.7),
+            0 0 25px rgba(0, 245, 255, 0.4) !important;
+        animation: maviNeonAkisi 3s ease-in-out infinite alternate;
     }
     
     .havali-alt-yazi {
         text-align: center !important;
         color: #d4a373 !important;
-        font-size: 15px !important;
+        font-size: 14px !important;
         margin-bottom: 25px !important;
-        opacity: 0.9;
+        opacity: 0.85;
         font-weight: 500;
     }
     
-    @keyframes kuantumAkisi {
+    @keyframes maviNeonAkisi {
         0% { 
-            text-shadow: 0 0 8px rgba(255,255,255,0.8), 0 0 18px rgba(0,245,255,0.6), 0 0 30px rgba(0,180,216,0.4);
-            transform: scale(0.99);
+            text-shadow: 0 0 6px rgba(0, 191, 255, 0.8), 0 0 15px rgba(0, 119, 255, 0.6);
+            color: #00bfff;
         }
         100% { 
-            text-shadow: 0 0 14px rgba(255,255,255,1), 0 0 28px rgba(0,245,255,1), 0 0 40px rgba(0,180,216,0.8), 0 0 60px rgba(0,119,182,0.6);
-            transform: scale(1.01);
+            text-shadow: 0 0 12px rgba(0, 191, 255, 1), 0 0 25px rgba(0, 245, 255, 0.9), 0 0 35px rgba(0, 119, 255, 0.7);
+            color: #ffffff; /* Hafif platin beyaza süzülen geçiş */
         }
     }
     
@@ -261,7 +260,7 @@ st.markdown("""
 # ==========================================================================================
 with st.sidebar:
     st.markdown("## 🎮 APOLINGO ARCADE")
-    st.markdown("Kuantum Turkuaz Güncellemesi")
+    st.markdown("Mavi Siber Panel Sürümü")
     st.write("---")
     
     secilen_mod = st.radio(
@@ -281,12 +280,12 @@ with st.sidebar:
     st.caption("👨‍💻 Kurucu: Apolingo\n\n**By Abdurrahim İriş © 2026**")
 
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ: SOHBET MODU (YENİ SİBER SEMBOLLER VE NEON TURKUAZ IŞIK EN ÜSTTE)
+# GÖRÜNÜM KONTROLÜ: SOHBET MODU (EMOJİSİZ, SADE VE ORTA BOY NEON MAVİ BAŞLIK EN ÜSTTE)
 # ==========================================================================================
 if st.session_state.aktif_mod == "Sohbet":
-    # Mekiği kaldırdık, yerine efsane siber taçlar ve kuantum turkuaz ışıklandırmayı çaktık!
-    st.markdown('<h1 class="havali-ana-baslik">👑 ❖ APOLINGO MASTER ARCADE AI ❖ 👑</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş | Kuantum Panel</p>', unsafe_allow_html=True)
+    # İstediğin gibi: Emojiler yok, orta boy ve göz alıcı siber mavi renkte tam ortalanmış başlık!
+    st.markdown('<h1 class="havali-ana-baslik">APOLINGO MASTER ARCADE AI</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="havali-alt-yazi">Kurucu ve Baş Mühendis: Apolingo | By Abdurrahim İriş | Mavi Kuantum Filtre</p>', unsafe_allow_html=True)
     st.write("---")
 
     # Sohbet hafızasını ekrana basıyoruz (Başlık her zaman bunun üstünde kalır)
@@ -329,7 +328,7 @@ if st.session_state.aktif_mod == "Sohbet":
         st.session_state.sohbet_hafizasi.append({"role": "user", "content": gelen_soru})
         soru_lower = gelen_soru.lower().strip()
 
-        with st.spinner("🎶 Apolingo Kuantum Panellerde Hesaplamalar Yapıyor..."):
+        with st.spinner("🎶 Apolingo Mavi Kuantum Panellerde Hesaplamalar Yapıyor..."):
             try:
                 if "ahmet" in soru_lower or "çişli" in soru_lower:
                     cevap = "ÇİŞLİİİİ AHMETTT HAHAHAHA 🤣💨"
