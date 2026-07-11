@@ -217,7 +217,7 @@ if st.session_state.aktif_oyun is None:
         </script>
     """, unsafe_allow_html=True)
 
-    # KONTROL PANELİ MATRİSİ (YENİ SİSTEM FORM YAPISI)
+    # KONTROL PANELİ MATRİSİ
     c_mic, c_chat, c_g1, c_g2 = st.columns([0.15, 0.73, 0.06, 0.06])
     
     with c_mic:
@@ -229,10 +229,10 @@ if st.session_state.aktif_oyun is None:
         st.markdown('</div>', unsafe_allow_html=True)
         
     with c_chat:
-        # Chat_input yerine %100 kontrol edilebilir Form yapısı kullanıyoruz, böylece ses otomatik olarak Gönderiliyor!
+        # Hatalı parametre tamamen temizlendi, pürüzsüz form yapısı!
         with st.form(key="mesaj_formu", clear_on_submit=True):
             yazi_soru = st.text_input("Mesajın:", label_visibility="collapsed", placeholder="Mesajını yaz veya konuş be gardaşşşşş...")
-            gonder_btn = st.form_submit_button("Gönder", scope="fragment")
+            gonder_btn = st.form_submit_button("Gönder")
             if gonder_btn and yazi_soru:
                 gelen_soru = yazi_soru
                 st.session_state.mic_aktif = False
@@ -278,7 +278,7 @@ if st.session_state.aktif_oyun is None:
                 pass
 
 # ==========================================================================================
-# OYUNLAR (DOKUNULMADI, STABİL ÇALIŞIYOR)
+# OYUNLAR (STABİL ÇALIŞIYOR)
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     sol_ust, sag_ust = st.columns([0.05, 0.95])
@@ -320,7 +320,7 @@ elif st.session_state.aktif_oyun == "erkek":
         bmwM3.position.set(0, 0, -8); scene.add(bmwM3);
         let traffic = []; const colors = [0xffaa00, 0xff3366, 0x00ccff, 0x9933ff];
         for(let i=0; i<4; i++){
-            let tMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.65, 2.8), new THREE.MeshStandardMaterial({ color: colors[i] }));
+            let tMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), new THREE.MeshStandardMaterial({ color: colors[i%4] }));
             tMesh.position.set((Math.random() - 0.5) * 11, 0.35, -50 - (i * 40)); scene.add(tMesh); traffic.push(tMesh);
         }
         camera.position.set(0, 4.2, -1.0); camera.lookAt(new THREE.Vector3(0, 0.5, -25));
