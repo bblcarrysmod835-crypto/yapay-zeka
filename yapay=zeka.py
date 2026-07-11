@@ -87,11 +87,11 @@ if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
 # ==========================================================================================
-# CSS DÜZENLEMELERİ: MAVİ EFEKTLER TAMAMEN KALDIRILDI, SAF BEYAZ VE KIRMIZI TONLARI KALDI
+# CSS DÜZENLEMELERİ: GİRİŞ KUTUSU BEYAZ YAPILDI, SİMSİYAH EFEKTLER KALDIRILDI
 # ==========================================================================================
 st.markdown("""
     <style>
-    /* 1. Genel Arka Plan - Orijinal Sıcak Tonlar */
+    /* 1. Genel Arka Plan */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #120a06 !important;
         background-image: 
@@ -100,15 +100,15 @@ st.markdown("""
             radial-gradient(circle at 0% 100%, #3d2212 0%, transparent 45%),
             radial-gradient(circle at 100% 100%, #3d2212 0%, transparent 45%) !important;
         background-attachment: fixed !important;
-        color: #ffffff !important; /* TÜM YAZILAR SAF BEYAZ */
+        color: #ffffff !important;
     }
 
-    /* Genel Metin Elemanlarını Beyaz Yapma */
+    /* Genel Metin Elemanları */
     p, span, label, div {
         color: #ffffff !important;
     }
     
-    /* 2. ANA BAŞLIK (Mavi Gölgeler Tamamen Silindi) */
+    /* 2. ANA BAŞLIK */
     .havali-ana-baslik {
         text-align: center !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
@@ -129,7 +129,7 @@ st.markdown("""
         font-weight: 500;
     }
     
-    /* 3. SOL ÜÇ ÇİZGİYE BEYAZ IŞIK VURMA EFEKTİ */
+    /* 3. SOL ÜÇ ÇİZGİ BUTONU */
     button[data-testid="stSidebarCollapseButton"] {
         background-color: #1a1a1a !important;
         border-radius: 50% !important;
@@ -149,24 +149,22 @@ st.markdown("""
         color: #ffffff !important;
     }
     
-    /* 4. OYUNLARIN OLDUĞU KISIM (SIDEBAR): TONLAMALI PREMİUM KIRMIZI */
+    /* 4. SIDEBAR OYUN PANELİ: TONLAMALI PREMİUM KIRMIZI */
     [data-testid="stSidebar"], [data-testid="stSidebarUserContent"] {
         background: linear-gradient(180deg, #4a0000 0%, #220000 50%, #050000 100%) !important;
         border-right: 2px solid #8b0000 !important;
         box-shadow: 5px 0 25px rgba(139, 0, 0, 0.3) !important;
     }
     
-    /* Yan menüdeki tüm metinleri beyaz yapıyoruz */
     [data-testid="stSidebar"] * {
         color: #ffffff !important;
     }
 
-    /* Yan menüdeki radyo buton yuvarlakları */
     div[data-testid="stRadio"] label div[data-slide="true"] {
         background-color: #ff3333 !important;
     }
     
-    /* 5. SOHBET BALONLARI (Mavi sınırlar/gölgeler tamamen temizlendi) */
+    /* 5. SOHBET BALONLARI */
     [data-testid="stChatMessage"] {
         background-color: rgba(20, 10, 5, 0.7) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -177,30 +175,36 @@ st.markdown("""
     }
 
     [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] span {
-        color: #ffffff !important; /* Yazılar net beyaz */
+        color: #ffffff !important;
     }
     
-    /* 6. MESAJ GİRİŞ KUTUSU (Mavi Neon Çerçeve Kaldırıldı, Beyaz/Gri Yapıldı) */
+    /* 6. MESAJ GİRİŞ KUTUSU - ARTIK NORMAL VE BEYAZ */
     textarea[data-testid="stChatInputTextArea"] {
-        color: #ffffff !important;
+        color: #111111 !important; /* Beyaz zeminde rahat okunsun diye koyu yazı */
         border-radius: 14px !important;
         font-size: 16px !important;
-        background-color: #0b0f14 !important; 
-        border: 2px solid #333333 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        background-color: #ffffff !important; /* KUTUNUN İÇİ NORMAL SAF BEYAZ */
+        border: 2px solid #cccccc !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
     }
     
     textarea[data-testid="stChatInputTextArea"]:focus {
-        border-color: #ffffff !important;
-        background-color: #0d1520 !important;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
+        border-color: #999999 !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Giriş alanındaki placeholder (ipucu) yazısının rengi */
+    textarea[data-testid="stChatInputTextArea"]::placeholder {
+        color: #666666 !important;
+        opacity: 0.8 !important;
     }
 
     /* Mikrofon Yuvası */
     .stAudioInput {
-        background-color: #0b0f14 !important;
+        background-color: #ffffff !important;
         border-radius: 50% !important;
-        border: 2px solid #333333 !important;
+        border: 2px solid #cccccc !important;
     }
 
     /* Spinner Dönüşü */
