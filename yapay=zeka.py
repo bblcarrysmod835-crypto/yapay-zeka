@@ -10,7 +10,7 @@ import base64
 import speech_recognition as sr
 import streamlit.components.v1 as components
 
-# Sayfa Ayarları (Tamamen geniş ve pürüzsüz tam ekran düzeni)
+# Sayfa Ayarları
 st.set_page_config(page_title="Apolingo Full Frame Arcade AI", page_icon="🏎️", layout="wide")
 
 # Yapay zekanın beynini ve hafızasını başlatıyoruz
@@ -21,16 +21,15 @@ if "client" not in st.session_state:
 if "son_islenen_ses_adi" not in st.session_state:
     st.session_state.son_islenen_ses_adi = None
 
-# Oyun panelinin aktiflik durumu ve hangi oyunun seçildiği hafızası
+# Oyun panelinin aktiflik durumu
 if "aktif_oyun" not in st.session_state:
-    st.session_state.aktif_oyun = None  # None, "erkek" veya "kiz"
+    st.session_state.aktif_oyun = None
 
-# Ses çalma fonksiyonu (Kız sesi için gTTS)
+# Ses çalma fonksiyonu
 def sesi_cal(metin):
     try:
         tts = gTTS(text=metin, lang='tr', slow=False)
         tts.save("cevap.mp3")
-        
         with open("cevap.mp3", "rb") as f:
             data = f.read()
             b64 = base64.b64encode(data).decode()
@@ -41,7 +40,7 @@ def sesi_cal(metin):
         pass
 
 # ==========================================================================================
-# SİSTEM TALİMATI (10 ÖZEL KANUN VE TEMEL KURALLAR EKSİKSİZ KORUNDU)
+# SİSTEM TALİMATI (EKSİKSİZ KORUNDU)
 # ==========================================================================================
 sistem_talimati = (
     "Sen Apolingo tarafından özenle geliştirilmiş, evrendeki, tarihteki, teknolojideki ve internetteki "
@@ -71,7 +70,7 @@ sistem_talimati = (
     "ve işlemci darboğazlarından, RAM yetersizliğinden ve bilgisayara virüs bulaşma hikayelerinden mizahi ve aşırı detaylı bahsedeceksin. "
     "\n"
     "7) ODA TASARIMI, DUVAR RENKLERİ VEYA SETUP REHBERİ: Kullanıcı odasını boyatmak istediğinde, duvar rengi sorduğunda "
-    "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini ve kablo gizlemeyi anlatacaksın. "
+    "ona antrasit, mimari gri, mat siyah, kırık beyaz gibi renklerin RGB led ışıklarla uyumunu, çift monitör yerleşimini and kablo gizlemeyi anlatacaksın. "
     "\n"
     "8) STİL, GİYİM VE RENK TEORİSİ: Kullanıcı tişört, kargo pantolon, şort, iç giyim/boxer tarzı kıyafet kombinleri sorduğunda "
     "renk teorisine göre kombinler yapacaksın. Özellikle K rengi (Kahverengi) tonlarının krem, bej ve vizonla uyumunu uzun uzun öveceksin. "
@@ -87,15 +86,61 @@ sistem_talimati = (
 if "sohbet_hafizasi" not in st.session_state:
     st.session_state.sohbet_hafizasi = [{"role": "system", "content": sistem_talimati}]
 
+# PROFESSIONAL UI / UX STYLE DÜZENLEMESİ (MİLİMETRİK HİZALAMA CSS)
+st.markdown("""
+    <style>
+    /* Form sınırlarını kaldır ve pürüzsüz yap */
+    div[data-testid="stForm"] {
+        border: none !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+    }
+    
+    /* Input bileşenlerinin dikeyde tam ortalanması */
+    .stAudioInput {
+        margin-top: -4px !important;
+    }
+
+    /* Oyun ve Gönder Butonları Ortak Tasarımı */
+    .gonder-tasarim div[data-testid="stFormSubmitButton"] > button {
+        background-color: #1e293b !important;
+        color: #3b82f6 !important;
+        border: 1px solid #3b82f6 !important;
+        border-radius: 8px !important;
+        height: 42px !important;
+        width: 100% !important;
+        font-size: 18px !important;
+        font-weight: bold;
+    }
+    .gonder-tasarim div[data-testid="stFormSubmitButton"] > button:hover {
+        background-color: #3b82f6 !important;
+        color: white !important;
+    }
+
+    .oyun-tasarim div[data-testid="stFormSubmitButton"] > button {
+        background-color: #1e293b !important;
+        border: 1px solid #4b5563 !important;
+        border-radius: 8px !important;
+        height: 42px !important;
+        width: 100% !important;
+        font-size: 18px !important;
+    }
+    .oyun-tasarim div[data-testid="stFormSubmitButton"] > button:hover {
+        border-color: #3b82f6 !important;
+        background-color: #1e293b !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # ==========================================================================================
-# GÖRÜNÜM KONTROLÜ (EĞER OYUN AÇIK DEĞİLSE - FULL CHAT EKRANI)
+# GÖRÜNÜM KONTROLÜ
 # ==========================================================================================
 if st.session_state.aktif_oyun is None:
     st.title("🚀 APOLINGO MASTER ARCADE AI")
     st.caption("👨‍💻 Kurucu ve Baş Mühendis: Apolingo | **By Abdurrahim İriş**")
     st.write("---")
 
-    # Mesaj geçmişini tam ekran formatında listeleme
+    # Mesaj geçmişi ekrana yazılıyor
     for mesaj in st.session_state.sohbet_hafizasi:
         if mesaj["role"] == "user":
             with st.chat_message("user"):
@@ -106,24 +151,42 @@ if st.session_state.aktif_oyun is None:
 
     gelen_soru = None
 
-    # Chat Giriş Satırı Tasarımı (Mikrofon ve Oyun Butonları Yan Yana En Sonda)
-    c1, c2, c3, c4 = st.columns([0.76, 0.08, 0.08, 0.08])
-    with c1:
-        yazi_soru = st.chat_input("Buraya yaz be gardaşşşşş...")
-        if yazi_soru:
-            gelen_soru = yazi_soru
-    with c2:
-        ses_dosyasi = st.audio_input("🎙️")
-    with c3:
-        if st.button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!", use_container_width=True):
-            st.session_state.aktif_oyun = "erkek"
-            st.rerun()
-    with c4:
-        if st.button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!", use_container_width=True):
-            st.session_state.aktif_oyun = "kiz"
-            st.rerun()
+    # MASTER LAYOUT FORMU: MİKROFON SOLDA, OYUNLAR SAĞDA VE BİTİŞİK!
+    with st.form(key="master_hizali_giris_formu", clear_on_submit=True):
+        # Sütun Dağılımı: Mikrofon (%12), Yazı Alanı (%70), Gönder oku (%6), Oyunlar (%6 ve %6)
+        c_mic, c_text, c_send, c_game1, c_game2 = st.columns([0.12, 0.70, 0.06, 0.06, 0.06])
+        
+        with c_mic:
+            ses_dosyasi = st.audio_input("🎙️", label_visibility="collapsed")
+            
+        with c_text:
+            yazi_soru = st.text_input("Mesaj alanı", label_visibility="collapsed", placeholder="Buraya yaz be gardaşşşşş...")
+            
+        with c_send:
+            st.markdown('<div class="gonder-tasarim">', unsafe_allow_html=True)
+            gonder_btn = st.form_submit_button("▲")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        with c_game1:
+            st.markdown('<div class="oyun-tasarim">', unsafe_allow_html=True)
+            erkek_btn = st.form_submit_button("🏎️", help="Erkek Oyunu (BMW M3) Başlat!")
+            if erkek_btn:
+                st.session_state.aktif_oyun = "erkek"
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+        with c_game2:
+            st.markdown('<div class="oyun-tasarim">', unsafe_allow_html=True)
+            kiz_btn = st.form_submit_button("🌌", help="Kız Oyunu (Astro-Aura) Başlat!")
+            if kiz_btn:
+                st.session_state.aktif_oyun = "kiz"
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    # Sesli girdiyi işleme mekanizması
+        if gonder_btn and yazi_soru:
+            gelen_soru = yazi_soru
+
+    # Ses dosyasını arka planda metne dönüştürme mantığı
     if ses_dosyasi is not None:
         if st.session_state.son_islenen_ses_adi != ses_dosyasi.name:
             r = sr.Recognizer()
@@ -137,6 +200,7 @@ if st.session_state.aktif_oyun is None:
             except Exception as e:
                 pass
 
+    # Cevap tetikleyici hat
     if gelen_soru:
         with st.chat_message("user"):
             st.write(gelen_soru)
@@ -167,8 +231,6 @@ if st.session_state.aktif_oyun is None:
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "erkek":
     st.markdown("### 🏎️ Apolingo Tam Gövde BMW M3 Makas Simülatörü")
-    
-    # Geri Dönüş Sağlayan Çarpı Butonu
     if st.button("❌ Yapay Zekaya Geri Dön be Gardaşşş!", help="Oyundan Çık"):
         st.session_state.aktif_oyun = None
         st.rerun()
@@ -184,97 +246,47 @@ elif st.session_state.aktif_oyun == "erkek":
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("bmwFullCanvasContainer");
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x020208);
-
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x020208);
         const camera = new THREE.PerspectiveCamera(55, container.clientWidth / 600, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 600);
-        container.appendChild(renderer.domElement);
-
+        renderer.setSize(container.clientWidth, 600); container.appendChild(renderer.domElement);
         const lightTop = new THREE.DirectionalLight(0xffffff, 2.0); lightTop.position.set(0, 30, 15); scene.add(lightTop);
-        const lightAmb = new THREE.AmbientLight(0x666666); scene.add(lightAmb);
-
-        const roadGeo = new THREE.BoxGeometry(16, 0.1, 1000);
-        const roadMat = new THREE.MeshStandardMaterial({ color: 0x15151c, roughness: 0.5 });
-        const road = new THREE.Mesh(roadGeo, roadMat); scene.add(road);
-
+        scene.add(new THREE.AmbientLight(0x666666));
+        const road = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 1000), new THREE.MeshStandardMaterial({ color: 0x15151c, roughness: 0.5 })); scene.add(road);
         let lines = [];
         for(let i=0; i<20; i++){
-            let lGeo = new THREE.BoxGeometry(0.25, 0.15, 10);
-            let lMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-            let lMesh = new THREE.Mesh(lGeo, lMat);
-            lMesh.position.set(0, 0.09, -i * 30);
-            scene.add(lMesh); lines.push(lMesh);
+            let lMesh = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.15, 10), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            lMesh.position.set(0, 0.09, -i * 30); scene.add(lMesh); lines.push(lMesh);
         }
-
         const bmwM3 = new THREE.Group();
-        const baseGeo = new THREE.BoxGeometry(1.4, 0.4, 3.0);
-        const baseMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.9, roughness: 0.1 });
-        const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-        baseMesh.position.y = 0.28;
-        bmwM3.add(baseMesh);
-
-        const cabinGeo = new THREE.BoxGeometry(1.15, 0.45, 1.5);
-        const cabinMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.05 });
-        const cabinMesh = new THREE.Mesh(cabinGeo, cabinMat);
-        cabinMesh.position.set(0, 0.65, -0.1);
-        bmwM3.add(cabinMesh);
-
-        const spGeo = new THREE.BoxGeometry(1.3, 0.08, 0.25);
-        const spMesh = new THREE.Mesh(spGeo, cabinMat);
-        spMesh.position.set(0, 0.55, -1.35);
-        bmwM3.add(spMesh);
-
-        bmwM3.position.set(0, 0, -8);
-        scene.add(bmwM3);
-
-        let traffic = [];
-        const colors = [0xffaa00, 0xff3366, 0x00ccff, 0x9933ff];
+        const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 3.0), new THREE.MeshStandardMaterial({ color: 0xdddddd, metalness: 0.9, roughness: 0.1 }));
+        baseMesh.position.y = 0.28; bmwM3.add(baseMesh);
+        const cabinMesh = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.45, 1.5), new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.05 }));
+        cabinMesh.position.set(0, 0.65, -0.1); bmwM3.add(cabinMesh);
+        const spMesh = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.08, 0.25), cabinMesh.material);
+        spMesh.position.set(0, 0.55, -1.35); bmwM3.add(spMesh);
+        bmwM3.position.set(0, 0, -8); scene.add(bmwM3);
+        let traffic = []; const colors = [0xffaa00, 0xff3366, 0x00ccff, 0x9933ff];
         for(let i=0; i<4; i++){
-            let tGeo = new THREE.BoxGeometry(1.4, 0.65, 2.8);
-            let tMat = new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.5 });
-            let tMesh = new THREE.Mesh(tGeo, tMat);
-            tMesh.position.set((Math.random() - 0.5) * 11, 0.35, -50 - (i * 40));
-            scene.add(tMesh); traffic.push(tMesh);
+            let tMesh = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.65, 2.8), new THREE.MeshStandardMaterial({ color: colors[i], metalness: 0.5 }));
+            tMesh.position.set((Math.random() - 0.5) * 11, 0.35, -50 - (i * 40)); scene.add(tMesh); traffic.push(tMesh);
         }
-
-        camera.position.set(0, 4.2, -1.0);
-        camera.lookAt(new THREE.Vector3(0, 0.5, -25));
-
+        camera.position.set(0, 4.2, -1.0); camera.lookAt(new THREE.Vector3(0, 0.5, -25));
         let score = 0; let gameOver = false; let keys = {};
-        window.addEventListener("keydown", e => keys[e.key] = true);
-        window.addEventListener("keyup", e => keys[e.key] = false);
-
+        window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
         function animate() {
             if(!gameOver) {
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(bmwM3.position.x > -6.5) bmwM3.position.x -= 0.18; }
                 if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(bmwM3.position.x < 6.5) bmwM3.position.x += 0.18; }
-
-                lines.forEach(l => {
-                    l.position.z += 0.7 + (score * 0.02);
-                    if(l.position.z > 10) l.position.z = -280;
-                });
-
-                let phase = Math.abs(Math.sin(score * 0.15));
-                scene.background.setRGB(0.01, 0.04 * phase, 0.09 * (1 - phase));
-
+                lines.forEach(l => { l.position.z += 0.7 + (score * 0.02); if(l.position.z > 10) l.position.z = -280; });
+                let phase = Math.abs(Math.sin(score * 0.15)); scene.background.setRGB(0.01, 0.04 * phase, 0.09 * (1 - phase));
                 traffic.forEach(t => {
                     t.position.z += 0.7 + (score * 0.03);
-                    if(t.position.z > 2) {
-                        t.position.z = -140 - Math.random()*30;
-                        t.position.x = (Math.random() - 0.5) * 11;
-                        score++;
-                        document.getElementById("scoreDisplay4D").innerText = "4D Makas Skoru: " + score + " 🌀";
-                    }
-                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) {
-                        gameOver = true;
-                        document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>";
-                    }
+                    if(t.position.z > 2) { t.position.z = -140 - Math.random()*30; t.position.x = (Math.random() - 0.5) * 11; score++; document.getElementById("scoreDisplay4D").innerText = "4D Makas Skoru: " + score + " 🌀"; }
+                    if(Math.abs(bmwM3.position.x - t.position.x) < 1.35 && Math.abs(bmwM3.position.z - t.position.z) < 2.9) { gameOver = true; document.getElementById("scoreDisplay4D").innerHTML = "<span style='color:#ff3333; font-size:26px;'>💥 M3 PERT OLDU! MATRIX DAĞILDI! 💥</span>"; }
                 });
             }
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
+            renderer.render(scene, camera); requestAnimationFrame(animate);
         }
         animate();
     </script>
@@ -286,8 +298,6 @@ elif st.session_state.aktif_oyun == "erkek":
 # ==========================================================================================
 elif st.session_state.aktif_oyun == "kiz":
     st.markdown("### 🌌 Kızlar İçin Özel: 4D Astro-Aura Kuantum Kaçış Oyunu")
-    
-    # Geri Dönüş Sağlayan Çarpı Butonu
     if st.button("❌ Yapay Zekaya Geri Dön be Gardaşşş!", help="Oyundan Çık"):
         st.session_state.aktif_oyun = None
         st.rerun()
@@ -303,93 +313,41 @@ elif st.session_state.aktif_oyun == "kiz":
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         const container = document.getElementById("kizFullCanvasContainer");
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x11001c);
-
+        const scene = new THREE.Scene(); scene.background = new THREE.Color(0x11001c);
         const camera = new THREE.PerspectiveCamera(60, container.clientWidth / 600, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, 600);
-        container.appendChild(renderer.domElement);
-
+        renderer.setSize(container.clientWidth, 600); container.appendChild(renderer.domElement);
         const pLight = new THREE.PointLight(0xff69b4, 3, 100); pLight.position.set(0, 10, -5); scene.add(pLight);
-        const aLight = new THREE.AmbientLight(0x3d0066); scene.add(aLight);
-
-        // Kuantum Yıldız Tozu Arka Planı
-        const starGeo = new THREE.BufferGeometry();
-        const starCount = 400;
-        const starPositions = new Float32Array(starCount * 3);
-        for(let i=0; i<starCount*3; i+=3) {
-            starPositions[i] = (Math.random() - 0.5) * 60;
-            starPositions[i+1] = (Math.random() - 0.5) * 40;
-            starPositions[i+2] = -Math.random() * 150;
-        }
+        scene.add(new THREE.AmbientLight(0x3d0066));
+        const starGeo = new THREE.BufferGeometry(); const starCount = 400; const starPositions = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i+=3) { starPositions[i] = (Math.random() - 0.5) * 60; starPositions[i+1] = (Math.random() - 0.5) * 40; starPositions[i+2] = -Math.random() * 150; }
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-        const starMat = new THREE.PointsMaterial({ color: 0xffb6c1, size: 0.4 });
-        const starField = new THREE.Points(starGeo, starMat);
-        scene.add(starField);
-
-        // Oyuncunun Aura Kristali
-        const playerGeo = new THREE.ConeGeometry(0.8, 2.0, 4);
-        const playerMat = new THREE.MeshStandardMaterial({ color: 0xff007f, emissive: 0xff0040, roughness: 0.1 });
-        const playerMesh = new THREE.Mesh(playerGeo, playerMat);
-        playerMesh.rotation.x = Math.PI / 2;
-        playerMesh.position.set(0, 0, -6);
-        scene.add(playerMesh);
-
-        // Engeller (Karanlık Kuantum Küreleri)
-        let obstacles = [];
-        const obsColors = [0x00ffff, 0xba55d3, 0xff69b4];
+        const starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffb6c1, size: 0.4 })); scene.add(starField);
+        const playerMesh = new THREE.Mesh(new THREE.ConeGeometry(0.8, 2.0, 4), new THREE.MeshStandardMaterial({ color: 0xff007f, emissive: 0xff0040, roughness: 0.1 }));
+        playerMesh.rotation.x = Math.PI / 2; playerMesh.position.set(0, 0, -6); scene.add(playerMesh);
+        let obstacles = []; const obsColors = [0x00ffff, 0xba55d3, 0xff69b4];
         for(let i=0; i<4; i++){
-            let oGeo = new THREE.IcosahedronGeometry(1.0, 1);
-            let oMat = new THREE.MeshStandardMaterial({ color: obsColors[i % 3], wireframe: false, emissive: obsColors[i % 3] });
-            let oMesh = new THREE.Mesh(oGeo, oMat);
-            oMesh.position.set((Math.random() - 0.5) * 12, 0, -40 - (i * 30));
-            scene.add(oMesh); obstacles.push(oMesh);
+            let oMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.0, 1), new THREE.MeshStandardMaterial({ color: obsColors[i % 3], emissive: obsColors[i % 3] }));
+            oMesh.position.set((Math.random() - 0.5) * 12, 0, -40 - (i * 30)); scene.add(oMesh); obstacles.push(oMesh);
         }
-
-        camera.position.set(0, 5, 2);
-        camera.lookAt(new THREE.Vector3(0, -0.5, -20));
-
+        camera.position.set(0, 5, 2); camera.lookAt(new THREE.Vector3(0, -0.5, -20));
         let score = 0; let gameOver = false; let keys = {};
-        window.addEventListener("keydown", e => keys[e.key] = true);
-        window.addEventListener("keyup", e => keys[e.key] = false);
-
+        window.addEventListener("keydown", e => keys[e.key] = true); window.addEventListener("keyup", e => keys[e.key] = false);
         function animate() {
             if(!gameOver) {
                 if(keys["ArrowLeft"] || keys["a"] || keys["A"]) { if(playerMesh.position.x > -6.5) playerMesh.position.x -= 0.16; }
                 if(keys["ArrowRight"] || keys["d"] || keys["D"]) { if(playerMesh.position.x < 6.5) playerMesh.position.x += 0.16; }
-
-                playerMesh.rotation.z += 0.05; // Tatlı bir kendi etrafında dönme efekti
-                
-                // Yıldızları geriye kaydır
+                playerMesh.rotation.z += 0.05;
                 const positions = starField.geometry.attributes.position.array;
-                for(let i=2; i<positions.length; i+=3) {
-                    positions[i] += 0.4;
-                    if(positions[i] > 5) positions[i] = -150;
-                }
+                for(let i=2; i<positions.length; i+=3) { positions[i] += 0.4; if(positions[i] > 5) positions[i] = -150; }
                 starField.geometry.attributes.position.needsUpdate = true;
-
-                // Engellerin hareketi ve çarpışma kontrolü
                 obstacles.forEach(o => {
-                    o.position.z += 0.55 + (score * 0.02);
-                    o.rotation.x += 0.02; o.rotation.y += 0.02;
-
-                    if(o.position.z > 5) {
-                        o.position.z = -120 - Math.random()*20;
-                        o.position.x = (Math.random() - 0.5) * 12;
-                        score++;
-                        document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐ ✨";
-                    }
-
-                    // Çarpışma Algılama alanı
-                    if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) {
-                        gameOver = true;
-                        document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:24px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>";
-                    }
+                    o.position.z += 0.55 + (score * 0.02); o.rotation.x += 0.02; o.rotation.y += 0.02;
+                    if(o.position.z > 5) { o.position.z = -120 - Math.random()*20; o.position.x = (Math.random() - 0.5) * 12; score++; document.getElementById("kizScoreDisplay").innerText = "Aura Enerjisi: " + score + " ⭐ ✨"; }
+                    if(Math.abs(playerMesh.position.x - o.position.x) < 1.4 && Math.abs(playerMesh.position.z - o.position.z) < 2.0) { gameOver = true; document.getElementById("kizScoreDisplay").innerHTML = "<span style='color:#ff69b4; font-size:24px;'>🔮 AURA DAĞILDI: Kuantum Boyutuna Işınlanıyorsun! 🔮</span>"; }
                 });
             }
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
+            renderer.render(scene, camera); requestAnimationFrame(animate);
         }
         animate();
     </script>
